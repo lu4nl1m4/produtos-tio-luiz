@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Entre em contato com Produtos Tio Luiz. Estamos prontos para atendê-lo via WhatsApp, email ou formulário.">
+    <title>Contato - Produtos Tio Luiz</title>
+    <link rel="stylesheet" href="src/styles.css">
+    <style>
+        /* Toast de sucesso/erro */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 500;
+            opacity: 0;
+            transform: translateY(100px);
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 9999;
+            max-width: 400px;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .toast.success {
+            background: linear-gradient(135deg, #2e7d32, #43a047);
+            color: white;
+        }
+
+        .toast.error {
+            background: linear-gradient(135deg, #c62828, #d32f2f);
+            color: white;
+        }
+
+        .toast-icon {
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .toast-content {
+            flex: 1;
+        }
+
+        .toast-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .toast-message {
+            font-size: 0.875rem;
+            opacity: 0.95;
+        }
+
+        /* Estados de validação */
+        .form-input:focus:valid,
+        .form-select:focus:valid,
+        .form-textarea:focus:valid {
+            border-color: var(--color-success);
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+        }
+
+        /* Animação de shake para erro */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        .form-input.error-shake,
+        .form-select.error-shake,
+        .form-textarea.error-shake {
+            animation: shake 0.5s;
+            border-color: var(--color-error) !important;
+        }
+
+        /* Loading spinner no botão */
+        .btn--loading {
+            position: relative;
+            pointer-events: none;
+        }
+
+        .btn--loading::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            top: 50%;
+            left: 50%;
+            margin-left: -10px;
+            margin-top: -10px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Contador de caracteres */
+        .char-counter {
+            display: block;
+            text-align: right;
+            margin-top: 0.25rem;
+            font-size: 0.875rem;
+            color: var(--color-gray-600);
+            transition: color 0.3s;
+        }
+
+        .char-counter.warning {
+            color: var(--color-warning);
+        }
+
+        .char-counter.danger {
+            color: var(--color-error);
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .toast {
+                bottom: 1rem;
+                right: 1rem;
+                left: 1rem;
+                max-width: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header class="header" id="header">
+        <div class="header__container">
+            <a href="index.html" class="header__logo">
+                <img src="src/imgs/logo.webp" alt="Produtos Tio Luiz">
+            </a>
+            <nav class="nav">
+                <button class="nav__toggle" id="navToggle" aria-label="Menu">
+                    <span class="nav__toggle-bar"></span>
+                    <span class="nav__toggle-bar"></span>
+                    <span class="nav__toggle-bar"></span>
+                </button>
+
+                <ul class="nav__list" id="navList">
+                    <li><a href="index.html" class="nav__link">Home</a></li>
+                    <li><a href="sobre.html" class="nav__link">Sobre Nós</a></li>
+                    <li><a href="produtos.html" class="nav__link">Produtos</a></li>
+                    <li><a href="pet-food.html" class="nav__link nav__link--pet nav__link--active">Linha Pet Food</a></li>
+                    <li><a href="onde-encontrar.html" class="nav__link">Onde Encontrar</a></li>
+                    <li><a href="contato.html" class="nav__link">Contato</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- PAGE HEADER -->
+    <section class="hero" style="min-height: 400px; padding: 4rem 0;">
+        <img src="src/imgs/atendimento.webp" alt="Atendimento Tio Luiz" class="hero__background">
+        <div class="hero__overlay"></div>
+        
+        <div class="hero__content">
+            <h1 class="hero__title">Fale Conosco</h1>
+            <p class="hero__subtitle">Estamos aqui para atendê-lo!</p>
+        </div>
+    </section>
+
+    <!-- CONTACT OPTIONS -->
+    <section class="section">
+        <div class="container">
+            <div class="grid grid--3" style="margin-bottom: 4rem;">
+                <a href="https://wa.me/5579998985386" target="_blank" rel="noopener noreferrer" class="card fade-in"
+                    style="text-decoration: none; transition: all 0.3s;">
+                    <div class="card__content" style="text-align: center;">
+                        <div style="width: 80px; height: 80px; margin: 0 auto 1.5rem; background: linear-gradient(135deg, var(--color-primary), var(--color-accent)); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-md);">
+                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                                <path d="M8 10h.01"/>
+                                <path d="M12 10h.01"/>
+                                <path d="M16 10h.01"/>
+                            </svg>
+                        </div>
+                        <h3 class="card__title">WhatsApp</h3>
+                        <p class="card__text">(79) 99898-5386</p>
+                        <p class="card__text" style="margin-top: 0.5rem; color: var(--color-success); font-weight: 600;">Clique para conversar →</p>
+                    </div>
+                </a>
+
+                <a href="mailto:sac@distribuidoratioluiz.com.br" class="card fade-in" style="text-decoration: none;">
+                    <div class="card__content" style="text-align: center;">
+                        <div style="width: 80px; height: 80px; margin: 0 auto 1.5rem; background: linear-gradient(135deg, var(--color-primary), var(--color-accent)); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-md);">
+                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                <polyline points="22,6 12,13 2,6"/>
+                            </svg>
+                        </div>
+                        <h3 class="card__title">Email</h3>
+                        <p class="card__text">sac@distribuidoratioluiz.com.br</p>
+                        <p class="card__text" style="margin-top: 0.5rem; color: var(--color-primary); font-weight: 600;">Envie um email →</p>
+                    </div>
+                </a>
+
+                <div class="card fade-in">
+                    <div class="card__content" style="text-align: center;">
+                        <div style="width: 80px; height: 80px; margin: 0 auto 1.5rem; background: linear-gradient(135deg, var(--color-primary), var(--color-accent)); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-md);">
+                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"/>
+                                <polyline points="12 6 12 12 16 14"/>
+                            </svg>
+                        </div>
+                        <h3 class="card__title">Horário de Atendimento</h3>
+                        <p class="card__text">Segunda a Sexta</p>
+                        <p class="card__text" style="margin-top: 0.5rem; font-weight: 600; font-size: 1.125rem;">8h às 12h | 14h às 18h</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CONTACT FORM -->
+            <div class="grid grid--2" style="gap: 3rem; align-items: flex-start;">
+                <div class="fade-in">
+                    <h2 class="section-title">Envie sua Mensagem</h2>
+                    <p class="section-subtitle" style="margin-bottom: 2rem;">Preencha o formulário e entraremos em contato o mais breve possível.</p>
+
+                    <form id="contactForm" novalidate>
+                        <div class="form-group">
+                            <label for="nome" class="form-label">Nome Completo *</label>
+                            <input type="text" name="nome" id="nome" class="form-input" maxlength="100" 
+                                   placeholder="Seu nome completo">
+                        </div>
+
+                        <div class="grid grid--2">
+                            <div class="form-group">
+                                <label for="email" class="form-label">Email *</label>
+                                <input type="email" name="email" id="email" class="form-input" 
+                                       placeholder="seu@email.com">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="telefone" class="form-label">Telefone</label>
+                                <input type="tel" name="telefone" id="telefone" class="form-input" 
+                                       placeholder="(79) 99999-9999">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="assunto" class="form-label">Assunto *</label>
+                            <select name="assunto" id="assunto" class="form-select">
+                                <option value="">Selecione um assunto</option>
+                                <option value="Dúvida sobre produtos">Dúvida sobre produtos</option>
+                                <option value="Quero ser revendedor">Quero ser revendedor</option>
+                                <option value="Qualidade do produto">Qualidade do produto</option>
+                                <option value="Sugestão">Sugestão</option>
+                                <option value="Elogio">Elogio</option>
+                                <option value="Outro">Outro</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="mensagem" class="form-label">Mensagem *</label>
+                            <textarea name="mensagem" id="mensagem" class="form-textarea" rows="5"
+                                maxlength="1000" placeholder="Escreva sua mensagem aqui..."></textarea>
+                            <small id="mensagem-counter" class="char-counter">0/1000 caracteres</small>
+                        </div>
+
+                        <button type="submit" id="submitBtn" class="btn btn--primary btn--large" 
+                                style="width: 100%;">
+                            Enviar Mensagem
+                        </button>
+                    </form>
+                </div>
+
+                <div class="fade-in">
+                    <div style="background: linear-gradient(135deg, var(--color-primary), var(--color-accent)); padding: 2.5rem; border-radius: var(--radius-lg); color: white; box-shadow: var(--shadow-lg);">
+                        <h3 style="color: white; font-size: 1.75rem; margin-bottom: 1.5rem;">Informações de Contato</h3>
+
+                        <div style="margin-bottom: 2rem;">
+                            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                                <div style="width: 50px; height: 50px; background: rgba(255, 255, 255, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p style="margin: 0; font-weight: 600; font-size: 1.125rem;">(79) 3431-0068</p>
+                                    <p style="margin: 0; opacity: 0.9; font-size: 0.875rem;">Atendimento comercial</p>
+                                </div>
+                            </div>
+
+                            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                                <div style="width: 50px; height: 50px; background: rgba(255, 255, 255, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                        <polyline points="22,6 12,13 2,6"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p style="margin: 0; font-weight: 600; font-size: 1.125rem;">sac@distribuidoratioluiz.com.br</p>
+                                    <p style="margin: 0; opacity: 0.9; font-size: 0.875rem;">Email de atendimento</p>
+                                </div>
+                            </div>
+
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <div style="width: 50px; height: 50px; background: rgba(255, 255, 255, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="10"/>
+                                        <polyline points="12 6 12 12 16 14"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p style="margin: 0; font-weight: 600; font-size: 1.125rem;">Seg - Sex: 8h às 12h | 14h às 18h</p>
+                                    <p style="margin: 0; opacity: 0.9; font-size: 0.875rem;">Horário de Brasília</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="border-top: 1px solid rgba(255, 255, 255, 0.3); padding-top: 2rem; margin-top: 2rem;">
+                            <h4 style="color: white; margin-bottom: 1rem; font-size: 1.25rem;">Redes Sociais</h4>
+                            <p style="margin-bottom: 1rem; opacity: 0.9;">Siga-nos e fique por dentro das novidades!</p>
+
+                            <div style="display: flex; gap: 1rem;">
+                                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer"
+                                    style="width: 50px; height: 50px; background: rgba(255, 255, 255, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.3s;"
+                                    onmouseover="this.style.background='rgba(255, 255, 255, 0.3)'"
+                                    onmouseout="this.style.background='rgba(255, 255, 255, 0.2)'">
+                                    <svg width="24" height="24" fill="white" viewBox="0 0 24 24">
+                                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                                    </svg>
+                                </a>
+
+                                <a href="https://facebook.com" target="_blank" rel="noopener noreferrer"
+                                    style="width: 50px; height: 50px; background: rgba(255, 255, 255, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.3s;"
+                                    onmouseover="this.style.background='rgba(255, 255, 255, 0.3)'"
+                                    onmouseout="this.style.background='rgba(255, 255, 255, 0.2)'">
+                                    <svg width="24" height="24" fill="white" viewBox="0 0 24 24">
+                                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 2rem; padding: 1.5rem; background: var(--color-bg-light); border-radius: var(--radius-lg); border-left: 4px solid var(--color-success);">
+                        <h4 style="color: var(--color-primary); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                            💡 Dica Rápida
+                        </h4>
+                        <p style="color: var(--color-gray-700); margin: 0; font-size: 0.95rem;">
+                            Para um atendimento mais rápido, entre em contato via WhatsApp!
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ SECTION -->
+    <section class="section section--light">
+        <div class="container">
+            <div style="text-align: center; margin-bottom: 3rem;">
+                <h2 class="section-title fade-in">Perguntas Frequentes</h2>
+                <p class="section-subtitle fade-in">Tire suas dúvidas mais comuns</p>
+            </div>
+
+            <div style="max-width: 800px; margin: 0 auto;">
+                <div class="card fade-in" style="margin-bottom: 1.5rem;">
+                    <div class="card__content">
+                        <h3 class="card__title">Onde posso comprar os produtos?</h3>
+                        <p class="card__text">
+                            Nossos produtos estão disponíveis em supermercados, hipermercados e distribuidores em todo o estado de Sergipe. Consulte a página <a href="onde-encontrar.html" style="color: var(--color-primary); font-weight: 600;">Onde Encontrar</a> para mais informações.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="card fade-in" style="margin-bottom: 1.5rem;">
+                    <div class="card__content">
+                        <h3 class="card__title">Como posso me tornar um revendedor?</h3>
+                        <p class="card__text">
+                            Entre em contato conosco através do formulário acima ou pelo WhatsApp. Nossa equipe comercial terá prazer em apresentar as condições de parceria.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="card fade-in" style="margin-bottom: 1.5rem;">
+                    <div class="card__content">
+                        <h3 class="card__title">Os produtos têm garantia de qualidade?</h3>
+                        <p class="card__text">
+                            Sim! Todos os nossos produtos passam por rigoroso controle de qualidade. Caso tenha algum problema, entre em contato conosco imediatamente.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="card fade-in">
+                    <div class="card__content">
+                        <h3 class="card__title">Qual o prazo de resposta para contatos?</h3>
+                        <p class="card__text">
+                            Respondemos todos os contatos em até 24 horas úteis. Pelo WhatsApp, o atendimento costuma ser ainda mais rápido!
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer__grid">
+                <div>
+                    <h3 class="footer__section-title">Produtos Tio Luiz</h3>
+                    <p style="color: var(--color-gray-300); margin-bottom: var(--spacing-md);">
+                        Qualidade e tradição em alimentos para sua família feliz.
+                    </p>
+                    <div class="footer__social">
+                        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="footer__social-link" aria-label="Instagram">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                            </svg>
+                        </a>
+                        <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" class="footer__social-link" aria-label="Facebook">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                            </svg>
+                        </a>
+                        <a href="https://wa.me/5579998985386?text=Olá!%20Gostaria%20de%20saber%20mais%20sobre%20os%20Produtos%20Tio%20Luiz" target="_blank" rel="noopener noreferrer" class="footer__social-link" aria-label="WhatsApp">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="footer__section-title">Links Rápidos</h3>
+                    <ul class="footer__list">
+                        <li><a href="index.html" class="footer__link">Home</a></li>
+                        <li><a href="sobre.html" class="footer__link">Sobre Nós</a></li>
+                        <li><a href="produtos.html" class="footer__link">Produtos</a></li>
+                        <li><a href="pet-food.html" class="footer__link">Linha Pet Food</a></li>
+                        <li><a href="onde-encontrar.html" class="footer__link">Onde Encontrar</a></li>
+                        <li><a href="contato.html" class="footer__link">Contato</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="footer__section-title">Categorias</h3>
+                    <ul class="footer__list">
+                        <li><a href="produtos.html#feijoes" class="footer__link">Feijões</a></li>
+                        <li><a href="produtos.html#arroz" class="footer__link">Arroz</a></li>
+                        <li><a href="produtos.html#milho" class="footer__link">Milho e Derivados</a></li>
+                        <li><a href="produtos.html#temperos" class="footer__link">Molhos e Vinagre</a></li>
+                        <li><a href="produtos.html#chas" class="footer__link">Chás</a></li>
+                        <li><a href="pet-food.html" class="footer__link">Pet Food</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="footer__section-title">Contato</h3>
+                    <ul class="footer__list">
+                        <li style="color: var(--color-gray-300);">📞 (79) 3431-0068 | 99898-5386</li>
+                        <li style="color: var(--color-gray-300);">📧 sac@distribuidoratioluiz.com.br</li>
+                        <li style="color: var(--color-gray-300);">⏰ Seg-Sex: 8h às 12h | 14h às 18h</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer__bottom">
+                <p>&copy; <span id="year"></span> Produtos Tio Luiz. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- WHATSAPP FLOATING BUTTON -->
+    <a href="https://wa.me/5579998985386?text=Olá!%20Gostaria%20de%20saber%20mais%20sobre%20os%20Produtos%20Tio%20Luiz" 
+        target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Fale conosco no WhatsApp">
+        <svg viewBox="0 0 24 24">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+        </svg>
+    </a>
+
+    <!-- TOAST CONTAINER -->
+    <div id="toastContainer"></div>
+
+    <script src="src/script.js"></script>
+
+    <!-- SCRIPT DO FORMULÁRIO - SEM ALERTS! -->
+    <script>
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwS8kCuFdSG4yBf5oRQgx6U4RTybHQNXyU8quLploy-UcUBrRCifJUsZyV9A0psPv87/exec';
+
+    // ========================================
+    // FUNÇÕES DE UTILIDADE
+    // ========================================
+
+    function sanitizeInput(input) {
+        const temp = document.createElement('div');
+        temp.textContent = input;
+        return temp.innerHTML;
+    }
+
+    function isValidEmail(email) {
+        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return regex.test(email);
+    }
+
+    function isValidPhone(phone) {
+        const numbers = phone.replace(/\D/g, '');
+        return numbers.length === 10 || numbers.length === 11;
+    }
+
+    // ========================================
+    // TOAST NOTIFICATIONS
+    // ========================================
+
+    function showToast(type, title, message) {
+        const container = document.getElementById('toastContainer');
+        
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        toast.innerHTML = `
+            <div class="toast-icon">${type === 'success' ? '✓' : '✕'}</div>
+            <div class="toast-content">
+                <div class="toast-title">${sanitizeInput(title)}</div>
+                <div class="toast-message">${sanitizeInput(message)}</div>
+            </div>
+        `;
+        
+        container.appendChild(toast);
+        
+        setTimeout(() => toast.classList.add('show'), 10);
+        
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => toast.remove(), 400);
+        }, 5000);
+    }
+
+    // ========================================
+    // VALIDAÇÃO DO FORMULÁRIO
+    // ========================================
+
+    function addShakeAnimation(element) {
+        element.classList.add('error-shake');
+        setTimeout(() => element.classList.remove('error-shake'), 500);
+    }
+
+    function validateForm(formData) {
+        const nome = formData.get('nome').trim();
+        const email = formData.get('email').trim();
+        const telefone = formData.get('telefone').trim();
+        const assunto = formData.get('assunto');
+        const mensagem = formData.get('mensagem').trim();
+        
+        // Validar nome
+        if (nome.length < 3) {
+            showToast('error', 'Nome Inválido', 'O nome deve ter pelo menos 3 caracteres.');
+            addShakeAnimation(document.getElementById('nome'));
+            document.getElementById('nome').focus();
+            return false;
+        }
+        if (nome.length > 100) {
+            showToast('error', 'Nome Muito Longo', 'O nome deve ter no máximo 100 caracteres.');
+            addShakeAnimation(document.getElementById('nome'));
+            return false;
+        }
+        
+        // Validar email
+        if (!isValidEmail(email)) {
+            showToast('error', 'Email Inválido', 'Por favor, insira um email válido.');
+            addShakeAnimation(document.getElementById('email'));
+            document.getElementById('email').focus();
+            return false;
+        }
+        
+        // Validar telefone (se preenchido)
+        if (telefone && !isValidPhone(telefone)) {
+            showToast('error', 'Telefone Inválido', 'Insira um telefone válido com DDD (10 ou 11 dígitos).');
+            addShakeAnimation(document.getElementById('telefone'));
+            document.getElementById('telefone').focus();
+            return false;
+        }
+        
+        // Validar assunto
+        if (!assunto) {
+            showToast('error', 'Assunto Obrigatório', 'Por favor, selecione um assunto.');
+            addShakeAnimation(document.getElementById('assunto'));
+            document.getElementById('assunto').focus();
+            return false;
+        }
+        
+        // Validar mensagem
+        if (mensagem.length < 10) {
+            showToast('error', 'Mensagem Muito Curta', 'A mensagem deve ter pelo menos 10 caracteres.');
+            addShakeAnimation(document.getElementById('mensagem'));
+            document.getElementById('mensagem').focus();
+            return false;
+        }
+        if (mensagem.length > 1000) {
+            showToast('error', 'Mensagem Muito Longa', 'A mensagem deve ter no máximo 1000 caracteres.');
+            addShakeAnimation(document.getElementById('mensagem'));
+            return false;
+        }
+        
+        return true;
+    }
+
+    // ========================================
+    // CONTADOR DE CARACTERES
+    // ========================================
+
+    const mensagemField = document.getElementById('mensagem');
+    const counter = document.getElementById('mensagem-counter');
+
+    mensagemField.addEventListener('input', function(e) {
+        const maxLength = 1000;
+        const currentLength = e.target.value.length;
+        
+        counter.textContent = `${currentLength}/${maxLength} caracteres`;
+        
+        counter.classList.remove('warning', 'danger');
+        
+        if (currentLength > maxLength * 0.9) {
+            counter.classList.add('warning');
+        }
+        if (currentLength === maxLength) {
+            counter.classList.add('danger');
+        }
+    });
+
+    mensagemField.addEventListener('paste', function(e) {
+        const paste = (e.clipboardData || window.clipboardData).getData('text');
+        if (paste.length > 1000) {
+            e.preventDefault();
+            showToast('error', 'Texto Muito Longo', 'O texto colado excede 1000 caracteres.');
+        }
+    });
+
+    // ========================================
+    // MÁSCARA DE TELEFONE
+    // ========================================
+
+    document.getElementById('telefone').addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length > 11) value = value.slice(0, 11);
+        
+        if (value.length > 10) {
+            value = value.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+        } else if (value.length > 6) {
+            value = value.replace(/(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
+        } else if (value.length > 2) {
+            value = value.replace(/(\d{2})(\d{0,5})/, '($1) $2');
+        } else if (value.length > 0) {
+            value = value.replace(/(\d*)/, '($1');
+        }
+        
+        e.target.value = value;
+    });
+
+    // ========================================
+    // SUBMISSÃO DO FORMULÁRIO
+    // ========================================
+
+    let isSubmitting = false;
+
+    document.getElementById('contactForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        if (isSubmitting) {
+            showToast('error', 'Aguarde', 'Já estamos processando seu envio...');
+            return;
+        }
+        
+        const form = this;
+        const submitBtn = document.getElementById('submitBtn');
+        const formData = new FormData(form);
+        
+        // Validar antes de enviar
+        if (!validateForm(formData)) {
+            return;
+        }
+        
+        // Ativar estado de loading
+        isSubmitting = true;
+        submitBtn.disabled = true;
+        submitBtn.classList.add('btn--loading');
+        const originalText = submitBtn.textContent;
+        submitBtn.textContent = '';
+        
+        try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 10000);
+            
+            const response = await fetch(SCRIPT_URL, {
+                method: 'POST',
+                body: formData,
+                signal: controller.signal
+            });
+            
+            clearTimeout(timeoutId);
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                showToast('success', 'Mensagem Enviada!', 'Entraremos em contato em breve.');
+                form.reset();
+                counter.textContent = '0/1000 caracteres';
+            } else {
+                showToast('error', 'Erro ao Enviar', result.message || 'Tente novamente ou entre em contato pelo WhatsApp.');
+            }
+            
+        } catch (error) {
+            console.error('Erro:', error);
+            
+            if (error.name === 'AbortError') {
+                showToast('error', 'Tempo Esgotado', 'O servidor demorou muito. Tente novamente.');
+            } else {
+                showToast('error', 'Erro de Conexão', 'Verifique sua internet e tente novamente.');
+            }
+            
+        } finally {
+            isSubmitting = false;
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('btn--loading');
+            submitBtn.textContent = originalText;
+        }
+    });
+    </script>
+</body>
+
+</html>

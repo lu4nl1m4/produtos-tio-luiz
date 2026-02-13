@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Produtos Tio Luiz - Grãos, temperos, chás e muito mais. Qualidade para sua família.">
+    <title>Produtos - Produtos Tio Luiz</title>
+    <link rel="stylesheet" href="src/styles.css">
+    <style>
+        /* Estilos para cards selecionáveis */
+        .product-card {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--color-primary);
+        }
+        
+        .product-card.active {
+            border-color: var(--color-primary);
+            background: linear-gradient(135deg, rgba(46, 125, 50, 0.05) 0%, rgba(46, 125, 50, 0.1) 100%);
+        }
+        
+        .product-card.active .card__title {
+            color: var(--color-primary);
+        }
+        
+        .product-image {
+            transition: opacity 0.3s ease;
+            min-height: 300px;
+            object-fit: contain;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header class="header" id="header">
+        <div class="header__container">
+            <a href="index.html" class="header__logo">
+                <img src="src/imgs/logo.webp" alt="Produtos Tio Luiz">
+            </a>
+
+            <nav class="nav">
+                <button class="nav__toggle" id="navToggle" aria-label="Menu">
+                    <span class="nav__toggle-bar"></span>
+                    <span class="nav__toggle-bar"></span>
+                    <span class="nav__toggle-bar"></span>
+                </button>
+
+                 <ul class="nav__list" id="navList">
+                    <li><a href="index.html" class="nav__link">Home</a></li>
+                    <li><a href="sobre.html" class="nav__link">Sobre Nós</a></li>
+                    <li><a href="produtos.html" class="nav__link">Produtos</a></li>
+                    <li><a href="pet-food.html" class="nav__link nav__link--pet nav__link--active">Linha Pet Food</a></li>
+                    <li><a href="onde-encontrar.html" class="nav__link">Onde Encontrar</a></li>
+                    <li><a href="contato.html" class="nav__link">Contato</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- PAGE HEADER -->
+    <section class="hero" style="min-height: 400px; padding: 4rem 0;">
+        <img src="src/imgs/todos_os_produtos.webp" class="hero__background">
+        <div class="hero__overlay"></div>
+        
+        <div class="hero__content">
+            <h1 class="hero__title">Nossos Produtos</h1>
+            <p class="hero__subtitle">Variedade e qualidade para todas as ocasiões</p>
+        </div>
+    </section>
+
+    <!-- FEIJÕES SECTION -->
+    <section class="section" id="feijoes">
+        <div class="container">
+            <div class="fade-in" style="text-align: center; margin-bottom: 3rem;">
+                <h2 class="section-title">Feijões</h2>
+                <p class="section-subtitle">Variedade e qualidade em cada grão</p>
+            </div>
+
+            <div class="grid grid--2" style="gap: 3rem; align-items: center; margin-bottom: 3rem;">
+                <div class="fade-in">
+                    <img id="feijoes-image" src="src/imgs/feijao_carioca_especial.webp"
+                        alt="Feijão Carioca Especial" class="product-image"
+                        style="width: 100%;">
+                </div>
+                <div class="fade-in">
+                    <h3 style="color: var(--color-primary); font-size: 2rem; margin-bottom: 1.5rem;">Tradição na Mesa Brasileira</h3>
+                    <div class="grid grid--2" style="gap: 1rem;">
+                        <div class="card product-card active" data-category="feijoes" data-image="src/imgs/feijao_carioca_especial.webp">
+                            <div class="card__content">
+                                <h4 class="card__title" style="font-size: 1.125rem;">Feijão Carioca Especial - 1 Kg</h4>
+                                <p class="card__text">Grãos selecionados premium.</p>
+                            </div>
+                        </div>
+                        <div class="card product-card" data-category="feijoes" data-image="src/imgs/feijao_carioca.webp">
+                            <div class="card__content">
+                                <h4 class="card__title" style="font-size: 1.125rem;">Feijão Carioca - 1 Kg</h4>
+                                <p class="card__text">O tradicional feijão do dia a dia.</p>
+                            </div>
+                        </div>
+                        <div class="card product-card" data-category="feijoes" data-image="src/imgs/feijao_preto.webp">
+                            <div class="card__content">
+                                <h4 class="card__title" style="font-size: 1.125rem;">Feijão Preto - 1 Kg</h4>
+                                <p class="card__text">Feijão de primeira, maciez garantida.</p>
+                            </div>
+                        </div>
+                        <div class="card product-card" data-category="feijoes" data-image="src/imgs/feijao_fradinho.webp">
+                            <div class="card__content">
+                                <h4 class="card__title" style="font-size: 1.125rem;">Feijão Fradinho - 1 Kg</h4>
+                                <p class="card__text">Perfeito para acarajé e saladas.</p>
+                            </div>
+                        </div>
+                        <div class="card product-card" data-category="feijoes" data-image="src/imgs/feijao_branco.webp">
+                            <div class="card__content">
+                                <h4 class="card__title" style="font-size: 1.125rem;">Feijão Branco - 500 g</h4>
+                                <p class="card__text">Ideal para saladas e receitas especiais.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ARROZ SECTION -->
+    <section class="section section--light" id="arroz">
+        <div class="container">
+            <div class="fade-in" style="text-align: center; margin-bottom: 3rem;">
+                <h2 class="section-title">Arroz</h2>
+                <p class="section-subtitle">Grãos selecionados, sempre soltinhos</p>
+            </div>
+
+            <div class="grid grid--2" style="gap: 3rem; align-items: center; margin-bottom: 3rem;">
+                <div class="fade-in" style="order: 2;">
+                    <img id="arroz-image" src="src/imgs/arroz_branco.webp"
+                        alt="Arroz Branco" class="product-image"
+                        style="width: 100%;">
+                </div>
+                <div class="fade-in" style="order: 1;">
+                    <h3 style="color: var(--color-primary); font-size: 2rem; margin-bottom: 1.5rem;">Acompanhamento Perfeito</h3>
+                    <div class="grid grid--2" style="gap: 1rem;">
+                        <div class="card product-card active" data-category="arroz" data-image="src/imgs/arroz_branco.webp">
+                            <div class="card__content">
+                                <h4 class="card__title" style="font-size: 1.125rem;">Arroz Branco - 1 Kg</h4>
+                                <p class="card__text">Grãos selecionados, branquinhos e soltinhos.</p>
+                            </div>
+                        </div>
+                        <div class="card product-card" data-category="arroz" data-image="src/imgs/arroz_parboilizado.webp">
+                            <div class="card__content">
+                                <h4 class="card__title" style="font-size: 1.125rem;">Arroz Parboilizado - 1 Kg</h4>
+                                <p class="card__text">Mais nutritivo e soltinho.</p>
+                            </div>
+                        </div>
+                        <div class="card product-card" data-category="arroz" data-image="src/imgs/arroz_integral.webp">
+                            <div class="card__content">
+                                <h4 class="card__title" style="font-size: 1.125rem;">Arroz Integral - 1 Kg</h4>
+                                <p class="card__text">Saúde e sabor em cada grão.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MILHO SECTION -->
+    <section class="section" id="milho">
+        <div class="container">
+            <div class="fade-in" style="text-align: center; margin-bottom: 3rem;">
+                <h2 class="section-title">Milho e Derivados</h2>
+                <p class="section-subtitle">Tradição e sabor nas festas juninas e o ano todo</p>
+            </div>
+
+            <div class="grid grid--2" style="gap: 3rem; align-items: center; margin-bottom: 3rem;">
+                <div class="fade-in">
+                    <img id="milho-image" src="src/imgs/todos_os_produtos.webp"
+                        alt="Milho de Pipoca" class="product-image"
+                        style="width: 100%;">
+                </div>
+                <div class="fade-in">
+                    <h3 style="color: var(--color-primary); font-size: 2rem; margin-bottom: 1.5rem;">Sabor das Tradições</h3>
+                    <div class="grid grid--2" style="gap: 1rem;">
+                        <div class="card product-card active" data-category="milho" data-image="src/imgs/produtos/milho-pipoca.webp">
+                            <div class="card__content">
+                                <h4 class="card__title" style="font-size: 1.125rem;">Milho de Pipoca - 500 g</h4>
+                                <p class="card__text">Grãos selecionados que estouram muito!</p>
+                            </div>
+                        </div>
+                        <div class="card product-card" data-category="milho" data-image="src/imgs/produtos/milho-mungunza.webp">
+                            <div class="card__content">
+                                <h4 class="card__title" style="font-size: 1.125rem;">Milho de Mungunzá - 500 g</h4>
+                                <p class="card__text">Tradicional e delicioso.</p>
+                            </div>
+                        </div>
+                        <div class="card product-card" data-category="milho" data-image="src/imgs/produtos/flocao-premium.webp">
+                            <div class="card__content">
+                                <h4 class="card__title" style="font-size: 1.125rem;">Flocão Premium - 400 g</h4>
+                                <p class="card__text">Para o melhor bolo de fubá e cuscuz.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MOLHOS SECTION -->
+    <section class="section section--light" id="temperos">
+        <div class="container">
+            <div class="fade-in" style="text-align: center; margin-bottom: 3rem;">
+                <h2 class="section-title">Molhos e Vinagre</h2>
+                <p class="section-subtitle">Sabor especial para suas receitas</p>
+            </div>
+
+            <div class="grid grid--2" style="gap: 3rem; align-items: center; margin-bottom: 3rem;">
+                <div class="fade-in" style="order: 2;">
+                    <img id="temperos-image" src="src/imgs/todos_os_produtos.webp"
+                        alt="Molho de Pimenta" class="product-image"
+                        style="width: 100%;">
+                </div>
+                <div class="fade-in" style="order: 1;">
+                    <h3 style="color: var(--color-primary); font-size: 2rem; margin-bottom: 1.5rem;">Arte de Temperar</h3>
+                    <div class="grid grid--2" style="gap: 1rem;">
+                        <div class="card product-card active" data-category="temperos" data-image="src/imgs/produtos/molho-pimenta.webp">
+                            <div class="card__content">
+                                <h4 class="card__title" style="font-size: 1.125rem;">Molho de Pimenta - 100 ml</h4>
+                                <p class="card__text">Picante e saboroso.</p>
+                            </div>
+                        </div>
+                        <div class="card product-card" data-category="temperos" data-image="src/imgs/produtos/molho-alho.webp">
+                            <div class="card__content">
+                                <h4 class="card__title" style="font-size: 1.125rem;">Molho de Alho - 100 ml</h4>
+                                <p class="card__text">Intenso e aromático.</p>
+                            </div>
+                        </div>
+                        <div class="card product-card" data-category="temperos" data-image="src/imgs/produtos/vinagre-alcool.webp">
+                            <div class="card__content">
+                                <h4 class="card__title" style="font-size: 1.125rem;">Vinagre de Álcool - 500 e 750 ml</h4>
+                                <p class="card__text">O verdadeiro sabor do vinagre.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CHÁS SECTION -->
+    <section class="section" id="chas">
+        <div class="container">
+            <div class="fade-in" style="text-align: center; margin-bottom: 3rem;">
+                <h2 class="section-title">Chás</h2>
+                <p class="section-subtitle">Momentos de relaxamento e bem-estar</p>
+            </div>
+
+            <div class="grid grid--2" style="gap: 3rem; align-items: center; margin-bottom: 3rem;">
+                <div class="fade-in">
+                    <img id="chas-image" src="src/imgs/todos_os_produtos.webp"
+                        alt="Chá de Camomila" class="product-image"
+                        style="width: 100%;">
+                </div>
+                <div class="fade-in">
+                    <h3 style="color: var(--color-primary); font-size: 2rem; margin-bottom: 1.5rem;">Saúde e Sabor</h3>
+                    <div class="grid grid--2" style="gap: 1rem;">
+                        <div class="card product-card active" data-category="chas" data-image="src/imgs/produtos/cha-camomila.webp">
+                            <div class="card__content">
+                                <h4 class="card__title" style="font-size: 1.125rem;">Chá de Camomila - 10 g</h4>
+                                <p class="card__text">Calmante natural.</p>
+                            </div>
+                        </div>
+                        <div class="card product-card" data-category="chas" data-image="src/imgs/produtos/cha-boldo.webp">
+                            <div class="card__content">
+                                <h4 class="card__title" style="font-size: 1.125rem;">Chá de Boldo - 10 g</h4>
+                                <p class="card__text">Digestivo natural.</p>
+                            </div>
+                        </div>
+                        <div class="card product-card" data-category="chas" data-image="src/imgs/produtos/cha-hortela.webp">
+                            <div class="card__content">
+                                <h4 class="card__title" style="font-size: 1.125rem;">Chá de Hortelã - 10 g</h4>
+                                <p class="card__text">Refrescante e aromático.</p>
+                            </div>
+                        </div>
+                        <div class="card product-card" data-category="chas" data-image="src/imgs/produtos/cha-cidreira.webp">
+                            <div class="card__content">
+                                <h4 class="card__title" style="font-size: 1.125rem;">Chá de Cidreira - 10 g</h4>
+                                <p class="card__text">Relaxante e suave.</p>
+                            </div>
+                        </div>
+                        <div class="card product-card" data-category="chas" data-image="src/imgs/produtos/cha-erva-doce.webp">
+                            <div class="card__content">
+                                <h4 class="card__title" style="font-size: 1.125rem;">Chá de Erva-Doce - 15 g</h4>
+                                <p class="card__text">Digestivo e saboroso.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- OUTROS SECTION -->
+    <section class="section section--light" id="outros">
+        <div class="container">
+            <div class="fade-in" style="text-align: center; margin-bottom: 3rem;">
+                <h2 class="section-title">Outros Produtos</h2>
+                <p class="section-subtitle">Ingredientes essenciais para sua despensa</p>
+            </div>
+
+            <div class="grid grid--2" style="gap: 3rem; align-items: center; margin-bottom: 3rem;">
+                <div class="fade-in" style="order: 2;">
+                    <img id="outros-image" src="src/imgs/todos_os_produtos.webp"
+                        alt="Tapioca" class="product-image"
+                        style="width: 100%;">
+                </div>
+                <div class="fade-in" style="order: 1;">
+                    <h3 style="color: var(--color-primary); font-size: 2rem; margin-bottom: 1.5rem;">Despensa Completa</h3>
+                    <div class="grid grid--2" style="gap: 1rem;">
+                        <div class="card product-card active" data-category="outros" data-image="src/imgs/produtos/tapioca.webp">
+                            <div class="card__content">
+                                <h4 class="card__title" style="font-size: 1.125rem;">Massa para Tapioca - 500 g e 1 Kg</h4>
+                                <p class="card__text">Goma de tapioca de qualidade.</p>
+                            </div>
+                        </div>
+                        <div class="card product-card" data-category="outros" data-image="src/imgs/produtos/lamen-carne.webp">
+                            <div class="card__content">
+                                <h4 class="card__title" style="font-size: 1.125rem;">Lámen Sabor Carne - 80 g</h4>
+                                <p class="card__text">Prático e saboroso.</p>
+                            </div>
+                        </div>
+                        <div class="card product-card" data-category="outros" data-image="src/imgs/produtos/lamen-frango.webp">
+                            <div class="card__content">
+                                <h4 class="card__title" style="font-size: 1.125rem;">Lámen Sabor Galinha - 80 g</h4>
+                                <p class="card__text">Refeição rápida e deliciosa.</p>
+                            </div>
+                        </div>
+                        <div class="card product-card" data-category="outros" data-image="src/imgs/produtos/lamen-galinha-caipira.webp">
+                            <div class="card__content">
+                                <h4 class="card__title" style="font-size: 1.125rem;">Lámen Sabor Galinha Caipira - 80 g</h4>
+                                <p class="card__text">Sabor tradicional.</p>
+                            </div>
+                        </div>
+                        <div class="card product-card" data-category="outros" data-image="src/imgs/produtos/queijo-parmesao.webp">
+                            <div class="card__content">
+                                <h4 class="card__title" style="font-size: 1.125rem;">Queijo Parmesão Ralado - 40 g</h4>
+                                <p class="card__text">Toque especial nas massas.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA SECTION -->
+    <section class="section cta">
+        <div class="container fade-in" style="text-align: center;">
+            <h2 class="cta__title">Encontre Nossos Produtos</h2>
+            <p class="cta__text">Disponíveis em supermercados em todo o estado de Sergipe.</p>
+            <a href="onde-encontrar.html" class="btn btn--secondary btn--large">Ver Onde Encontrar</a>
+        </div>
+    </section>
+ <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__grid">
+        <!-- Sobre -->
+        <div>
+          <h3 class="footer__section-title">Produtos Tio Luiz</h3>
+          <p style="color: var(--color-gray-300); margin-bottom: var(--spacing-md);">
+            Qualidade e tradição em alimentos para sua família feliz.
+          </p>
+          <div class="footer__social">
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="footer__social-link" aria-label="Instagram">
+              <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+              </svg>
+            </a>
+            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" class="footer__social-link" aria-label="Facebook">
+              <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+              </svg>
+            </a>
+            <a href="https://wa.me/5579998985386?text=Olá!%20Gostaria%20de%20saber%20mais%20sobre%20os%20Produtos%20Tio%20Luiz" target="_blank" rel="noopener noreferrer" class="footer__social-link" aria-label="WhatsApp">
+              <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+        
+        <div>
+                    <h3 class="footer__section-title">Links Rápidos</h3>
+                    <ul class="footer__list">
+                        <li><a href="index.html" class="footer__link">Home</a></li>
+                        <li><a href="sobre.html" class="footer__link">Sobre Nós</a></li>
+                        <li><a href="produtos.html" class="footer__link">Produtos</a></li>
+                        <li><a href="pet-food.html" class="footer__link">Linha Pet Food</a></li>
+                        <li><a href="onde-encontrar.html" class="footer__link">Onde Encontrar</a></li>
+                        <li><a href="contato.html" class="footer__link">Contato</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="footer__section-title">Categorias</h3>
+                    <ul class="footer__list">
+                        <li><a href="produtos.html#feijoes" class="footer__link">Feijões</a></li>
+                        <li><a href="produtos.html#arroz" class="footer__link">Arroz</a></li>
+                        <li><a href="produtos.html#milho" class="footer__link">Milho e Derivados</a></li>
+                        <li><a href="produtos.html#temperos" class="footer__link">Molhos e Vinagre</a></li>
+                        <li><a href="produtos.html#chas" class="footer__link">Chás</a></li>
+                        <li><a href="pet-food.html" class="footer__link">Pet Food</a></li>
+                    </ul>
+                </div>
+        <!-- Contato -->
+        <div>
+          <h3 class="footer__section-title">Contato</h3>
+          <ul class="footer__list">
+            <li style="color: var(--color-gray-300);">📞 (79) 3431-0068 | 99898-5386</li>
+            <li style="color: var(--color-gray-300);">📧 sac@distribuidoratioluiz.com.br</li>
+            <li style="color: var(--color-gray-300);">⏰ Seg-Sex: 8h às 12h | 14h às 18h</li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="footer__bottom">
+  <p>&copy; <span id="year"></span> Produtos Tio Luiz. Todos os direitos reservados.</p>
+</div>
+
+    </div>
+  </footer>
+
+    <!-- WHATSAPP FLOATING BUTTON -->
+    <a href="https://wa.me/5579998985386?text=Olá!%20Gostaria%20de%20saber%20mais%20sobre%20os%20Produtos%20Tio%20Luiz" 
+        target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Fale conosco no WhatsApp">
+        <svg viewBox="0 0 24 24">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+        </svg>
+    </a>
+
+    <script src="src/script.js"></script>
+    <script>
+        // === PRODUCT SELECTOR ===
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Product selector initialized');
+            
+            const productCards = document.querySelectorAll('.product-card');
+            const fallbackImage = 'src/imgs/todos_os_produtos.webp';
+            
+            productCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    const category = this.dataset.category;
+                    const imagePath = this.dataset.image;
+                    
+                    console.log(`Clicked: ${category}, Image: ${imagePath}`);
+                    
+                    // Remove active class from all cards in the same category
+                    document.querySelectorAll(`[data-category="${category}"]`).forEach(c => {
+                        c.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked card
+                    this.classList.add('active');
+                    
+                    // Update image
+                    const imageElement = document.getElementById(`${category}-image`);
+                    if (imageElement) {
+                        imageElement.style.opacity = '0';
+                        setTimeout(() => {
+                            const img = new Image();
+                            img.onload = function() {
+                                imageElement.src = imagePath;
+                                imageElement.alt = card.querySelector('.card__title').textContent;
+                                imageElement.style.opacity = '1';
+                            };
+                            img.onerror = function() {
+                                console.warn(`Image not found: ${imagePath}, using fallback`);
+                                imageElement.src = fallbackImage;
+                                imageElement.alt = card.querySelector('.card__title').textContent;
+                                imageElement.style.opacity = '1';
+                            };
+                            img.src = imagePath;
+                        }, 300);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

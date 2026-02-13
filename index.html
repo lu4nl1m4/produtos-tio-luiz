@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Produtos Tio Luiz - Alimentos de qualidade para sua família feliz. Grãos, temperos, chás e muito mais.">
+  <meta name="keywords" content="alimentos, arroz, feijão, produtos brasileiros, Tio Luiz, família">
+  <title>Produtos Tio Luiz - Sua Família Feliz</title>
+  <link rel="stylesheet" href="src/styles.css">
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header" id="header">
+    <div class="header__container">
+      <a href="index.html" class="header__logo">
+    <img src="src/imgs/logo.webp" alt="Produtos Tio Luiz">
+</a>
+
+      
+      <nav class="nav">
+        <button class="nav__toggle" id="navToggle" aria-label="Menu">
+          <span class="nav__toggle-bar"></span>
+          <span class="nav__toggle-bar"></span>
+          <span class="nav__toggle-bar"></span>
+        </button>
+        
+         <ul class="nav__list" id="navList">
+                    <li><a href="index.html" class="nav__link">Home</a></li>
+                    <li><a href="sobre.html" class="nav__link">Sobre Nós</a></li>
+                    <li><a href="produtos.html" class="nav__link">Produtos</a></li>
+                    <li><a href="pet-food.html" class="nav__link nav__link--pet nav__link--active">Linha Pet Food</a></li>
+                    <li><a href="onde-encontrar.html" class="nav__link">Onde Encontrar</a></li>
+                    <li><a href="contato.html" class="nav__link">Contato</a></li>
+                </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HERO SECTION -->
+  <section class="hero" id="home">
+    <img src="src/imgs/hero_banner_1770150132774.png" alt="Família feliz" class="hero__background">
+    <div class="hero__overlay"></div>
+    
+    <div class="hero__content fade-in">
+      <h1 class="hero__title">Sua Família Feliz</h1>
+      <p class="hero__subtitle">Qualidade e tradição em cada produto</p>
+      <div class="hero__cta">
+        <a href="produtos.html" class="btn btn--secondary btn--large">Conheça Nossos Produtos</a>
+        <a href="contato.html" class="btn btn--outline btn--large">Fale Conosco</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES SECTION -->
+<section class="section features">
+  <div class="container">
+    <h2 class="section-title fade-in">Por que escolher Produtos Tio Luiz?</h2>
+    <p class="section-subtitle fade-in">Compromisso com a qualidade e tradição familiar</p>
+    
+    <div class="grid grid--3 features__grid">
+      
+      <!-- Qualidade Garantida -->
+      <div class="feature fade-in">
+        <div class="feature__icon">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            <polyline points="9 12 11 14 15 10"/>
+          </svg>
+        </div>
+        <h3 class="feature__title">Qualidade Garantida</h3>
+        <p class="feature__description">Produtos selecionados com rigoroso controle de qualidade para garantir o melhor para sua família.</p>
+      </div>
+      
+      <!-- Tradição Familiar -->
+      <div class="feature fade-in">
+        <div class="feature__icon">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            <path d="M9 22V12h6v10"/>
+          </svg>
+        </div>
+        <h3 class="feature__title">Tradição Familiar</h3>
+        <p class="feature__description">Décadas de experiência levando produtos de qualidade para mesas brasileiras.</p>
+      </div>
+      
+      <!-- Feito com Carinho -->
+      <div class="feature fade-in">
+        <div class="feature__icon">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+          </svg>
+        </div>
+        <h3 class="feature__title">Feito com Carinho</h3>
+        <p class="feature__description">Cada produto é preparado pensando no bem-estar e felicidade da sua família.</p>
+      </div>
+      
+    </div>
+  </div>
+</section>
+
+
+  <!-- PRODUCTS PREVIEW SECTION -->
+  <section class="section section--light">
+    <div class="container">
+      <div class="products__header fade-in">
+        <h2 class="section-title">Nossos Produtos</h2>
+        <p class="section-subtitle">Variedade e qualidade para todas as ocasiões</p>
+      </div>
+      
+      <div class="grid grid--3">
+        <!-- Grãos -->
+        <a href="produtos.html#graos" class="card fade-in">
+          <img src="src/imgs/graos.webp" alt="Grãos - Arroz e Feijão" class="card__image">
+          <div class="card__content">
+            <h3 class="card__title">Grãos</h3>
+            <p class="card__text">Conheça nossos tipos de feijão e arroz para o dia a dia da sua família.</p>
+          </div>
+        </a>
+        
+        <!-- Milho e Derivados -->
+        <a href="produtos.html#milho" class="card fade-in">
+          <img src="src/imgs/milho e derivados.webp" alt="Milho e Derivados" class="card__image">
+          <div class="card__content">
+            <h3 class="card__title">Milho e Derivados</h3>
+            <p class="card__text">Flocão, pipoca e mungunzá de alta qualidade.</p>
+          </div>
+        </a>
+        
+        <!-- Temperos -->
+        <a href="produtos.html#temperos" class="card fade-in">
+          <img src="src/imgs/molhos.webp" alt="Temperos e Molhos" class="card__image">
+          <div class="card__content">
+            <h3 class="card__title">Molhos e Vinagre</h3>
+            <p class="card__text">Sabor especial para suas receitas favoritas.</p>
+          </div>
+        </a>
+        
+        <!-- Chás -->
+        <a href="produtos.html#chas" class="card fade-in">
+          <img src="src/imgs/chas.webp" alt="Chás e Infusões" class="card__image">
+          <div class="card__content">
+            <h3 class="card__title">Chás</h3>
+            <p class="card__text">Variedades selecionadas para momentos relaxantes.</p>
+          </div>
+        </a>
+        
+        <!-- Outros -->
+        <a href="produtos.html#outros" class="card fade-in">
+          <img src="src/imgs/tapioca.webp" alt="Outros Produtos" class="card__image">
+          <div class="card__content">
+            <h3 class="card__title">Outros Produtos</h3>
+            <p class="card__text">Tapioca, lámen, amendoim, queijo ralado e muito mais.</p>
+          </div>
+        </a>
+        
+        <!-- Ver Todos -->
+        <a href="produtos.html" class="card fade-in" style="background: linear-gradient(135deg, var(--color-primary), var(--color-accent)); display: flex; align-items: center; justify-content: center;">
+          <div class="card__content" style="text-align: center;">
+            <h3 style="color: white; font-size: 2rem; margin: 0;">Ver Todos os Produtos →</h3>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA SECTION -->
+  <section class="section cta">
+    <div class="container fade-in">
+      <h2 class="cta__title">Seja um Revendedor</h2>
+      <p class="cta__text">Leve a qualidade Produtos Tio Luiz para o seu estabelecimento.<br>Entre em contato e descubra as vantagens de ser nosso parceiro.</p>
+      <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+        <a href="onde-encontrar.html" class="btn btn--secondary btn--large">Quero Ser Revendedor</a>
+        <a href="contato.html" class="btn btn--outline btn--large" style="border-color: white; color: white;">Fale com Representante</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__grid">
+        <!-- Sobre -->
+        <div>
+          <h3 class="footer__section-title">Produtos Tio Luiz</h3>
+          <p style="color: var(--color-gray-300); margin-bottom: var(--spacing-md);">
+            Qualidade e tradição em alimentos para sua família feliz.
+          </p>
+          <div class="footer__social">
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="footer__social-link" aria-label="Instagram">
+              <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+              </svg>
+            </a>
+            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" class="footer__social-link" aria-label="Facebook">
+              <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+              </svg>
+            </a>
+            <a href="https://wa.me/5579998985386?text=Olá!%20Gostaria%20de%20saber%20mais%20sobre%20os%20Produtos%20Tio%20Luiz" target="_blank" rel="noopener noreferrer" class="footer__social-link" aria-label="WhatsApp">
+              <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+        
+        <!-- Links Rápidos -->
+           <div>
+                    <h3 class="footer__section-title">Links Rápidos</h3>
+                    <ul class="footer__list">
+                        <li><a href="index.html" class="footer__link">Home</a></li>
+                        <li><a href="sobre.html" class="footer__link">Sobre Nós</a></li>
+                        <li><a href="produtos.html" class="footer__link">Produtos</a></li>
+                        <li><a href="pet-food.html" class="footer__link">Linha Pet Food</a></li>
+                        <li><a href="onde-encontrar.html" class="footer__link">Onde Encontrar</a></li>
+                        <li><a href="contato.html" class="footer__link">Contato</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="footer__section-title">Categorias</h3>
+                    <ul class="footer__list">
+                        <li><a href="produtos.html#feijoes" class="footer__link">Feijões</a></li>
+                        <li><a href="produtos.html#arroz" class="footer__link">Arroz</a></li>
+                        <li><a href="produtos.html#milho" class="footer__link">Milho e Derivados</a></li>
+                        <li><a href="produtos.html#temperos" class="footer__link">Molhos e Vinagre</a></li>
+                        <li><a href="produtos.html#chas" class="footer__link">Chás</a></li>
+                        <li><a href="pet-food.html" class="footer__link">Pet Food</a></li>
+                    </ul>
+                </div>
+        
+        <!-- Contato -->
+        <div>
+          <h3 class="footer__section-title">Contato</h3>
+          <ul class="footer__list">
+            <li style="color: var(--color-gray-300);">📞 (79) 3431-0068 | 99898-5386</li>
+            <li style="color: var(--color-gray-300);">📧 sac@distribuidoratioluiz.com.br</li>
+            <li style="color: var(--color-gray-300);">⏰ Seg-Sex: 8h às 12h | 14h às 18h</li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="footer__bottom">
+  <p>&copy; <span id="year"></span> Produtos Tio Luiz. Todos os direitos reservados.</p>
+</div>
+
+    </div>
+  </footer>
+
+  <!-- WHATSAPP FLOATING BUTTON -->
+  <a href="https://wa.me/5579998985386?text=Olá!%20Gostaria%20de%20saber%20mais%20sobre%20os%20Produtos%20Tio%20Luiz" 
+     target="_blank" 
+     rel="noopener noreferrer" 
+     class="whatsapp-float"
+     aria-label="Fale conosco no WhatsApp">
+    <svg viewBox="0 0 24 24">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+    </svg>
+  </a>
+
+  <script src="src/script.js"></script>
+</body>
+</html>
