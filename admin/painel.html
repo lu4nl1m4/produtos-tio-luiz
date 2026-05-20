@@ -40,29 +40,13 @@
       </div>
     </div>
 
-    <!-- Tabela -->
-    <div class="card-table">
-      <div class="table-responsive">
-        <table class="table align-middle mb-0">
-          <thead class="table-light">
-            <tr>
-              <th style="width:64px;"></th>
-              <th>Nome</th>
-              <th>Categoria</th>
-              <th>Embalagem</th>
-              <th class="text-center" style="width:90px;">Ordem</th>
-              <th class="text-center" style="width:110px;">Ativo</th>
-              <th class="text-center" style="width:110px;">Destaque</th>
-              <th class="text-end" style="width:160px;">Ações</th>
-            </tr>
-          </thead>
-          <tbody id="tabela-body">
-            <tr>
-              <td colspan="8" class="state-message">Carregando...</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+    <p class="small text-muted">
+      Dica: arraste pelo <span style="font-family:monospace;">⋮⋮</span> à esquerda de cada produto pra reordenar dentro da categoria. A ordem é salva automaticamente.
+    </p>
+
+    <!-- Container que recebe os grupos renderizados dinamicamente -->
+    <div id="grupos-container">
+      <div class="state-message">Carregando...</div>
     </div>
 
   </div>
@@ -106,14 +90,10 @@
                     <label class="form-label">Embalagem</label>
                     <input id="produto-embalagem" type="text" class="form-control" placeholder="500 g">
                   </div>
-                  <div class="col-md-8">
+                  <div class="col-12">
                     <label class="form-label">URL da imagem</label>
                     <input id="produto-imagem" type="text" class="form-control" placeholder="assets/images/produto.webp">
                     <div class="form-text">Caminho relativo enquanto Storage não está ativo (Fase 6).</div>
-                  </div>
-                  <div class="col-md-4">
-                    <label class="form-label">Ordem</label>
-                    <input id="produto-ordem" type="number" class="form-control" value="1" min="0">
                   </div>
                   <div class="col-md-8">
                     <label class="form-label">Nome curto <span class="text-muted small">(badge dos pet-cards)</span></label>
@@ -128,6 +108,9 @@
                       <input id="produto-destaque" type="checkbox" class="form-check-input">
                       <label class="form-check-label" for="produto-destaque">Destaque</label>
                     </div>
+                  </div>
+                  <div class="col-12">
+                    <div class="form-text">A <strong>ordem dentro da categoria</strong> é definida arrastando as linhas pelos pontinhos <span style="font-family:monospace;">⋮⋮</span> na tabela. Novos produtos vão pro fim da categoria escolhida.</div>
                   </div>
                 </div>
               </div>
@@ -223,6 +206,7 @@
   <div class="toast-area" id="toast-area"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
   <script type="module" src="../assets/js/admin-painel.js"></script>
 
 </body>

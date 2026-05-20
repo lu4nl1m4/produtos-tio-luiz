@@ -1,4 +1,7 @@
-// CRUD do painel admin. Depende de admin/painel.html + Bootstrap 5 (bundle).
+// CRUD do painel admin (produtos).
+// Layout: produtos agrupados por categoria em mini-tabelas. Cada mini-tabela
+// suporta drag-and-drop para reordenar produtos dentro da sua categoria.
+// Depende de admin/painel.html + Bootstrap 5 + SortableJS (CDN).
 
 import { db } from "./firebase-config.js";
 import { requireAuth, logout, watchAuth } from "./auth.js";
@@ -9,6 +12,7 @@ import {
   updateDoc,
   deleteDoc,
   doc,
+  writeBatch,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
@@ -16,11 +20,12 @@ const FALLBACK_IMAGE = "../assets/images/todos_os_produtos.webp";
 
 const $ = (id) => document.getElementById(id);
 const state = {
-  produtos: [],          // { id, ...campos }
-  categorias: [],        // [{ id, nome, tipo, ordem }]
+  produtos: [],
+  categorias: [],
   filtroCategoria: "",
   filtroBusca: ""
 };
+const sortables = {};  // categoria.id -> Sortable instance
 
 // ---------- Toasts ----------
 
@@ -39,17 +44,29 @@ function toast(msg, type = "success") {
   }, 3500);
 }
 
+function escapeHtml(s) {
+  return String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+function escapeAttr(s) {
+  return String(s ?? "").replace(/"/g, "&quot;");
+}
+
 // ---------- Data ----------
 
+function ordenarCategorias(lista) {
+  return lista.sort((a, b) => {
+    const ta = a.tipo === "pet" ? 1 : 0;
+    const tb = b.tipo === "pet" ? 1 : 0;
+    if (ta !== tb) return ta - tb;
+    return (a.ordem ?? 99) - (b.ordem ?? 99);
+  });
+}
+
 async function carregarCategorias() {
-  // Tenta Firestore primeiro. Cai para data/categorias.json se a coleção estiver vazia
-  // (caso o usuário ainda não tenha importado as categorias no painel).
   try {
     const snap = await getDocs(collection(db, "categorias"));
     if (snap.size > 0) {
-      state.categorias = snap.docs
-        .map((d) => ({ id: d.id, ...d.data() }))
-        .sort((a, b) => (a.ordem ?? 99) - (b.ordem ?? 99));
+      state.categorias = ordenarCategorias(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
       return;
     }
   } catch (e) {
@@ -57,12 +74,23 @@ async function carregarCategorias() {
   }
   const res = await fetch("../data/categorias.json");
   if (!res.ok) throw new Error("Falha ao carregar categorias.");
-  state.categorias = await res.json();
+  state.categorias = ordenarCategorias(await res.json());
 }
 
 async function carregarProdutos() {
   const snap = await getDocs(collection(db, "produtos"));
   state.produtos = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+}
+
+function produtosDaCategoria(catId) {
+  let lista = state.produtos
+    .filter((p) => p.categoria === catId)
+    .sort((a, b) => (a.ordem || 0) - (b.ordem || 0));
+  if (state.filtroBusca) {
+    const q = state.filtroBusca.toLowerCase();
+    lista = lista.filter((p) => (p.nome || "").toLowerCase().includes(q));
+  }
+  return lista;
 }
 
 // ---------- Render ----------
@@ -81,75 +109,166 @@ function renderCategoriaForm() {
     state.categorias.map((c) => `<option value="${c.id}">${c.nome}</option>`).join("");
 }
 
-function categoriaInfo(id) {
-  return state.categorias.find((c) => c.id === id) || { nome: id, tipo: "regular" };
+function renderProdutoRow(p, index) {
+  const inativo = p.ativo === false ? " row-inactive" : "";
+  return `
+    <tr class="${inativo}" data-id="${p.id}">
+      <td class="drag-handle text-center" title="Arrastar para reordenar" style="cursor: grab; color: #aaa; user-select: none;">⋮⋮</td>
+      <td class="text-center text-muted small">${index + 1}</td>
+      <td>
+        <img src="${escapeAttr(p.imagem_url || FALLBACK_IMAGE)}" class="thumb" onerror="this.src='${FALLBACK_IMAGE}'" alt="">
+      </td>
+      <td>
+        <div class="fw-medium">${escapeHtml(p.nome || "(sem nome)")}</div>
+        ${p.nome_curto ? `<div class="small text-muted">${escapeHtml(p.nome_curto)}</div>` : ""}
+      </td>
+      <td class="text-muted small">${escapeHtml(p.embalagem || "—")}</td>
+      <td class="text-center">
+        <span class="toggle-chip toggle-chip--${p.ativo !== false ? "on" : "off"}" data-action="toggle" data-field="ativo">
+          ${p.ativo !== false ? "Sim" : "Não"}
+        </span>
+      </td>
+      <td class="text-center">
+        <span class="toggle-chip toggle-chip--${p.destaque ? "on" : "off"}" data-action="toggle" data-field="destaque">
+          ${p.destaque ? "Sim" : "Não"}
+        </span>
+      </td>
+      <td class="text-end">
+        <button class="btn btn-sm btn-outline-secondary" data-action="editar">Editar</button>
+        <button class="btn btn-sm btn-outline-danger" data-action="remover">Remover</button>
+      </td>
+    </tr>
+  `;
 }
 
-function aplicarFiltros() {
-  let lista = state.produtos.slice();
+function renderMiniTabela(cat) {
+  const produtos = produtosDaCategoria(cat.id);
+  const isPet = cat.tipo === "pet";
+  const badgeClass = isPet ? "badge-cat--pet" : "";
+
+  const rowsHtml = produtos.length === 0
+    ? `<tr><td colspan="8" class="state-message">Nenhum produto nesta categoria${state.filtroBusca ? " (busca aplicada)" : ""}.</td></tr>`
+    : produtos.map((p, i) => renderProdutoRow(p, i)).join("");
+
+  return `
+    <div class="mini-tabela mb-4" data-categoria-id="${cat.id}">
+      <h5 class="d-flex align-items-center gap-2 mb-2">
+        <span>${escapeHtml(cat.nome)}</span>
+        <span class="badge badge-cat ${badgeClass}">${produtos.length} produto(s)</span>
+      </h5>
+      <div class="card-table">
+        <div class="table-responsive">
+          <table class="table table-sm align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th style="width:36px;"></th>
+                <th class="text-center" style="width:50px;">#</th>
+                <th style="width:64px;"></th>
+                <th>Nome</th>
+                <th style="width:120px;">Embalagem</th>
+                <th class="text-center" style="width:100px;">Ativo</th>
+                <th class="text-center" style="width:100px;">Destaque</th>
+                <th class="text-end" style="width:160px;">Ações</th>
+              </tr>
+            </thead>
+            <tbody data-categoria-id="${cat.id}">
+              ${rowsHtml}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderGrupos() {
+  const container = $("grupos-container");
+
+  // Determina quais categorias mostrar (respeitando filtro de categoria, se houver)
+  let categoriasParaMostrar = state.categorias;
   if (state.filtroCategoria) {
-    lista = lista.filter((p) => p.categoria === state.filtroCategoria);
+    categoriasParaMostrar = categoriasParaMostrar.filter((c) => c.id === state.filtroCategoria);
   }
-  if (state.filtroBusca) {
-    const q = state.filtroBusca.toLowerCase();
-    lista = lista.filter((p) => (p.nome || "").toLowerCase().includes(q));
+
+  const regulares = categoriasParaMostrar.filter((c) => c.tipo !== "pet");
+  const pets = categoriasParaMostrar.filter((c) => c.tipo === "pet");
+
+  let html = "";
+
+  if (regulares.length > 0) {
+    html += `<h4 class="mb-3">Categorias Regulares <small class="text-muted fw-normal">— produtos.html</small></h4>`;
+    html += regulares.map(renderMiniTabela).join("");
   }
-  lista.sort((a, b) => {
-    const ca = categoriaInfo(a.categoria).ordem ?? 99;
-    const cb = categoriaInfo(b.categoria).ordem ?? 99;
-    if (ca !== cb) return ca - cb;
-    return (a.ordem || 0) - (b.ordem || 0);
-  });
-  return lista;
+
+  if (pets.length > 0) {
+    html += `<h4 class="mb-3 mt-4">Categorias Pet <small class="text-muted fw-normal">— pet-food.html</small></h4>`;
+    html += pets.map(renderMiniTabela).join("");
+  }
+
+  if (!html) {
+    html = `<div class="state-message">Nenhuma categoria cadastrada. <a href="categorias.html">Vá para Categorias</a> para importar as padrões.</div>`;
+  }
+
+  container.innerHTML = html;
+
+  // Atualiza contagem
+  const totalVisivel = categoriasParaMostrar
+    .map((c) => produtosDaCategoria(c.id).length)
+    .reduce((a, b) => a + b, 0);
+  $("contagem").textContent = `${totalVisivel} de ${state.produtos.length} produto(s)`;
+
+  initSortableProdutos();
 }
 
-function renderTabela() {
-  const lista = aplicarFiltros();
-  const body = $("tabela-body");
-  $("contagem").textContent = `${lista.length} de ${state.produtos.length} produto(s)`;
-
-  if (lista.length === 0) {
-    body.innerHTML = `<tr><td colspan="8" class="state-message">Nenhum produto encontrado.</td></tr>`;
+function initSortableProdutos() {
+  const SortableLib = window.Sortable;
+  if (!SortableLib) {
+    console.warn("SortableJS não carregado — drag-and-drop indisponível.");
     return;
   }
 
-  body.innerHTML = lista.map((p) => {
-    const cat = categoriaInfo(p.categoria);
-    const isPet = cat.tipo === "pet";
-    const inativo = p.ativo === false ? " row-inactive" : "";
-    return `
-      <tr class="${inativo}" data-id="${p.id}">
-        <td>
-          <img src="${p.imagem_url || FALLBACK_IMAGE}" class="thumb" onerror="this.src='${FALLBACK_IMAGE}'" alt="">
-        </td>
-        <td>
-          <div class="fw-medium">${escapeHtml(p.nome || "(sem nome)")}</div>
-          ${p.nome_curto ? `<div class="small text-muted">${escapeHtml(p.nome_curto)}</div>` : ""}
-        </td>
-        <td><span class="badge badge-cat${isPet ? " badge-cat--pet" : ""}">${escapeHtml(cat.nome)}</span></td>
-        <td class="text-muted small">${escapeHtml(p.embalagem || "—")}</td>
-        <td class="text-center">${p.ordem ?? "—"}</td>
-        <td class="text-center">
-          <span class="toggle-chip toggle-chip--${p.ativo !== false ? "on" : "off"}" data-action="toggle" data-field="ativo">
-            ${p.ativo !== false ? "Sim" : "Não"}
-          </span>
-        </td>
-        <td class="text-center">
-          <span class="toggle-chip toggle-chip--${p.destaque ? "on" : "off"}" data-action="toggle" data-field="destaque">
-            ${p.destaque ? "Sim" : "Não"}
-          </span>
-        </td>
-        <td class="text-end">
-          <button class="btn btn-sm btn-outline-secondary" data-action="editar">Editar</button>
-          <button class="btn btn-sm btn-outline-danger" data-action="remover">Remover</button>
-        </td>
-      </tr>
-    `;
-  }).join("");
+  Object.values(sortables).forEach((s) => s.destroy());
+  Object.keys(sortables).forEach((k) => delete sortables[k]);
+
+  document.querySelectorAll("tbody[data-categoria-id]").forEach((tbody) => {
+    const catId = tbody.dataset.categoriaId;
+    sortables[catId] = new SortableLib(tbody, {
+      handle: ".drag-handle",
+      animation: 150,
+      ghostClass: "table-active",
+      onEnd: async (evt) => {
+        if (evt.oldIndex === evt.newIndex) return;
+        await persistirOrdemProdutos(catId);
+      }
+    });
+  });
 }
 
-function escapeHtml(s) {
-  return String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+async function persistirOrdemProdutos(catId) {
+  const tbody = document.querySelector(`tbody[data-categoria-id="${catId}"]`);
+  if (!tbody) return;
+  const ids = Array.from(tbody.querySelectorAll("tr[data-id]")).map((tr) => tr.dataset.id);
+  const batch = writeBatch(db);
+  let mudou = 0;
+  ids.forEach((id, i) => {
+    const p = state.produtos.find((x) => x.id === id);
+    const novaOrdem = i + 1;
+    if (p && p.ordem !== novaOrdem) {
+      p.ordem = novaOrdem;
+      batch.set(doc(db, "produtos", id), { ordem: novaOrdem, atualizado_em: serverTimestamp() }, { merge: true });
+      mudou++;
+    }
+  });
+  if (mudou === 0) return;
+  try {
+    await batch.commit();
+    renderGrupos();
+    toast(`Ordem atualizada (${mudou} produto(s)).`);
+  } catch (e) {
+    toast(e.message || "Erro ao salvar nova ordem.", "error");
+    await carregarProdutos();
+    renderGrupos();
+  }
 }
 
 // ---------- Modal ----------
@@ -161,7 +280,6 @@ function getModal() {
 }
 
 function resetTabs() {
-  // Volta sempre para a aba "Básico" ao abrir o modal.
   document.querySelectorAll("#produto-modal .nav-link").forEach((b, i) => {
     b.classList.toggle("active", i === 0);
   });
@@ -171,7 +289,6 @@ function resetTabs() {
   });
 }
 
-// Lista padrão ANVISA RDC 429/2020 — 10 nutrientes obrigatórios na ordem correta.
 const NUTRIENTES_ANVISA = [
   "Valor energético (kcal)",
   "Carboidratos totais (g)",
@@ -199,7 +316,6 @@ function addNutriRow(nome = "", per100 = "", por_porcao = "", vd = "") {
 }
 
 function preencherPresetAnvisa() {
-  // Se já tem linhas, confirma antes de sobrescrever.
   const existentes = $("nutri-body").querySelectorAll("tr").length;
   if (existentes > 0 && !confirm(`A tabela já tem ${existentes} linha(s). Substituir pela lista padrão ANVISA?`)) return;
   $("nutri-body").innerHTML = "";
@@ -209,10 +325,6 @@ function preencherPresetAnvisa() {
 function limparTabelaNutricional() {
   if (!confirm("Limpar todas as linhas da tabela nutricional?")) return;
   $("nutri-body").innerHTML = "";
-}
-
-function escapeAttr(s) {
-  return String(s ?? "").replace(/"/g, "&quot;");
 }
 
 function lerInfoNutricional() {
@@ -245,7 +357,6 @@ function preencherInfoNutricional(info) {
   $("produto-medida-caseira").value = info.medida_caseira || "";
   $("produto-porcoes").value = info.porcoes_por_embalagem ?? "";
   (info.valores || []).forEach((v) => {
-    // Backward compat: formato antigo tinha { nome, quantidade, vd } — mapeia quantidade → por_porcao.
     const per100     = v.per100 ?? "";
     const por_porcao = v.por_porcao ?? v.quantidade ?? "";
     addNutriRow(v.nome, per100, por_porcao, v.vd);
@@ -257,11 +368,10 @@ function abrirModalNovo() {
   $("produto-id").value = "";
   $("produto-nome").value = "";
   $("produto-nome-curto").value = "";
-  $("produto-categoria").value = "";
+  $("produto-categoria").value = state.filtroCategoria || "";  // pré-seleciona se filtrado
   $("produto-descricao").value = "";
   $("produto-embalagem").value = "";
   $("produto-imagem").value = "";
-  $("produto-ordem").value = "1";
   $("produto-ativo").checked = true;
   $("produto-destaque").checked = false;
   $("produto-descricao-longa").value = "";
@@ -284,7 +394,6 @@ function abrirModalEditar(p) {
   $("produto-descricao").value = p.descricao || "";
   $("produto-embalagem").value = p.embalagem || "";
   $("produto-imagem").value = p.imagem_url || "";
-  $("produto-ordem").value = p.ordem ?? 1;
   $("produto-ativo").checked = p.ativo !== false;
   $("produto-destaque").checked = !!p.destaque;
   $("produto-descricao-longa").value = p.descricao_longa || "";
@@ -318,7 +427,6 @@ async function salvarProduto(e) {
     descricao: $("produto-descricao").value.trim(),
     embalagem: $("produto-embalagem").value.trim(),
     imagem_url: $("produto-imagem").value.trim(),
-    ordem: Number($("produto-ordem").value) || 0,
     ativo: $("produto-ativo").checked,
     destaque: $("produto-destaque").checked,
     descricao_longa: $("produto-descricao-longa").value.trim(),
@@ -335,16 +443,21 @@ async function salvarProduto(e) {
   btn.textContent = "Salvando...";
   try {
     if (id) {
+      // Edit: preserva ordem atual
       await updateDoc(doc(db, "produtos", id), payload);
       toast(`"${nome}" atualizado.`);
     } else {
+      // Novo: ordem = fim da categoria escolhida
+      const naCategoria = state.produtos.filter((p) => p.categoria === categoria);
+      const maxOrdem = naCategoria.length > 0 ? Math.max(...naCategoria.map((p) => p.ordem ?? 0)) : 0;
+      payload.ordem = maxOrdem + 1;
       payload.criado_em = serverTimestamp();
       await addDoc(collection(db, "produtos"), payload);
       toast(`"${nome}" adicionado.`);
     }
     getModal().hide();
     await carregarProdutos();
-    renderTabela();
+    renderGrupos();
   } catch (err) {
     errEl.textContent = err.message || "Erro ao salvar.";
     errEl.classList.remove("d-none");
@@ -354,7 +467,7 @@ async function salvarProduto(e) {
   }
 }
 
-// ---------- Ações da tabela ----------
+// ---------- Ações ----------
 
 async function toggleCampo(id, field) {
   const p = state.produtos.find((x) => x.id === id);
@@ -366,7 +479,7 @@ async function toggleCampo(id, field) {
       atualizado_em: serverTimestamp()
     });
     p[field] = novoValor;
-    renderTabela();
+    renderGrupos();
   } catch (err) {
     toast(err.message || "Erro ao atualizar.", "error");
   }
@@ -379,14 +492,14 @@ async function removerProduto(id) {
   try {
     await deleteDoc(doc(db, "produtos", id));
     state.produtos = state.produtos.filter((x) => x.id !== id);
-    renderTabela();
+    renderGrupos();
     toast(`"${p.nome}" removido.`);
   } catch (err) {
     toast(err.message || "Erro ao remover.", "error");
   }
 }
 
-function handleTabelaClick(e) {
+function handleGruposClick(e) {
   const btn = e.target.closest("[data-action]");
   if (!btn) return;
   const tr = btn.closest("tr[data-id]");
@@ -410,7 +523,6 @@ async function init() {
   if (!user) return;
   $("user-email").textContent = user.email;
 
-  // Se logout em outra aba, manda voltar pra tela de login.
   watchAuth((u) => {
     if (!u) window.location.replace("index.html");
   });
@@ -420,25 +532,25 @@ async function init() {
     await carregarProdutos();
     renderCategoriaFiltro();
     renderCategoriaForm();
-    renderTabela();
+    renderGrupos();
   } catch (err) {
-    $("tabela-body").innerHTML = `<tr><td colspan="8" class="state-message text-danger">${escapeHtml(err.message)}</td></tr>`;
+    $("grupos-container").innerHTML = `<div class="state-message text-danger">${escapeHtml(err.message)}</div>`;
     return;
   }
 
   $("filtro-categoria").addEventListener("change", (e) => {
     state.filtroCategoria = e.target.value;
-    renderTabela();
+    renderGrupos();
   });
 
   $("filtro-busca").addEventListener("input", (e) => {
     state.filtroBusca = e.target.value.trim();
-    renderTabela();
+    renderGrupos();
   });
 
   $("novo-btn").addEventListener("click", abrirModalNovo);
   $("produto-form").addEventListener("submit", salvarProduto);
-  $("tabela-body").addEventListener("click", handleTabelaClick);
+  $("grupos-container").addEventListener("click", handleGruposClick);
   $("nutri-add").addEventListener("click", () => addNutriRow());
   $("nutri-preset").addEventListener("click", preencherPresetAnvisa);
   $("nutri-clear").addEventListener("click", limparTabelaNutricional);

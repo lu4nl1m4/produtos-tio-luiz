@@ -180,7 +180,10 @@ async function init() {
     return;
   }
 
-  const doTipo = categorias.filter((c) => (c.tipo || "regular") === tipoDesejado);
+  // Filtra por tipo e re-ordena (ordens são independentes entre regulares e pet).
+  const doTipo = categorias
+    .filter((c) => (c.tipo || "regular") === tipoDesejado)
+    .sort((a, b) => (a.ordem ?? 99) - (b.ordem ?? 99));
   if (doTipo.length === 0) {
     container.innerHTML = `<p style="color: var(--color-gray-600); text-align: center; padding: 2rem;">Nenhuma categoria cadastrada${tipoDesejado === "pet" ? " na linha Pet Food" : ""}.</p>`;
     return;

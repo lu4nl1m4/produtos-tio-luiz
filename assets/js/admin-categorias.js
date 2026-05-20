@@ -95,36 +95,101 @@ async function completarCamposPadrao() {
 }
 
 // ---------- Render ----------
+const sortables = { regular: null, pet: null };
+
+function tipoLabel(tipo) {
+  return tipo === "pet" ? "pet" : "regular";
+}
+
+function renderLinhas(lista) {
+  if (lista.length === 0) {
+    return `<tr><td colspan="5" class="state-message">Nenhuma categoria neste grupo.</td></tr>`;
+  }
+  return lista.map((c, i) => `
+    <tr data-id="${c.id}" data-tipo="${tipoLabel(c.tipo)}">
+      <td class="drag-handle text-center" title="Arrastar para reordenar" style="cursor: grab; color: #aaa; user-select: none;">⋮⋮</td>
+      <td class="text-center text-muted small">${i + 1}</td>
+      <td><code>${escapeHtml(c.id)}</code></td>
+      <td class="fw-medium">${escapeHtml(c.nome)}</td>
+      <td class="text-end">
+        <button class="btn btn-sm btn-outline-secondary" data-action="editar">Editar</button>
+        <button class="btn btn-sm btn-outline-danger" data-action="remover">Remover</button>
+      </td>
+    </tr>
+  `).join("");
+}
+
+function categoriasDoTipo(tipo) {
+  return state.categorias
+    .filter((c) => tipoLabel(c.tipo) === tipo)
+    .sort((a, b) => (a.ordem ?? 99) - (b.ordem ?? 99));
+}
+
 function renderTabela() {
-  const body = $("tabela-body");
-  $("contagem").textContent = `${state.categorias.length} categoria(s)`;
+  const regulares = categoriasDoTipo("regular");
+  const pets = categoriasDoTipo("pet");
+
+  $("contagem").textContent = `${state.categorias.length} categoria(s) — ${regulares.length} regular + ${pets.length} pet`;
 
   if (state.categorias.length === 0) {
-    body.innerHTML = `<tr><td colspan="5" class="state-message">Nenhuma categoria cadastrada.</td></tr>`;
     $("import-banner").classList.remove("d-none");
     $("import-banner").classList.add("d-flex");
+  } else {
+    $("import-banner").classList.add("d-none");
+    $("import-banner").classList.remove("d-flex");
+  }
+
+  $("tabela-body-regular").innerHTML = renderLinhas(regulares);
+  $("tabela-body-pet").innerHTML = renderLinhas(pets);
+
+  initSortable();
+}
+
+function initSortable() {
+  const SortableLib = window.Sortable;
+  if (!SortableLib) {
+    console.warn("SortableJS não carregado — drag-and-drop indisponível.");
     return;
   }
-  $("import-banner").classList.add("d-none");
-  $("import-banner").classList.remove("d-flex");
+  ["regular", "pet"].forEach((tipo) => {
+    if (sortables[tipo]) sortables[tipo].destroy();
+    const tbody = $(`tabela-body-${tipo}`);
+    sortables[tipo] = new SortableLib(tbody, {
+      handle: ".drag-handle",
+      animation: 150,
+      ghostClass: "table-active",
+      onEnd: async (evt) => {
+        if (evt.oldIndex === evt.newIndex) return;
+        await persistirNovaOrdem(tipo);
+      }
+    });
+  });
+}
 
-  body.innerHTML = state.categorias.map((c) => {
-    const tipoBadge = c.tipo === "pet"
-      ? `<span class="badge badge-cat badge-cat--pet">Pet</span>`
-      : `<span class="badge badge-cat">Regular</span>`;
-    return `
-      <tr data-id="${c.id}">
-        <td><code>${escapeHtml(c.id)}</code></td>
-        <td class="fw-medium">${escapeHtml(c.nome)}</td>
-        <td class="text-center">${tipoBadge}</td>
-        <td class="text-center">${c.ordem ?? "—"}</td>
-        <td class="text-end">
-          <button class="btn btn-sm btn-outline-secondary" data-action="editar">Editar</button>
-          <button class="btn btn-sm btn-outline-danger" data-action="remover">Remover</button>
-        </td>
-      </tr>
-    `;
-  }).join("");
+async function persistirNovaOrdem(tipo) {
+  const tbody = $(`tabela-body-${tipo}`);
+  const ids = Array.from(tbody.querySelectorAll("tr[data-id]")).map((tr) => tr.dataset.id);
+  const batch = writeBatch(db);
+  let mudou = 0;
+  ids.forEach((id, i) => {
+    const cat = state.categorias.find((c) => c.id === id);
+    const novaOrdem = i + 1;
+    if (cat && cat.ordem !== novaOrdem) {
+      cat.ordem = novaOrdem;
+      batch.set(doc(db, "categorias", id), { ordem: novaOrdem, atualizado_em: serverTimestamp() }, { merge: true });
+      mudou++;
+    }
+  });
+  if (mudou === 0) return;
+  try {
+    await batch.commit();
+    renderTabela();
+    toast(`Ordem atualizada (${mudou} ${tipo === "pet" ? "pet" : "regular"}).`);
+  } catch (e) {
+    toast(e.message || "Erro ao salvar nova ordem.", "error");
+    await carregarCategorias();
+    renderTabela();
+  }
 }
 
 // ---------- Modal ----------
@@ -141,7 +206,6 @@ function abrirModalNovo() {
   $("cat-id").disabled = false;
   $("cat-nome").value = "";
   $("cat-tipo").value = "regular";
-  $("cat-ordem").value = String((state.categorias.at(-1)?.ordem ?? 0) + 1);
   $("cat-subtitulo").value = "";
   $("cat-frase").value = "";
   $("cat-imagem").value = "";
@@ -156,7 +220,6 @@ function abrirModalEditar(c) {
   $("cat-id").disabled = true; // id é imutável depois de criado
   $("cat-nome").value = c.nome || "";
   $("cat-tipo").value = c.tipo || "regular";
-  $("cat-ordem").value = c.ordem ?? 0;
   $("cat-subtitulo").value = c.subtitulo || "";
   $("cat-frase").value = c.frase_destaque || "";
   $("cat-imagem").value = c.imagem_secao || "";
@@ -170,7 +233,6 @@ async function salvarCategoria(e) {
   const id = $("cat-id").value.trim().toLowerCase();
   const nome = $("cat-nome").value.trim();
   const tipo = $("cat-tipo").value;
-  const ordem = Number($("cat-ordem").value) || 0;
   const errEl = $("form-erro");
 
   if (!id || !nome) {
@@ -193,13 +255,18 @@ async function salvarCategoria(e) {
   const payload = {
     nome,
     tipo,
-    ordem,
     subtitulo:      $("cat-subtitulo").value.trim(),
     frase_destaque: $("cat-frase").value.trim(),
     imagem_secao:   $("cat-imagem").value.trim(),
     atualizado_em:  serverTimestamp()
   };
-  if (!originalId) payload.criado_em = serverTimestamp();
+  if (!originalId) {
+    // Categoria nova: vai pro fim da lista do seu tipo (ordens são independentes entre regulares e pet)
+    const doTipo = state.categorias.filter((c) => tipoLabel(c.tipo) === tipoLabel(tipo));
+    const maxOrdem = doTipo.length > 0 ? Math.max(...doTipo.map((c) => c.ordem ?? 0)) : 0;
+    payload.ordem = maxOrdem + 1;
+    payload.criado_em = serverTimestamp();
+  }
 
   const btn = $("salvar-btn");
   btn.disabled = true;
@@ -281,7 +348,8 @@ async function init() {
 
   $("novo-btn").addEventListener("click", abrirModalNovo);
   $("cat-form").addEventListener("submit", salvarCategoria);
-  $("tabela-body").addEventListener("click", handleTabelaClick);
+  $("tabela-body-regular").addEventListener("click", handleTabelaClick);
+  $("tabela-body-pet").addEventListener("click", handleTabelaClick);
 
   $("import-btn").addEventListener("click", async () => {
     $("import-btn").disabled = true;

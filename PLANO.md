@@ -245,10 +245,17 @@ Fase ampla que cobriu três frentes interligadas:
 **5. Badge "★ DESTAQUE":**
 - [x] Cards (regular + pet) com `destaque=true` mostram selo dourado no canto superior direito.
 
+**6. UX drag-and-drop (SortableJS via CDN):**
+- [x] Categorias: drag pelo handle `⋮⋮` reordena. Separadas em duas tabelas (regular | pet) — ordens independentes entre tipos.
+- [x] Produtos: layout agrupado por categoria em mini-tabelas (Categorias Regulares → cada categoria com seus produtos → Categorias Pet → idem). Drag dentro de cada mini-tabela reordena produtos na categoria.
+- [x] Campo "ordem" sumiu dos modais — ordem é só pelo drag. Ao criar, vai pro fim do grupo/categoria automaticamente.
+- [x] Filtro por categoria mostra só a seção correspondente; busca filtra produtos dentro das mini-tabelas visíveis.
+
 **Critério de pronto atendido:**
 - CRUD de produtos e categorias 100% via painel admin.
 - Mudanças refletem instantaneamente no site público sem editar HTML.
 - Página de detalhe renderiza informação completa por produto, incluindo tabela ANVISA.
+- Reordenação por drag funciona para categorias e produtos.
 
 ---
 
