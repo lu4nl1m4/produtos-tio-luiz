@@ -72,20 +72,61 @@ Coleção: **`produtos`**
 
 ```
 documento (id gerado automaticamente):
-  nome:           string  "Feijão Carioca Especial"
-  nome_curto:     string  "Calopsita e Agapornis"  (opcional — usado em pet-cards como badge)
-  categoria:      string  "feijoes" | "arroz" | "milho" | "temperos" | "chas" | "outros" | "pet-aves" | "pet-caes"
-  descricao:      string  "Grãos selecionados premium"
-  embalagem:      string  "1 Kg" | "500 g" | "100 ml"
-  imagem_url:     string  "https://firebasestorage..." ou caminho relativo enquanto Storage não está ativo
-  ativo:          boolean true   (false = oculto, sem deletar)
-  destaque:       boolean false  (true = aparece em destaque na home)
-  ordem:          number  1      (controla ordem de exibição dentro da categoria)
-  criado_em:      timestamp
-  atualizado_em:  timestamp
+  nome:                       string   "Feijão Carioca Especial"
+  nome_curto:                 string   "Calopsita e Agapornis"  (opcional — badge em pet-cards)
+  categoria:                  string   "feijoes" | "arroz" | "milho" | "temperos" | "chas" | "outros" | "pet-aves" | "pet-caes"
+  descricao:                  string   "Grãos selecionados premium" (texto curto do card)
+  embalagem:                  string   "1 Kg" | "500 g" | "100 ml"
+  imagem_url:                 string   "https://firebasestorage..." ou caminho relativo enquanto Storage não está ativo
+  ativo:                      boolean  true (false = oculto, sem deletar)
+  destaque:                   boolean  false (true = aparece em destaque na home)
+  ordem:                      number   1 (controla ordem de exibição dentro da categoria)
+
+  // Campos da página de detalhe (Fase 5) — todos opcionais
+  descricao_longa:            string   texto livre/markdown leve, descrição detalhada
+  ingredientes:               string   "Trigo enriquecido com ferro, fermento químico..."
+  alergenos:                  string   "Contém glúten. Pode conter traços de soja."
+  validade:                   string   "12 meses a partir da data de fabricação"
+  modo_preparo:               string   texto livre, para produtos que aplicam (chás, lámen, tapioca)
+  info_nutricional: {
+    // Formato compatível com ANVISA RDC 429/2020 (rótulo nutricional)
+    porcao:                   string   "50 g"
+    medida_caseira:           string   "1 xícara"  (opcional)
+    porcoes_por_embalagem:    number   20
+    valores: [
+      // Nutrientes obrigatórios na ordem ANVISA, com nome + unidade entre parênteses
+      { nome: "Valor energético (kcal)", per100: "360", por_porcao: "180", vd: "9" },
+      { nome: "Carboidratos totais (g)", per100: "76",  por_porcao: "38",  vd: "13" },
+      { nome: "Açúcares totais (g)",     per100: "5",   por_porcao: "2.5", vd: "-"  },
+      { nome: "Açúcares adicionados (g)",per100: "0",   por_porcao: "0",   vd: "0"  },
+      { nome: "Proteínas (g)",           per100: "12",  por_porcao: "6",   vd: "12" },
+      { nome: "Gorduras totais (g)",     per100: "2",   por_porcao: "1",   vd: "2"  },
+      { nome: "Gorduras saturadas (g)",  per100: "0.5", por_porcao: "0.25",vd: "1"  },
+      { nome: "Gorduras trans (g)",      per100: "0",   por_porcao: "0",   vd: "**" },
+      { nome: "Fibra alimentar (g)",     per100: "4",   por_porcao: "2",   vd: "8"  },
+      { nome: "Sódio (mg)",              per100: "5",   por_porcao: "2.5", vd: "0"  }
+    ]
+  }
+
+  criado_em:                  timestamp
+  atualizado_em:              timestamp
 ```
 
-Categorias e tipos ficam em `data/categorias.json` (estáticos, raramente mudam).
+Categorias vivem na coleção Firestore **`categorias`**:
+
+```
+documento (id = slug, ex: "feijoes"):
+  nome:              string   "Feijões"
+  tipo:              "regular" | "pet"
+  ordem:             number   1 (controla a ordem das seções no site público)
+  subtitulo:         string   "Variedade e qualidade em cada grão" (regular)
+  frase_destaque:    string   "Tradição na Mesa Brasileira" (h3 da seção, regular)
+  imagem_secao:      string   caminho/URL da imagem grande da seção (regular)
+  criado_em:         timestamp
+  atualizado_em:     timestamp
+```
+
+`data/categorias.json` permanece no repo como seed inicial e referência de valores padrão — quando a coleção está vazia, o painel admin oferece importação automática.
 
 ---
 
@@ -156,29 +197,62 @@ Categorias e tipos ficam em `data/categorias.json` (estáticos, raramente mudam)
 
 ---
 
-### 🔜 Fase 4 — Painel admin (CRUD)
+### ✅ Fase 4 — Painel admin (CRUD)
+**Concluída em 2026-05-20**
 
-**Objetivo:** interface gráfica para gerenciar produtos sem mexer no Firestore manualmente.
-
-**Passos:**
-1. Criar `admin/index.html` com formulário de login (email + senha).
-2. Criar `admin/painel.html` protegido por auth (redireciona pra login se não autenticado).
-3. Criar `assets/js/auth.js` (login, logout, verificação de sessão).
-4. Criar `assets/js/admin-painel.js`:
-   - Listar todos os produtos em tabela
-   - Botão "Adicionar produto" com formulário
-   - Botão "Editar" em cada linha
-   - Botão "Remover" com confirmação
-   - Toggle "ativo/inativo" e "destaque/normal"
-5. Criar `assets/css/admin.css` (visual diferente do site público, mais "dashboard").
-
-**Critério de pronto:**
-- Login funciona e bloqueia acesso sem credenciais.
-- Adicionar/editar/remover produto no painel reflete nas páginas públicas em segundos.
+- [x] [`admin/index.html`](admin/index.html): tela de login Bootstrap 5 (CDN), valida via Firebase Auth com mensagens de erro claras (e-mail/senha inválidos).
+- [x] [`admin/painel.html`](admin/painel.html): dashboard com tabela responsiva, filtro por categoria + busca por nome, modal de edição.
+- [x] [`assets/js/auth.js`](assets/js/auth.js): `login`, `logout`, `getCurrentUser`, `requireAuth` (redireciona se não autenticado), `watchAuth` (detecta logout em outra aba).
+- [x] [`assets/js/admin-painel.js`](assets/js/admin-painel.js): listar/adicionar/editar/remover produtos; toggles inline em "ativo" e "destaque" com persistência imediata; toasts de feedback.
+- [x] [`assets/css/admin.css`](assets/css/admin.css): tweaks sobre Bootstrap mantendo identidade do site (verde Tio Luiz, laranja Pet Food).
+- [x] Validado: mudanças no painel refletem instantaneamente em produtos.html / pet-food.html.
 
 ---
 
-### 🔜 Fase 5 — Upload de imagens (Firebase Storage)
+### ✅ Fase 5 — Páginas de detalhe + categorias dinâmicas + ANVISA
+**Concluída em 2026-05-20**
+
+Fase ampla que cobriu três frentes interligadas:
+
+**1. Páginas de detalhe do produto** (inspirado em [marata.com.br](https://marata.com.br/produto/farinha-de-trigo-com-fermento-marata-1-kg/)):
+- [x] Modelo Firestore estendido: `descricao_longa`, `ingredientes`, `alergenos`, `validade`, `modo_preparo`, `info_nutricional`.
+- [x] Modal do painel admin com tabs (Básico / Detalhes / Nutricional).
+- [x] Página [`produto.html`](produto.html) + [`produto-detalhe.js`](assets/js/produto-detalhe.js): lê `?id=XXX`, busca doc no Firestore, renderiza com seções condicionais (esconde o que está vazio).
+- [x] Botão "+ Detalhes" nos cards (regular + pet) apontando para `produto.html?id={docId}`.
+
+**2. Tabela nutricional ANVISA (RDC 429/2020):**
+- [x] Estrutura `info_nutricional`: `{ porcao, medida_caseira, porcoes_por_embalagem, valores: [{ nome, per100, por_porcao, vd }] }`.
+- [x] Tabela com 4 colunas no formato ANVISA (Nutriente | por 100g/mL | por porção | %VD).
+- [x] Botão **⚡ Preencher nutrientes ANVISA** preenche as 10 linhas obrigatórias na ordem correta.
+- [x] Render no `produto.html` segue layout oficial (header preto, rodapé com asteriscos explicativos).
+- [x] Backward compat: dados no formato antigo (`{ nome, quantidade, vd }`) continuam funcionando.
+
+**3. Categorias dinâmicas (coleção Firestore + UI admin):**
+- [x] Nova coleção `categorias` no Firestore (regras publicadas).
+- [x] Nova página [`admin/categorias.html`](admin/categorias.html) + [`admin-categorias.js`](assets/js/admin-categorias.js) com CRUD completo.
+- [x] Sub-nav no admin: Produtos | Categorias.
+- [x] Auto-importação inicial de `data/categorias.json` quando a coleção está vazia.
+- [x] Botão **⚡ Completar campos padrões** preenche subtitulo/frase_destaque/imagem_secao nas 8 categorias originais sem sobrescrever customizações.
+- [x] Modelo estendido: `{ id, nome, tipo, ordem, subtitulo, frase_destaque, imagem_secao, criado_em, atualizado_em }`.
+
+**4. Seções totalmente dinâmicas no site público:**
+- [x] [`produtos.html`](produtos.html) e [`pet-food.html`](pet-food.html) viraram shells com `<main id="secoes-container" data-tipo="regular|pet">`.
+- [x] [`produtos-publico.js`](assets/js/produtos-publico.js) renderiza seções inteiras na ordem do `ordem` da categoria, alternando esquerda/direita da imagem e fundo claro/branco.
+- [x] Criar categoria nova no painel → aparece automaticamente no site público (sem editar HTML).
+- [x] Alterar ordem no painel → seções reordenam no site público.
+- [x] Workaround para IntersectionObserver: força `.visible` em elementos `.fade-in` inseridos dinamicamente.
+
+**5. Badge "★ DESTAQUE":**
+- [x] Cards (regular + pet) com `destaque=true` mostram selo dourado no canto superior direito.
+
+**Critério de pronto atendido:**
+- CRUD de produtos e categorias 100% via painel admin.
+- Mudanças refletem instantaneamente no site público sem editar HTML.
+- Página de detalhe renderiza informação completa por produto, incluindo tabela ANVISA.
+
+---
+
+### 🔜 Fase 6 — Upload de imagens (Firebase Storage)
 
 **Objetivo:** subir imagens de produtos pelo painel admin, sem mexer no Git.
 
@@ -187,16 +261,14 @@ Categorias e tipos ficam em `data/categorias.json` (estáticos, raramente mudam)
 2. Comprimir imagem no front-end antes de subir (canvas API) — limite 500KB.
 3. Subir via Firebase Storage, salvar URL pública no campo `imagem_url`.
 4. Mostrar preview da imagem atual ao editar.
-5. Criar `storage.rules`:
-   - Leitura pública.
-   - Escrita só para autenticado.
+5. Publicar `storage.rules` (já existe no repo) no Console.
 
 **Critério de pronto:**
 - Subir uma imagem nova pelo painel atualiza o produto e mostra no site público.
 
 ---
 
-### 🔜 Fase 6 — Polimento (SEO + acessibilidade + performance)
+### 🔜 Fase 7 — Polimento (SEO + acessibilidade + performance)
 
 Pendências técnicas levantadas na análise inicial — tratar quando o core estiver pronto:
 
@@ -208,11 +280,11 @@ Pendências técnicas levantadas na análise inicial — tratar quando o core es
 - [ ] Remover handlers `onmouseover`/`onmouseout` inline em [contato.html:332-348](contato.html#L332-L348) — usar `:hover` no CSS
 - [ ] Adicionar `required` e remover `novalidate` dos formulários
 - [ ] `sitemap.xml` e `robots.txt`
-- [ ] Imagens quebradas em `assets/images/produtos/` — vão sumir naturalmente quando a Fase 3 ficar pronta
+- [ ] Imagens quebradas em `assets/images/produtos/` — vão sumir naturalmente quando a Fase 6 (Storage) ficar pronta
 
 ---
 
-### 🔜 Fase 7 — Deploy
+### 🔜 Fase 8 — Deploy
 
 **Objetivo:** site no ar com URL pública e deploy automático.
 

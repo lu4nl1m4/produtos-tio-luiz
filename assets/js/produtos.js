@@ -4,6 +4,9 @@
 const FALLBACK_IMAGE = 'assets/images/todos_os_produtos.webp';
 
 document.addEventListener('click', function (event) {
+    // Permite navegação dos links internos do card (ex: "+ Detalhes") sem disparar o swap.
+    if (event.target.closest('[data-no-card-action]')) return;
+
     const card = event.target.closest('.product-card');
     if (!card) return;
 

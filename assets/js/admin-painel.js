@@ -42,8 +42,21 @@ function toast(msg, type = "success") {
 // ---------- Data ----------
 
 async function carregarCategorias() {
+  // Tenta Firestore primeiro. Cai para data/categorias.json se a coleção estiver vazia
+  // (caso o usuário ainda não tenha importado as categorias no painel).
+  try {
+    const snap = await getDocs(collection(db, "categorias"));
+    if (snap.size > 0) {
+      state.categorias = snap.docs
+        .map((d) => ({ id: d.id, ...d.data() }))
+        .sort((a, b) => (a.ordem ?? 99) - (b.ordem ?? 99));
+      return;
+    }
+  } catch (e) {
+    console.warn("Falha ao ler categorias do Firestore, usando JSON:", e);
+  }
   const res = await fetch("../data/categorias.json");
-  if (!res.ok) throw new Error("Falha ao carregar categorias.json");
+  if (!res.ok) throw new Error("Falha ao carregar categorias.");
   state.categorias = await res.json();
 }
 
@@ -147,6 +160,98 @@ function getModal() {
   return modalInstance;
 }
 
+function resetTabs() {
+  // Volta sempre para a aba "Básico" ao abrir o modal.
+  document.querySelectorAll("#produto-modal .nav-link").forEach((b, i) => {
+    b.classList.toggle("active", i === 0);
+  });
+  document.querySelectorAll("#produto-modal .tab-pane").forEach((p, i) => {
+    p.classList.toggle("show", i === 0);
+    p.classList.toggle("active", i === 0);
+  });
+}
+
+// Lista padrão ANVISA RDC 429/2020 — 10 nutrientes obrigatórios na ordem correta.
+const NUTRIENTES_ANVISA = [
+  "Valor energético (kcal)",
+  "Carboidratos totais (g)",
+  "Açúcares totais (g)",
+  "Açúcares adicionados (g)",
+  "Proteínas (g)",
+  "Gorduras totais (g)",
+  "Gorduras saturadas (g)",
+  "Gorduras trans (g)",
+  "Fibra alimentar (g)",
+  "Sódio (mg)"
+];
+
+function addNutriRow(nome = "", per100 = "", por_porcao = "", vd = "") {
+  const tr = document.createElement("tr");
+  tr.innerHTML = `
+    <td><input type="text" class="form-control form-control-sm nutri-nome"   value="${escapeAttr(nome)}"       placeholder="Carboidratos totais (g)"></td>
+    <td><input type="text" class="form-control form-control-sm nutri-per100" value="${escapeAttr(per100)}"     placeholder="76"></td>
+    <td><input type="text" class="form-control form-control-sm nutri-porcao" value="${escapeAttr(por_porcao)}" placeholder="38"></td>
+    <td><input type="text" class="form-control form-control-sm nutri-vd"     value="${escapeAttr(vd)}"         placeholder="13"></td>
+    <td class="text-end"><button type="button" class="btn btn-sm btn-outline-danger nutri-remove" aria-label="Remover linha">×</button></td>
+  `;
+  tr.querySelector(".nutri-remove").addEventListener("click", () => tr.remove());
+  $("nutri-body").appendChild(tr);
+}
+
+function preencherPresetAnvisa() {
+  // Se já tem linhas, confirma antes de sobrescrever.
+  const existentes = $("nutri-body").querySelectorAll("tr").length;
+  if (existentes > 0 && !confirm(`A tabela já tem ${existentes} linha(s). Substituir pela lista padrão ANVISA?`)) return;
+  $("nutri-body").innerHTML = "";
+  NUTRIENTES_ANVISA.forEach((nome) => addNutriRow(nome));
+}
+
+function limparTabelaNutricional() {
+  if (!confirm("Limpar todas as linhas da tabela nutricional?")) return;
+  $("nutri-body").innerHTML = "";
+}
+
+function escapeAttr(s) {
+  return String(s ?? "").replace(/"/g, "&quot;");
+}
+
+function lerInfoNutricional() {
+  const porcao = $("produto-porcao").value.trim();
+  const medida_caseira = $("produto-medida-caseira").value.trim();
+  const porcoesRaw = $("produto-porcoes").value;
+  const porcoes_por_embalagem = porcoesRaw ? Number(porcoesRaw) : null;
+
+  const valores = Array.from($("nutri-body").querySelectorAll("tr")).map((tr) => ({
+    nome:       tr.querySelector(".nutri-nome").value.trim(),
+    per100:     tr.querySelector(".nutri-per100").value.trim(),
+    por_porcao: tr.querySelector(".nutri-porcao").value.trim(),
+    vd:         tr.querySelector(".nutri-vd").value.trim()
+  })).filter((v) => v.nome || v.per100 || v.por_porcao || v.vd);
+
+  const temAlgo = porcao || medida_caseira || porcoes_por_embalagem || valores.length > 0;
+  if (!temAlgo) return null;
+  return { porcao, medida_caseira, porcoes_por_embalagem, valores };
+}
+
+function preencherInfoNutricional(info) {
+  $("nutri-body").innerHTML = "";
+  if (!info) {
+    $("produto-porcao").value = "";
+    $("produto-medida-caseira").value = "";
+    $("produto-porcoes").value = "";
+    return;
+  }
+  $("produto-porcao").value = info.porcao || "";
+  $("produto-medida-caseira").value = info.medida_caseira || "";
+  $("produto-porcoes").value = info.porcoes_por_embalagem ?? "";
+  (info.valores || []).forEach((v) => {
+    // Backward compat: formato antigo tinha { nome, quantidade, vd } — mapeia quantidade → por_porcao.
+    const per100     = v.per100 ?? "";
+    const por_porcao = v.por_porcao ?? v.quantidade ?? "";
+    addNutriRow(v.nome, per100, por_porcao, v.vd);
+  });
+}
+
 function abrirModalNovo() {
   $("modal-titulo").textContent = "Novo produto";
   $("produto-id").value = "";
@@ -159,7 +264,14 @@ function abrirModalNovo() {
   $("produto-ordem").value = "1";
   $("produto-ativo").checked = true;
   $("produto-destaque").checked = false;
+  $("produto-descricao-longa").value = "";
+  $("produto-ingredientes").value = "";
+  $("produto-alergenos").value = "";
+  $("produto-validade").value = "";
+  $("produto-modo-preparo").value = "";
+  preencherInfoNutricional(null);
   $("form-erro").classList.add("d-none");
+  resetTabs();
   getModal().show();
 }
 
@@ -175,7 +287,14 @@ function abrirModalEditar(p) {
   $("produto-ordem").value = p.ordem ?? 1;
   $("produto-ativo").checked = p.ativo !== false;
   $("produto-destaque").checked = !!p.destaque;
+  $("produto-descricao-longa").value = p.descricao_longa || "";
+  $("produto-ingredientes").value = p.ingredientes || "";
+  $("produto-alergenos").value = p.alergenos || "";
+  $("produto-validade").value = p.validade || "";
+  $("produto-modo-preparo").value = p.modo_preparo || "";
+  preencherInfoNutricional(p.info_nutricional);
   $("form-erro").classList.add("d-none");
+  resetTabs();
   getModal().show();
 }
 
@@ -202,6 +321,12 @@ async function salvarProduto(e) {
     ordem: Number($("produto-ordem").value) || 0,
     ativo: $("produto-ativo").checked,
     destaque: $("produto-destaque").checked,
+    descricao_longa: $("produto-descricao-longa").value.trim(),
+    ingredientes: $("produto-ingredientes").value.trim(),
+    alergenos: $("produto-alergenos").value.trim(),
+    validade: $("produto-validade").value.trim(),
+    modo_preparo: $("produto-modo-preparo").value.trim(),
+    info_nutricional: lerInfoNutricional(),
     atualizado_em: serverTimestamp()
   };
 
@@ -314,6 +439,9 @@ async function init() {
   $("novo-btn").addEventListener("click", abrirModalNovo);
   $("produto-form").addEventListener("submit", salvarProduto);
   $("tabela-body").addEventListener("click", handleTabelaClick);
+  $("nutri-add").addEventListener("click", () => addNutriRow());
+  $("nutri-preset").addEventListener("click", preencherPresetAnvisa);
+  $("nutri-clear").addEventListener("click", limparTabelaNutricional);
 
   $("logout-btn").addEventListener("click", async () => {
     await logout();

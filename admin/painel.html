@@ -10,8 +10,13 @@
 <body>
 
   <!-- Navbar -->
-  <nav class="navbar-admin d-flex justify-content-between align-items-center">
-    <a href="../index.html" class="brand">Tio Luiz · Painel Admin</a>
+  <nav class="navbar-admin d-flex justify-content-between align-items-center flex-wrap gap-2">
+    <div class="d-flex align-items-center gap-3 flex-wrap">
+      <a href="../index.html" class="brand">Tio Luiz · Painel</a>
+      <span class="text-muted">|</span>
+      <a href="painel.html" class="admin-nav-link admin-nav-link--active">Produtos</a>
+      <a href="categorias.html" class="admin-nav-link">Categorias</a>
+    </div>
     <div class="d-flex align-items-center gap-3">
       <span id="user-email" class="text-muted small"></span>
       <button id="logout-btn" class="btn btn-outline-secondary btn-sm">Sair</button>
@@ -73,47 +78,136 @@
           </div>
           <div class="modal-body">
             <input type="hidden" id="produto-id">
-            <div class="row g-3">
-              <div class="col-md-8">
-                <label class="form-label">Nome *</label>
-                <input id="produto-nome" type="text" class="form-control" required>
-              </div>
-              <div class="col-md-4">
-                <label class="form-label">Categoria *</label>
-                <select id="produto-categoria" class="form-select" required></select>
-              </div>
-              <div class="col-md-8">
-                <label class="form-label">Descrição</label>
-                <input id="produto-descricao" type="text" class="form-control">
-              </div>
-              <div class="col-md-4">
-                <label class="form-label">Embalagem</label>
-                <input id="produto-embalagem" type="text" class="form-control" placeholder="500 g">
-              </div>
-              <div class="col-md-8">
-                <label class="form-label">URL da imagem</label>
-                <input id="produto-imagem" type="text" class="form-control" placeholder="assets/images/produto.webp">
-                <div class="form-text">Caminho relativo enquanto Storage não está ativo (Fase 5).</div>
-              </div>
-              <div class="col-md-4">
-                <label class="form-label">Ordem</label>
-                <input id="produto-ordem" type="number" class="form-control" value="1" min="0">
-              </div>
-              <div class="col-md-8">
-                <label class="form-label">Nome curto <span class="text-muted small">(opcional — badge dos pet-cards)</span></label>
-                <input id="produto-nome-curto" type="text" class="form-control">
-              </div>
-              <div class="col-md-4 d-flex flex-column justify-content-end gap-2">
-                <div class="form-check">
-                  <input id="produto-ativo" type="checkbox" class="form-check-input" checked>
-                  <label class="form-check-label" for="produto-ativo">Ativo</label>
+
+            <ul class="nav nav-tabs mb-3" role="tablist">
+              <li class="nav-item"><button type="button" class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-basico">Básico</button></li>
+              <li class="nav-item"><button type="button" class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-detalhes">Detalhes</button></li>
+              <li class="nav-item"><button type="button" class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-nutricional">Nutricional</button></li>
+            </ul>
+
+            <div class="tab-content">
+
+              <!-- TAB: BÁSICO -->
+              <div class="tab-pane fade show active" id="tab-basico" role="tabpanel">
+                <div class="row g-3">
+                  <div class="col-md-8">
+                    <label class="form-label">Nome *</label>
+                    <input id="produto-nome" type="text" class="form-control" required>
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label">Categoria *</label>
+                    <select id="produto-categoria" class="form-select" required></select>
+                  </div>
+                  <div class="col-md-8">
+                    <label class="form-label">Descrição curta <span class="text-muted small">(aparece no card)</span></label>
+                    <input id="produto-descricao" type="text" class="form-control">
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label">Embalagem</label>
+                    <input id="produto-embalagem" type="text" class="form-control" placeholder="500 g">
+                  </div>
+                  <div class="col-md-8">
+                    <label class="form-label">URL da imagem</label>
+                    <input id="produto-imagem" type="text" class="form-control" placeholder="assets/images/produto.webp">
+                    <div class="form-text">Caminho relativo enquanto Storage não está ativo (Fase 6).</div>
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label">Ordem</label>
+                    <input id="produto-ordem" type="number" class="form-control" value="1" min="0">
+                  </div>
+                  <div class="col-md-8">
+                    <label class="form-label">Nome curto <span class="text-muted small">(badge dos pet-cards)</span></label>
+                    <input id="produto-nome-curto" type="text" class="form-control">
+                  </div>
+                  <div class="col-md-4 d-flex flex-column justify-content-end gap-2">
+                    <div class="form-check">
+                      <input id="produto-ativo" type="checkbox" class="form-check-input" checked>
+                      <label class="form-check-label" for="produto-ativo">Ativo</label>
+                    </div>
+                    <div class="form-check">
+                      <input id="produto-destaque" type="checkbox" class="form-check-input">
+                      <label class="form-check-label" for="produto-destaque">Destaque</label>
+                    </div>
+                  </div>
                 </div>
-                <div class="form-check">
-                  <input id="produto-destaque" type="checkbox" class="form-check-input">
-                  <label class="form-check-label" for="produto-destaque">Destaque</label>
+              </div>
+
+              <!-- TAB: DETALHES -->
+              <div class="tab-pane fade" id="tab-detalhes" role="tabpanel">
+                <div class="row g-3">
+                  <div class="col-12">
+                    <label class="form-label">Descrição longa</label>
+                    <textarea id="produto-descricao-longa" class="form-control" rows="4" placeholder="Texto detalhado que aparece na página do produto."></textarea>
+                  </div>
+                  <div class="col-12">
+                    <label class="form-label">Ingredientes</label>
+                    <textarea id="produto-ingredientes" class="form-control" rows="2" placeholder="Trigo enriquecido com ferro, fermento químico..."></textarea>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Alérgenos</label>
+                    <textarea id="produto-alergenos" class="form-control" rows="2" placeholder="Contém glúten. Pode conter traços de soja."></textarea>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Validade</label>
+                    <input id="produto-validade" type="text" class="form-control" placeholder="12 meses a partir da data de fabricação">
+                  </div>
+                  <div class="col-12">
+                    <label class="form-label">Modo de preparo</label>
+                    <textarea id="produto-modo-preparo" class="form-control" rows="3" placeholder="Para produtos que aplicam (chás, lámen, tapioca...)."></textarea>
+                  </div>
                 </div>
               </div>
+
+              <!-- TAB: NUTRICIONAL (formato ANVISA RDC 429/2020) -->
+              <div class="tab-pane fade" id="tab-nutricional" role="tabpanel">
+                <div class="row g-3 mb-3">
+                  <div class="col-md-4">
+                    <label class="form-label">Porção *</label>
+                    <input id="produto-porcao" type="text" class="form-control" placeholder="50 g">
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label">Medida caseira</label>
+                    <input id="produto-medida-caseira" type="text" class="form-control" placeholder="1 xícara, 2 colheres...">
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label">Porções por embalagem</label>
+                    <input id="produto-porcoes" type="number" class="form-control" min="0">
+                  </div>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
+                  <strong class="small">Tabela nutricional</strong>
+                  <div class="d-flex gap-2">
+                    <button type="button" id="nutri-preset" class="btn btn-sm btn-outline-success">⚡ Preencher nutrientes ANVISA</button>
+                    <button type="button" id="nutri-add" class="btn btn-sm btn-outline-primary">+ Linha</button>
+                    <button type="button" id="nutri-clear" class="btn btn-sm btn-outline-danger">Limpar</button>
+                  </div>
+                </div>
+                <div class="table-responsive">
+                  <table class="table table-sm align-middle mb-0">
+                    <thead class="table-light">
+                      <tr>
+                        <th>Nutriente (com unidade)</th>
+                        <th style="width:110px;">por 100 g/mL</th>
+                        <th style="width:110px;">por porção</th>
+                        <th style="width:80px;">% VD</th>
+                        <th style="width:40px;"></th>
+                      </tr>
+                    </thead>
+                    <tbody id="nutri-body">
+                      <!-- linhas adicionadas dinamicamente -->
+                    </tbody>
+                  </table>
+                </div>
+                <div class="form-text mt-2">
+                  Use o botão <strong>⚡ Preencher nutrientes ANVISA</strong> pra adicionar as 10 linhas obrigatórias na ordem correta — depois é só preencher os valores.
+                  No campo %VD: use <code>-</code> para nutrientes sem VD estabelecido (ex: açúcares totais) e <code>**</code> para gorduras trans.
+                  Deixe tudo vazio se o produto não tem informação nutricional — a seção fica oculta na página pública.
+                </div>
+              </div>
+
             </div>
+
             <div id="form-erro" class="alert alert-danger mt-3 d-none small mb-0"></div>
           </div>
           <div class="modal-footer">

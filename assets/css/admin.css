@@ -35,6 +35,24 @@ body {
   text-decoration: none;
 }
 
+.admin-nav-link {
+  color: #444;
+  text-decoration: none;
+  padding: 0.35rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  transition: background 0.15s;
+}
+.admin-nav-link:hover {
+  background: #f0f0f0;
+  color: var(--admin-primary);
+}
+.admin-nav-link--active {
+  background: #e8f5e9;
+  color: var(--admin-primary-dark);
+  font-weight: 500;
+}
+
 .card-table {
   background: white;
   border-radius: 6px;
