@@ -41,16 +41,17 @@ Sem frameworks, sem build, sem `node_modules`.
 ├── onde-encontrar.html     # Pontos de venda + revendedores
 ├── contato.html            # Formulário e canais de contato
 │
-├── src/
-│   ├── styles.css          # Estilos globais
-│   ├── script.js           # Comportamentos globais
-│   └── imgs/               # Imagens do site
+├── assets/
+│   ├── css/
+│   │   └── styles.css      # Estilos globais
+│   ├── js/
+│   │   └── script.js       # Comportamentos globais
+│   └── images/             # Imagens do site
 │
 ├── .gitignore
+├── .gitattributes
 └── README.md
 ```
-
-> **Nota:** a estrutura será reorganizada em breve (ver [Roadmap](#roadmap)).
 
 ---
 
@@ -85,7 +86,7 @@ O site é hospedado no **Vercel/Netlify** (a configurar), com deploy automático
 
 Próximas evoluções planejadas:
 
-- [ ] **Reorganização de pastas** — migrar `src/` para `assets/` com separação em `css/`, `js/`, `images/`
+- [x] **Reorganização de pastas** — migrado `src/` para `assets/` com separação em `css/`, `js/`, `images/`
 - [ ] **Painel administrativo** — área `/admin` com login (Firebase Auth) para gerenciar produtos do catálogo
 - [ ] **Banco de dados** — produtos passam a ser carregados dinamicamente do Firestore
 - [ ] **Upload de imagens** — gerenciamento de imagens via Firebase Storage
