@@ -121,26 +121,19 @@ Categorias e tipos ficam em `data/categorias.json` (estáticos, raramente mudam)
 
 ---
 
-### 🔜 Fase 2 — Setup Firebase
+### ✅ Fase 2 — Setup Firebase
+**Concluída em 2026-05-19**
 
-**Objetivo:** preparar a infraestrutura na nuvem antes de migrar produtos.
+- [x] Projeto `site-produtos-tio-luiz` criado no Firebase Console (Plano Spark).
+- [x] App Web registrado, config copiada para [`assets/js/firebase-config.js`](assets/js/firebase-config.js).
+- [x] Authentication habilitado (Email/Password) e usuário admin criado.
+- [x] Firestore Database habilitado (modo produção, região `southamerica-east1`).
+- [x] `firestore.rules` publicado no Console — leitura pública em `produtos`, escrita só autenticado, deny default.
+- [x] SDK Firebase v10.14.1 (CDN, modular) adicionado em [`index.html`](index.html), [`produtos.html`](produtos.html), [`pet-food.html`](pet-food.html) via `<script type="module">`.
+- [x] Páginas estáticas (sobre/contato/onde-encontrar) não carregam Firebase — não precisam.
+- [x] Validado localmente via `python -m http.server` — sem erros no console.
 
-**Passos:**
-1. Criar projeto no [Firebase Console](https://console.firebase.google.com/) (sem custo).
-2. Habilitar Authentication → método "Email/Password".
-3. Criar usuário admin (seu email + senha forte) no painel.
-4. Habilitar Firestore Database em modo de produção (regras restritivas).
-5. Habilitar Storage (vamos usar na Fase 5).
-6. Criar `assets/js/firebase-config.js` com a config pública do projeto.
-7. Criar `firestore.rules`:
-   - Leitura pública na coleção `produtos`
-   - Escrita só para usuário autenticado
-8. Adicionar o SDK do Firebase nos HTMLs (via CDN, sem npm).
-
-**Critério de pronto:**
-- Conseguir abrir o console e ver o projeto criado.
-- `firestore.rules` impede que qualquer um na internet edite dados.
-- Login de teste funciona no console do Firebase.
+**Adiado para Fase 5:** habilitar Storage (exige plano Blaze). Alternativas serão avaliadas: Blaze (free tier 5GB/30k downloads), Cloudinary, ou sem upload.
 
 ---
 
