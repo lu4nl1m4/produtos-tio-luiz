@@ -809,23 +809,7 @@ p {
 .grid--arroz-caes .pet-card {
   grid-column: 1;
 }
-/* Botões CTA Pet Food - Hovers com !important para sobrescrever inline styles */
-.section.cta a.btn[style*="background: white"]:hover,
-.section.cta a.btn[style*="background:white"]:hover {
-    background: #f5f5f5 !important;
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lg);
-}
-
-.section.cta a.btn[style*="background: transparent"]:hover,
-.section.cta a.btn[style*="background:transparent"]:hover {
-    background: white !important;
-    color: #ff6f00 !important;
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lg);
-}
-
-/* Botões específicos Pet Food CTA (caso use classes) */
+/* Botões Pet Food CTA */
 .btn--pet-primary {
     background: white;
     color: #ff6f00;
@@ -850,6 +834,181 @@ p {
     color: #ff6f00;
     transform: translateY(-2px);
     box-shadow: var(--shadow-lg);
+}
+
+/* ===================================
+   PRODUCT CARDS (página produtos.html)
+   =================================== */
+.product-card {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.product-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--color-primary);
+}
+
+.product-card.active {
+    border-color: var(--color-primary);
+    background: linear-gradient(135deg, rgba(46, 125, 50, 0.05) 0%, rgba(46, 125, 50, 0.1) 100%);
+}
+
+.product-card.active .card__title {
+    color: var(--color-primary);
+}
+
+.product-image {
+    transition: opacity 0.3s ease;
+    min-height: 300px;
+    object-fit: contain;
+}
+
+/* ===================================
+   TOAST NOTIFICATIONS (compartilhado)
+   =================================== */
+.toast {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 500;
+    opacity: 0;
+    transform: translateY(100px);
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    z-index: 9999;
+    max-width: 400px;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.toast.success {
+    background: linear-gradient(135deg, #2e7d32, #43a047);
+    color: white;
+}
+
+.toast.error {
+    background: linear-gradient(135deg, #c62828, #d32f2f);
+    color: white;
+}
+
+.toast-icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.toast-content {
+    flex: 1;
+}
+
+.toast-title {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.toast-message {
+    font-size: 0.875rem;
+    opacity: 0.95;
+}
+
+/* ===================================
+   FORM VALIDATION STATES
+   =================================== */
+.form-input:focus:valid,
+.form-select:focus:valid,
+.form-textarea:focus:valid {
+    border-color: var(--color-success);
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+.form-input.error-shake,
+.form-select.error-shake,
+.form-textarea.error-shake {
+    animation: shake 0.5s;
+    border-color: var(--color-error) !important;
+}
+
+.btn--loading {
+    position: relative;
+    pointer-events: none;
+}
+
+.btn--loading::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 50%;
+    left: 50%;
+    margin-left: -10px;
+    margin-top: -10px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.char-counter {
+    display: block;
+    text-align: right;
+    margin-top: 0.25rem;
+    font-size: 0.875rem;
+    color: var(--color-gray-600);
+    transition: color 0.3s;
+}
+
+.char-counter.warning {
+    color: var(--color-warning);
+}
+
+.char-counter.danger {
+    color: var(--color-error);
+    font-weight: 600;
+}
+
+/* ===================================
+   UTILITÁRIOS
+   =================================== */
+.u-text-center { text-align: center; }
+.u-text-primary { color: var(--color-primary); }
+.u-text-white { color: white; }
+.u-text-pet { color: #ff6f00; }
+.u-full-width { width: 100%; }
+
+.hero--compact {
+    min-height: 400px;
+    padding: 4rem 0;
+}
+
+.btn-group--centered {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.section-header--centered {
+    text-align: center;
+    margin-bottom: 3rem;
 }
 
 /* === RESPONSIVE === */
@@ -922,6 +1081,14 @@ p {
     width: 100%;
     text-align: center;
     margin: 0.5rem 0;
+  }
+
+  /* Toast em mobile ocupa toda a largura inferior */
+  .toast {
+    bottom: 1rem;
+    right: 1rem;
+    left: 1rem;
+    max-width: none;
   }
 }
 

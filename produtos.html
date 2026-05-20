@@ -8,34 +8,6 @@
         content="Produtos Tio Luiz - Grãos, temperos, chás e muito mais. Qualidade para sua família.">
     <title>Produtos - Produtos Tio Luiz</title>
     <link rel="stylesheet" href="assets/css/styles.css">
-    <style>
-        /* Estilos para cards selecionáveis */
-        .product-card {
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
-        }
-        
-        .product-card:hover {
-            transform: translateY(-2px);
-            border-color: var(--color-primary);
-        }
-        
-        .product-card.active {
-            border-color: var(--color-primary);
-            background: linear-gradient(135deg, rgba(46, 125, 50, 0.05) 0%, rgba(46, 125, 50, 0.1) 100%);
-        }
-        
-        .product-card.active .card__title {
-            color: var(--color-primary);
-        }
-        
-        .product-image {
-            transition: opacity 0.3s ease;
-            min-height: 300px;
-            object-fit: contain;
-        }
-    </style>
 </head>
 
 <body>
@@ -67,7 +39,7 @@
     </header>
 
     <!-- PAGE HEADER -->
-    <section class="hero" style="min-height: 400px; padding: 4rem 0;">
+    <section class="hero hero--compact">
         <img src="assets/images/todos_os_produtos.webp" class="hero__background">
         <div class="hero__overlay"></div>
         
@@ -80,7 +52,7 @@
     <!-- FEIJÕES SECTION -->
     <section class="section" id="feijoes">
         <div class="container">
-            <div class="fade-in" style="text-align: center; margin-bottom: 3rem;">
+            <div class="fade-in section-header--centered">
                 <h2 class="section-title">Feijões</h2>
                 <p class="section-subtitle">Variedade e qualidade em cada grão</p>
             </div>
@@ -133,7 +105,7 @@
     <!-- ARROZ SECTION -->
     <section class="section section--light" id="arroz">
         <div class="container">
-            <div class="fade-in" style="text-align: center; margin-bottom: 3rem;">
+            <div class="fade-in section-header--centered">
                 <h2 class="section-title">Arroz</h2>
                 <p class="section-subtitle">Grãos selecionados, sempre soltinhos</p>
             </div>
@@ -174,7 +146,7 @@
     <!-- MILHO SECTION -->
     <section class="section" id="milho">
         <div class="container">
-            <div class="fade-in" style="text-align: center; margin-bottom: 3rem;">
+            <div class="fade-in section-header--centered">
                 <h2 class="section-title">Milho e Derivados</h2>
                 <p class="section-subtitle">Tradição e sabor nas festas juninas e o ano todo</p>
             </div>
@@ -215,7 +187,7 @@
     <!-- MOLHOS SECTION -->
     <section class="section section--light" id="temperos">
         <div class="container">
-            <div class="fade-in" style="text-align: center; margin-bottom: 3rem;">
+            <div class="fade-in section-header--centered">
                 <h2 class="section-title">Molhos e Vinagre</h2>
                 <p class="section-subtitle">Sabor especial para suas receitas</p>
             </div>
@@ -256,7 +228,7 @@
     <!-- CHÁS SECTION -->
     <section class="section" id="chas">
         <div class="container">
-            <div class="fade-in" style="text-align: center; margin-bottom: 3rem;">
+            <div class="fade-in section-header--centered">
                 <h2 class="section-title">Chás</h2>
                 <p class="section-subtitle">Momentos de relaxamento e bem-estar</p>
             </div>
@@ -309,7 +281,7 @@
     <!-- OUTROS SECTION -->
     <section class="section section--light" id="outros">
         <div class="container">
-            <div class="fade-in" style="text-align: center; margin-bottom: 3rem;">
+            <div class="fade-in section-header--centered">
                 <h2 class="section-title">Outros Produtos</h2>
                 <p class="section-subtitle">Ingredientes essenciais para sua despensa</p>
             </div>
@@ -361,7 +333,7 @@
 
     <!-- CTA SECTION -->
     <section class="section cta">
-        <div class="container fade-in" style="text-align: center;">
+        <div class="container fade-in u-text-center">
             <h2 class="cta__title">Encontre Nossos Produtos</h2>
             <p class="cta__text">Disponíveis em supermercados em todo o estado de Sergipe.</p>
             <a href="onde-encontrar.html" class="btn btn--secondary btn--large">Ver Onde Encontrar</a>
@@ -446,53 +418,7 @@
     </a>
 
     <script src="assets/js/script.js"></script>
-    <script>
-        // === PRODUCT SELECTOR ===
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('Product selector initialized');
-            
-            const productCards = document.querySelectorAll('.product-card');
-            const fallbackImage = 'assets/images/todos_os_produtos.webp';
-            
-            productCards.forEach(card => {
-                card.addEventListener('click', function() {
-                    const category = this.dataset.category;
-                    const imagePath = this.dataset.image;
-                    
-                    console.log(`Clicked: ${category}, Image: ${imagePath}`);
-                    
-                    // Remove active class from all cards in the same category
-                    document.querySelectorAll(`[data-category="${category}"]`).forEach(c => {
-                        c.classList.remove('active');
-                    });
-                    
-                    // Add active class to clicked card
-                    this.classList.add('active');
-                    
-                    // Update image
-                    const imageElement = document.getElementById(`${category}-image`);
-                    if (imageElement) {
-                        imageElement.style.opacity = '0';
-                        setTimeout(() => {
-                            const img = new Image();
-                            img.onload = function() {
-                                imageElement.src = imagePath;
-                                imageElement.alt = card.querySelector('.card__title').textContent;
-                                imageElement.style.opacity = '1';
-                            };
-                            img.onerror = function() {
-                                console.warn(`Image not found: ${imagePath}, using fallback`);
-                                imageElement.src = fallbackImage;
-                                imageElement.alt = card.querySelector('.card__title').textContent;
-                                imageElement.style.opacity = '1';
-                            };
-                            img.src = imagePath;
-                        }, 300);
-                    }
-                });
-            });
-        });
-    </script>
+    <script src="assets/js/produtos.js"></script>
 </body>
 
 </html>

@@ -7,106 +7,6 @@
     <meta name="description" content="Produtos Tio Luiz em Sergipe. Venda direta para supermercados, mercearias e mercadinhos. Entre em contato!">
     <title>Onde Encontrar - Produtos Tio Luiz</title>
     <link rel="stylesheet" href="assets/css/styles.css">
-    <style>
-        /* Toast de sucesso/erro */
-        .toast {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            padding: 1rem 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            font-weight: 500;
-            opacity: 0;
-            transform: translateY(100px);
-            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            z-index: 9999;
-            max-width: 400px;
-        }
-
-        .toast.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .toast.success {
-            background: linear-gradient(135deg, #2e7d32, #43a047);
-            color: white;
-        }
-
-        .toast.error {
-            background: linear-gradient(135deg, #c62828, #d32f2f);
-            color: white;
-        }
-
-        .toast-icon {
-            font-size: 1.5rem;
-            flex-shrink: 0;
-        }
-
-        .toast-content {
-            flex: 1;
-        }
-
-        .toast-title {
-            font-weight: 600;
-            margin-bottom: 0.25rem;
-        }
-
-        .toast-message {
-            font-size: 0.875rem;
-            opacity: 0.95;
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-            20%, 40%, 60%, 80% { transform: translateX(5px); }
-        }
-
-        .form-input.error-shake,
-        .form-select.error-shake,
-        .form-textarea.error-shake {
-            animation: shake 0.5s;
-            border-color: var(--color-error) !important;
-        }
-
-        .btn--loading {
-            position: relative;
-            pointer-events: none;
-        }
-
-        .btn--loading::after {
-            content: '';
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            top: 50%;
-            left: 50%;
-            margin-left: -10px;
-            margin-top: -10px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-top-color: white;
-            border-radius: 50%;
-            animation: spin 0.6s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        @media (max-width: 768px) {
-            .toast {
-                bottom: 1rem;
-                right: 1rem;
-                left: 1rem;
-                max-width: none;
-            }
-        }
-    </style>
 </head>
 
 <body>
@@ -138,7 +38,7 @@
     </header>
 
     <!-- PAGE HEADER -->
-    <section class="hero" style="min-height: 400px; padding: 4rem 0;">
+    <section class="hero hero--compact">
         <img src="assets/images/todos_os_produtos.webp" alt="Supermercados em Sergipe" class="hero__background">
         <div class="hero__overlay"></div>
         
@@ -217,14 +117,14 @@
     <!-- BECOME RESELLER -->
     <section class="section section--light">
         <div class="container">
-            <div style="text-align: center; margin-bottom: 3rem;">
+            <div class="section-header--centered">
                 <h2 class="section-title fade-in">Revenda Nossos Produtos</h2>
                 <p class="section-subtitle fade-in">Venda direta para o seu estabelecimento comercial</p>
             </div>
 
             <div class="grid grid--3" style="margin-bottom: 3rem;">
                 <div class="card fade-in">
-                    <div class="card__content" style="text-align: center;">
+                    <div class="card__content u-text-center">
                         <div style="width: 80px; height: 80px; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center;">
                             <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#2E7D32" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
@@ -240,7 +140,7 @@
                 </div>
 
                 <div class="card fade-in">
-                    <div class="card__content" style="text-align: center;">
+                    <div class="card__content u-text-center">
                         <div style="width: 80px; height: 80px; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center;">
                             <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#2E7D32" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
@@ -253,7 +153,7 @@
                 </div>
 
                 <div class="card fade-in">
-                    <div class="card__content" style="text-align: center;">
+                    <div class="card__content u-text-center">
                         <div style="width: 80px; height: 80px; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center;">
                             <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#2E7D32" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
@@ -265,7 +165,7 @@
                 </div>
 
                 <div class="card fade-in">
-                    <div class="card__content" style="text-align: center;">
+                    <div class="card__content u-text-center">
                         <div style="width: 80px; height: 80px; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center;">
                             <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#2E7D32" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/>
@@ -280,7 +180,7 @@
                 </div>
 
                 <div class="card fade-in">
-                    <div class="card__content" style="text-align: center;">
+                    <div class="card__content u-text-center">
                         <div style="width: 80px; height: 80px; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center;">
                             <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#2E7D32" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <rect x="1" y="3" width="15" height="13"/>
@@ -295,7 +195,7 @@
                 </div>
 
                 <div class="card fade-in">
-                    <div class="card__content" style="text-align: center;">
+                    <div class="card__content u-text-center">
                         <div style="width: 80px; height: 80px; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center;">
                             <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#2E7D32" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <line x1="12" y1="1" x2="12" y2="23"/>
@@ -390,10 +290,10 @@
 
     <!-- CONTACT CTA -->
     <section class="section cta">
-        <div class="container fade-in" style="text-align: center;">
+        <div class="container fade-in u-text-center">
             <h2 class="cta__title">Dúvidas? Fale Conosco!</h2>
             <p class="cta__text">Nossa equipe comercial está pronta para atendê-lo</p>
-            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+            <div class="btn-group--centered">
                 <a href="contato.html" class="btn btn--secondary btn--large">Página de Contato</a>
                 <a href="https://wa.me/5579998985386?text=Olá!%20Tenho%20interesse%20em%20revender%20os%20Produtos%20Tio%20Luiz"
                     target="_blank" rel="noopener noreferrer" class="btn btn--outline btn--large"
@@ -484,186 +384,8 @@
     <div id="toastContainer"></div>
 
     <script src="assets/js/script.js"></script>
-
-    <!-- VALIDAÇÃO DO FORMULÁRIO DE REVENDEDOR -->
-    <script>
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwS8kCuFdSG4yBf5oRQgx6U4RTybHQNXyU8quLploy-UcUBrRCifJUsZyV9A0psPv87/exec';
-
-    function sanitizeInput(input) {
-        const temp = document.createElement('div');
-        temp.textContent = input;
-        return temp.innerHTML;
-    }
-
-    function isValidEmail(email) {
-        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return regex.test(email);
-    }
-
-    function isValidPhone(phone) {
-        const numbers = phone.replace(/\D/g, '');
-        return numbers.length === 10 || numbers.length === 11;
-    }
-
-    function showToast(type, title, message) {
-        const container = document.getElementById('toastContainer');
-        
-        const toast = document.createElement('div');
-        toast.className = `toast ${type}`;
-        toast.innerHTML = `
-            <div class="toast-icon">${type === 'success' ? '✓' : '✕'}</div>
-            <div class="toast-content">
-                <div class="toast-title">${sanitizeInput(title)}</div>
-                <div class="toast-message">${sanitizeInput(message)}</div>
-            </div>
-        `;
-        
-        container.appendChild(toast);
-        setTimeout(() => toast.classList.add('show'), 10);
-        setTimeout(() => {
-            toast.classList.remove('show');
-            setTimeout(() => toast.remove(), 400);
-        }, 5000);
-    }
-
-    function addShakeAnimation(element) {
-        element.classList.add('error-shake');
-        setTimeout(() => element.classList.remove('error-shake'), 500);
-    }
-
-    function validateResellerForm(formData) {
-        const estabelecimento = formData.get('estabelecimento').trim();
-        const tipo = formData.get('tipoEstabelecimento');
-        const responsavel = formData.get('responsavel').trim();
-        const email = formData.get('emailReseller').trim();
-        const telefone = formData.get('telefoneReseller').trim();
-        const cidade = formData.get('cidade').trim();
-        
-        if (estabelecimento.length < 3) {
-            showToast('error', 'Estabelecimento Inválido', 'O nome deve ter pelo menos 3 caracteres.');
-            addShakeAnimation(document.getElementById('estabelecimento'));
-            document.getElementById('estabelecimento').focus();
-            return false;
-        }
-        
-        if (!tipo) {
-            showToast('error', 'Tipo Obrigatório', 'Selecione o tipo de estabelecimento.');
-            addShakeAnimation(document.getElementById('tipoEstabelecimento'));
-            document.getElementById('tipoEstabelecimento').focus();
-            return false;
-        }
-        
-        if (responsavel.length < 3) {
-            showToast('error', 'Nome Inválido', 'O nome do responsável deve ter pelo menos 3 caracteres.');
-            addShakeAnimation(document.getElementById('responsavel'));
-            document.getElementById('responsavel').focus();
-            return false;
-        }
-        
-        if (!isValidEmail(email)) {
-            showToast('error', 'Email Inválido', 'Por favor, insira um email válido.');
-            addShakeAnimation(document.getElementById('emailReseller'));
-            document.getElementById('emailReseller').focus();
-            return false;
-        }
-        
-        if (!isValidPhone(telefone)) {
-            showToast('error', 'Telefone Inválido', 'Insira um telefone válido com DDD (10 ou 11 dígitos).');
-            addShakeAnimation(document.getElementById('telefoneReseller'));
-            document.getElementById('telefoneReseller').focus();
-            return false;
-        }
-        
-        if (cidade.length < 3) {
-            showToast('error', 'Cidade Inválida', 'A cidade deve ter pelo menos 3 caracteres.');
-            addShakeAnimation(document.getElementById('cidade'));
-            document.getElementById('cidade').focus();
-            return false;
-        }
-        
-        return true;
-    }
-
-    // Máscara de telefone
-    document.getElementById('telefoneReseller').addEventListener('input', function(e) {
-        let value = e.target.value.replace(/\D/g, '');
-        if (value.length > 11) value = value.slice(0, 11);
-        
-        if (value.length > 10) {
-            value = value.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
-        } else if (value.length > 6) {
-            value = value.replace(/(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
-        } else if (value.length > 2) {
-            value = value.replace(/(\d{2})(\d{0,5})/, '($1) $2');
-        } else if (value.length > 0) {
-            value = value.replace(/(\d*)/, '($1');
-        }
-        
-        e.target.value = value;
-    });
-
-    // Submissão do formulário
-    let isSubmitting = false;
-
-    document.getElementById('resellerForm').addEventListener('submit', async function(e) {
-        e.preventDefault();
-        
-        if (isSubmitting) {
-            showToast('error', 'Aguarde', 'Já estamos processando seu envio...');
-            return;
-        }
-        
-        const form = this;
-        const submitBtn = document.getElementById('submitBtnReseller');
-        const formData = new FormData(form);
-        
-        if (!validateResellerForm(formData)) {
-            return;
-        }
-        
-        isSubmitting = true;
-        submitBtn.disabled = true;
-        submitBtn.classList.add('btn--loading');
-        const originalText = submitBtn.textContent;
-        submitBtn.textContent = '';
-        
-        try {
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 10000);
-            
-            const response = await fetch(SCRIPT_URL, {
-                method: 'POST',
-                body: formData,
-                signal: controller.signal
-            });
-            
-            clearTimeout(timeoutId);
-            const result = await response.json();
-            
-            if (result.success) {
-                showToast('success', 'Solicitação Enviada!', 'Entraremos em contato em breve.');
-                form.reset();
-            } else {
-                showToast('error', 'Erro ao Enviar', result.message || 'Tente novamente ou entre em contato pelo WhatsApp.');
-            }
-            
-        } catch (error) {
-            console.error('Erro:', error);
-            
-            if (error.name === 'AbortError') {
-                showToast('error', 'Tempo Esgotado', 'O servidor demorou muito. Tente novamente.');
-            } else {
-                showToast('error', 'Erro de Conexão', 'Verifique sua internet e tente novamente.');
-            }
-            
-        } finally {
-            isSubmitting = false;
-            submitBtn.disabled = false;
-            submitBtn.classList.remove('btn--loading');
-            submitBtn.textContent = originalText;
-        }
-    });
-    </script>
+    <script src="assets/js/form-utils.js"></script>
+    <script src="assets/js/onde-encontrar.js"></script>
 </body>
 
 </html>

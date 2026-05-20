@@ -7,135 +7,6 @@
     <meta name="description" content="Entre em contato com Produtos Tio Luiz. Estamos prontos para atendê-lo via WhatsApp, email ou formulário.">
     <title>Contato - Produtos Tio Luiz</title>
     <link rel="stylesheet" href="assets/css/styles.css">
-    <style>
-        /* Toast de sucesso/erro */
-        .toast {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            padding: 1rem 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            font-weight: 500;
-            opacity: 0;
-            transform: translateY(100px);
-            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            z-index: 9999;
-            max-width: 400px;
-        }
-
-        .toast.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .toast.success {
-            background: linear-gradient(135deg, #2e7d32, #43a047);
-            color: white;
-        }
-
-        .toast.error {
-            background: linear-gradient(135deg, #c62828, #d32f2f);
-            color: white;
-        }
-
-        .toast-icon {
-            font-size: 1.5rem;
-            flex-shrink: 0;
-        }
-
-        .toast-content {
-            flex: 1;
-        }
-
-        .toast-title {
-            font-weight: 600;
-            margin-bottom: 0.25rem;
-        }
-
-        .toast-message {
-            font-size: 0.875rem;
-            opacity: 0.95;
-        }
-
-        /* Estados de validação */
-        .form-input:focus:valid,
-        .form-select:focus:valid,
-        .form-textarea:focus:valid {
-            border-color: var(--color-success);
-            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
-        }
-
-        /* Animação de shake para erro */
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-            20%, 40%, 60%, 80% { transform: translateX(5px); }
-        }
-
-        .form-input.error-shake,
-        .form-select.error-shake,
-        .form-textarea.error-shake {
-            animation: shake 0.5s;
-            border-color: var(--color-error) !important;
-        }
-
-        /* Loading spinner no botão */
-        .btn--loading {
-            position: relative;
-            pointer-events: none;
-        }
-
-        .btn--loading::after {
-            content: '';
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            top: 50%;
-            left: 50%;
-            margin-left: -10px;
-            margin-top: -10px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-top-color: white;
-            border-radius: 50%;
-            animation: spin 0.6s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* Contador de caracteres */
-        .char-counter {
-            display: block;
-            text-align: right;
-            margin-top: 0.25rem;
-            font-size: 0.875rem;
-            color: var(--color-gray-600);
-            transition: color 0.3s;
-        }
-
-        .char-counter.warning {
-            color: var(--color-warning);
-        }
-
-        .char-counter.danger {
-            color: var(--color-error);
-            font-weight: 600;
-        }
-
-        @media (max-width: 768px) {
-            .toast {
-                bottom: 1rem;
-                right: 1rem;
-                left: 1rem;
-                max-width: none;
-            }
-        }
-    </style>
 </head>
 
 <body>
@@ -166,7 +37,7 @@
     </header>
 
     <!-- PAGE HEADER -->
-    <section class="hero" style="min-height: 400px; padding: 4rem 0;">
+    <section class="hero hero--compact">
         <img src="assets/images/atendimento.webp" alt="Atendimento Tio Luiz" class="hero__background">
         <div class="hero__overlay"></div>
         
@@ -182,7 +53,7 @@
             <div class="grid grid--3" style="margin-bottom: 4rem;">
                 <a href="https://wa.me/5579998985386" target="_blank" rel="noopener noreferrer" class="card fade-in"
                     style="text-decoration: none; transition: all 0.3s;">
-                    <div class="card__content" style="text-align: center;">
+                    <div class="card__content u-text-center">
                         <div style="width: 80px; height: 80px; margin: 0 auto 1.5rem; background: linear-gradient(135deg, var(--color-primary), var(--color-accent)); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-md);">
                             <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
@@ -198,7 +69,7 @@
                 </a>
 
                 <a href="mailto:sac@distribuidoratioluiz.com.br" class="card fade-in" style="text-decoration: none;">
-                    <div class="card__content" style="text-align: center;">
+                    <div class="card__content u-text-center">
                         <div style="width: 80px; height: 80px; margin: 0 auto 1.5rem; background: linear-gradient(135deg, var(--color-primary), var(--color-accent)); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-md);">
                             <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
@@ -212,7 +83,7 @@
                 </a>
 
                 <div class="card fade-in">
-                    <div class="card__content" style="text-align: center;">
+                    <div class="card__content u-text-center">
                         <div style="width: 80px; height: 80px; margin: 0 auto 1.5rem; background: linear-gradient(135deg, var(--color-primary), var(--color-accent)); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-md);">
                             <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <circle cx="12" cy="12" r="10"/>
@@ -366,7 +237,7 @@
     <!-- FAQ SECTION -->
     <section class="section section--light">
         <div class="container">
-            <div style="text-align: center; margin-bottom: 3rem;">
+            <div class="section-header--centered">
                 <h2 class="section-title fade-in">Perguntas Frequentes</h2>
                 <p class="section-subtitle fade-in">Tire suas dúvidas mais comuns</p>
             </div>
@@ -491,248 +362,8 @@
     <div id="toastContainer"></div>
 
     <script src="assets/js/script.js"></script>
-
-    <!-- SCRIPT DO FORMULÁRIO - SEM ALERTS! -->
-    <script>
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwS8kCuFdSG4yBf5oRQgx6U4RTybHQNXyU8quLploy-UcUBrRCifJUsZyV9A0psPv87/exec';
-
-    // ========================================
-    // FUNÇÕES DE UTILIDADE
-    // ========================================
-
-    function sanitizeInput(input) {
-        const temp = document.createElement('div');
-        temp.textContent = input;
-        return temp.innerHTML;
-    }
-
-    function isValidEmail(email) {
-        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return regex.test(email);
-    }
-
-    function isValidPhone(phone) {
-        const numbers = phone.replace(/\D/g, '');
-        return numbers.length === 10 || numbers.length === 11;
-    }
-
-    // ========================================
-    // TOAST NOTIFICATIONS
-    // ========================================
-
-    function showToast(type, title, message) {
-        const container = document.getElementById('toastContainer');
-        
-        const toast = document.createElement('div');
-        toast.className = `toast ${type}`;
-        toast.innerHTML = `
-            <div class="toast-icon">${type === 'success' ? '✓' : '✕'}</div>
-            <div class="toast-content">
-                <div class="toast-title">${sanitizeInput(title)}</div>
-                <div class="toast-message">${sanitizeInput(message)}</div>
-            </div>
-        `;
-        
-        container.appendChild(toast);
-        
-        setTimeout(() => toast.classList.add('show'), 10);
-        
-        setTimeout(() => {
-            toast.classList.remove('show');
-            setTimeout(() => toast.remove(), 400);
-        }, 5000);
-    }
-
-    // ========================================
-    // VALIDAÇÃO DO FORMULÁRIO
-    // ========================================
-
-    function addShakeAnimation(element) {
-        element.classList.add('error-shake');
-        setTimeout(() => element.classList.remove('error-shake'), 500);
-    }
-
-    function validateForm(formData) {
-        const nome = formData.get('nome').trim();
-        const email = formData.get('email').trim();
-        const telefone = formData.get('telefone').trim();
-        const assunto = formData.get('assunto');
-        const mensagem = formData.get('mensagem').trim();
-        
-        // Validar nome
-        if (nome.length < 3) {
-            showToast('error', 'Nome Inválido', 'O nome deve ter pelo menos 3 caracteres.');
-            addShakeAnimation(document.getElementById('nome'));
-            document.getElementById('nome').focus();
-            return false;
-        }
-        if (nome.length > 100) {
-            showToast('error', 'Nome Muito Longo', 'O nome deve ter no máximo 100 caracteres.');
-            addShakeAnimation(document.getElementById('nome'));
-            return false;
-        }
-        
-        // Validar email
-        if (!isValidEmail(email)) {
-            showToast('error', 'Email Inválido', 'Por favor, insira um email válido.');
-            addShakeAnimation(document.getElementById('email'));
-            document.getElementById('email').focus();
-            return false;
-        }
-        
-        // Validar telefone (se preenchido)
-        if (telefone && !isValidPhone(telefone)) {
-            showToast('error', 'Telefone Inválido', 'Insira um telefone válido com DDD (10 ou 11 dígitos).');
-            addShakeAnimation(document.getElementById('telefone'));
-            document.getElementById('telefone').focus();
-            return false;
-        }
-        
-        // Validar assunto
-        if (!assunto) {
-            showToast('error', 'Assunto Obrigatório', 'Por favor, selecione um assunto.');
-            addShakeAnimation(document.getElementById('assunto'));
-            document.getElementById('assunto').focus();
-            return false;
-        }
-        
-        // Validar mensagem
-        if (mensagem.length < 10) {
-            showToast('error', 'Mensagem Muito Curta', 'A mensagem deve ter pelo menos 10 caracteres.');
-            addShakeAnimation(document.getElementById('mensagem'));
-            document.getElementById('mensagem').focus();
-            return false;
-        }
-        if (mensagem.length > 1000) {
-            showToast('error', 'Mensagem Muito Longa', 'A mensagem deve ter no máximo 1000 caracteres.');
-            addShakeAnimation(document.getElementById('mensagem'));
-            return false;
-        }
-        
-        return true;
-    }
-
-    // ========================================
-    // CONTADOR DE CARACTERES
-    // ========================================
-
-    const mensagemField = document.getElementById('mensagem');
-    const counter = document.getElementById('mensagem-counter');
-
-    mensagemField.addEventListener('input', function(e) {
-        const maxLength = 1000;
-        const currentLength = e.target.value.length;
-        
-        counter.textContent = `${currentLength}/${maxLength} caracteres`;
-        
-        counter.classList.remove('warning', 'danger');
-        
-        if (currentLength > maxLength * 0.9) {
-            counter.classList.add('warning');
-        }
-        if (currentLength === maxLength) {
-            counter.classList.add('danger');
-        }
-    });
-
-    mensagemField.addEventListener('paste', function(e) {
-        const paste = (e.clipboardData || window.clipboardData).getData('text');
-        if (paste.length > 1000) {
-            e.preventDefault();
-            showToast('error', 'Texto Muito Longo', 'O texto colado excede 1000 caracteres.');
-        }
-    });
-
-    // ========================================
-    // MÁSCARA DE TELEFONE
-    // ========================================
-
-    document.getElementById('telefone').addEventListener('input', function(e) {
-        let value = e.target.value.replace(/\D/g, '');
-        if (value.length > 11) value = value.slice(0, 11);
-        
-        if (value.length > 10) {
-            value = value.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
-        } else if (value.length > 6) {
-            value = value.replace(/(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
-        } else if (value.length > 2) {
-            value = value.replace(/(\d{2})(\d{0,5})/, '($1) $2');
-        } else if (value.length > 0) {
-            value = value.replace(/(\d*)/, '($1');
-        }
-        
-        e.target.value = value;
-    });
-
-    // ========================================
-    // SUBMISSÃO DO FORMULÁRIO
-    // ========================================
-
-    let isSubmitting = false;
-
-    document.getElementById('contactForm').addEventListener('submit', async function(e) {
-        e.preventDefault();
-        
-        if (isSubmitting) {
-            showToast('error', 'Aguarde', 'Já estamos processando seu envio...');
-            return;
-        }
-        
-        const form = this;
-        const submitBtn = document.getElementById('submitBtn');
-        const formData = new FormData(form);
-        
-        // Validar antes de enviar
-        if (!validateForm(formData)) {
-            return;
-        }
-        
-        // Ativar estado de loading
-        isSubmitting = true;
-        submitBtn.disabled = true;
-        submitBtn.classList.add('btn--loading');
-        const originalText = submitBtn.textContent;
-        submitBtn.textContent = '';
-        
-        try {
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 10000);
-            
-            const response = await fetch(SCRIPT_URL, {
-                method: 'POST',
-                body: formData,
-                signal: controller.signal
-            });
-            
-            clearTimeout(timeoutId);
-            
-            const result = await response.json();
-            
-            if (result.success) {
-                showToast('success', 'Mensagem Enviada!', 'Entraremos em contato em breve.');
-                form.reset();
-                counter.textContent = '0/1000 caracteres';
-            } else {
-                showToast('error', 'Erro ao Enviar', result.message || 'Tente novamente ou entre em contato pelo WhatsApp.');
-            }
-            
-        } catch (error) {
-            console.error('Erro:', error);
-            
-            if (error.name === 'AbortError') {
-                showToast('error', 'Tempo Esgotado', 'O servidor demorou muito. Tente novamente.');
-            } else {
-                showToast('error', 'Erro de Conexão', 'Verifique sua internet e tente novamente.');
-            }
-            
-        } finally {
-            isSubmitting = false;
-            submitBtn.disabled = false;
-            submitBtn.classList.remove('btn--loading');
-            submitBtn.textContent = originalText;
-        }
-    });
-    </script>
+    <script src="assets/js/form-utils.js"></script>
+    <script src="assets/js/contato.js"></script>
 </body>
 
 </html>
