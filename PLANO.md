@@ -73,10 +73,11 @@ Coleção: **`produtos`**
 ```
 documento (id gerado automaticamente):
   nome:           string  "Feijão Carioca Especial"
+  nome_curto:     string  "Calopsita e Agapornis"  (opcional — usado em pet-cards como badge)
   categoria:      string  "feijoes" | "arroz" | "milho" | "temperos" | "chas" | "outros" | "pet-aves" | "pet-caes"
   descricao:      string  "Grãos selecionados premium"
   embalagem:      string  "1 Kg" | "500 g" | "100 ml"
-  imagem_url:     string  "https://firebasestorage..." ou ""
+  imagem_url:     string  "https://firebasestorage..." ou caminho relativo enquanto Storage não está ativo
   ativo:          boolean true   (false = oculto, sem deletar)
   destaque:       boolean false  (true = aparece em destaque na home)
   ordem:          number  1      (controla ordem de exibição dentro da categoria)
@@ -137,23 +138,21 @@ Categorias e tipos ficam em `data/categorias.json` (estáticos, raramente mudam)
 
 ---
 
-### 🔜 Fase 3 — Migração de produtos do HTML para Firestore
+### ✅ Fase 3 — Migração de produtos do HTML para Firestore
+**Concluída em 2026-05-19**
 
-**Objetivo:** os HTMLs deixam de ter produtos hardcoded — passam a carregar do banco.
+- [x] Modelo de dados definido (ver "Modelo de dados" acima — incluído `nome_curto` para pet-cards).
+- [x] `data/produtos-seed.json` criado com os 30 produtos extraídos do HTML (8 categorias).
+- [x] `data/categorias.json` criado com metadados de categorias (id, nome, tipo, ordem).
+- [x] Página one-shot `admin/seed.html` populou o Firestore via batch write (deletada após uso).
+- [x] [`assets/js/produtos-publico.js`](assets/js/produtos-publico.js): fetch único da coleção `produtos`, filtra/ordena no client, popula containers por `data-category`. Evita queries compostas (sem necessidade de índice no Firestore).
+- [x] [`produtos.html`](produtos.html): 6 blocos hardcoded substituídos por `<div class="grid grid--2 product-cards" data-category="...">` vazios.
+- [x] [`pet-food.html`](pet-food.html): 2 blocos hardcoded substituídos por `<div class="grid grid--3 pet-cards" data-category="...">` vazios.
+- [x] [`assets/js/produtos.js`](assets/js/produtos.js) refatorado para event delegation no document — funciona com cards renderizados async.
+- [x] [`index.html`](index.html): tag do firebase-config removida (home não tem produtos dinâmicos no MVP — pode receber seção "destaques" futuramente usando o campo `destaque`).
+- [x] Validado localmente: cards renderizam, seletor visual troca imagem de destaque, sem erros no console.
 
-**Passos:**
-1. Modelar definitivamente os campos (ver "Modelo de dados" acima).
-2. Popular o Firestore manualmente (cole pela primeira vez, via console) com os produtos atuais.
-3. Criar `assets/js/produtos-publico.js` que:
-   - Lê a coleção `produtos` filtrando `ativo: true`, ordenando por `ordem`.
-   - Renderiza dinamicamente os cards nas seções de [produtos.html](produtos.html), [pet-food.html](pet-food.html) e na home [index.html](index.html).
-4. Remover o HTML hardcoded dos produtos (deixar `<div id="lista-produtos"></div>` vazio).
-5. Manter o seletor visual de `produtos.js` funcionando com os novos cards renderizados.
-6. Criar `data/categorias.json` com a lista de categorias (estáticas).
-
-**Critério de pronto:**
-- Adicionar/remover um produto manualmente no Firestore reflete imediatamente nas páginas públicas.
-- Não há mais lista de produtos hardcoded nos HTMLs.
+**Pendência técnica conhecida:** algumas imagens em `assets/images/produtos/*.webp` referenciadas no seed ainda podem não existir (anotado no PLANO original) — produtos-publico.js cai para `todos_os_produtos.webp` via `onerror`. Resolver na Fase 5 (Storage) ou copiando os arquivos manualmente.
 
 ---
 

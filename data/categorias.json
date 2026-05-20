@@ -1,0 +1,10 @@
+[
+  { "id": "feijoes",   "nome": "Feijões",            "tipo": "regular", "ordem": 1 },
+  { "id": "arroz",     "nome": "Arroz",              "tipo": "regular", "ordem": 2 },
+  { "id": "milho",     "nome": "Milho e Derivados",  "tipo": "regular", "ordem": 3 },
+  { "id": "temperos",  "nome": "Molhos e Vinagre",   "tipo": "regular", "ordem": 4 },
+  { "id": "chas",      "nome": "Chás",               "tipo": "regular", "ordem": 5 },
+  { "id": "outros",    "nome": "Outros Produtos",    "tipo": "regular", "ordem": 6 },
+  { "id": "pet-aves",  "nome": "Alimento para Aves", "tipo": "pet",     "ordem": 7 },
+  { "id": "pet-caes",  "nome": "Alimento para Cães", "tipo": "pet",     "ordem": 8 }
+]

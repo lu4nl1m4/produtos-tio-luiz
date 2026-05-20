@@ -1,0 +1,308 @@
+[
+  {
+    "nome": "Feijão Carioca Especial",
+    "categoria": "feijoes",
+    "descricao": "Grãos selecionados premium.",
+    "embalagem": "1 Kg",
+    "imagem_url": "assets/images/feijao_carioca_especial.webp",
+    "ativo": true,
+    "destaque": false,
+    "ordem": 1
+  },
+  {
+    "nome": "Feijão Carioca",
+    "categoria": "feijoes",
+    "descricao": "O tradicional feijão do dia a dia.",
+    "embalagem": "1 Kg",
+    "imagem_url": "assets/images/feijao_carioca.webp",
+    "ativo": true,
+    "destaque": false,
+    "ordem": 2
+  },
+  {
+    "nome": "Feijão Preto",
+    "categoria": "feijoes",
+    "descricao": "Feijão de primeira, maciez garantida.",
+    "embalagem": "1 Kg",
+    "imagem_url": "assets/images/feijao_preto.webp",
+    "ativo": true,
+    "destaque": false,
+    "ordem": 3
+  },
+  {
+    "nome": "Feijão Fradinho",
+    "categoria": "feijoes",
+    "descricao": "Perfeito para acarajé e saladas.",
+    "embalagem": "1 Kg",
+    "imagem_url": "assets/images/feijao_fradinho.webp",
+    "ativo": true,
+    "destaque": false,
+    "ordem": 4
+  },
+  {
+    "nome": "Feijão Branco",
+    "categoria": "feijoes",
+    "descricao": "Ideal para saladas e receitas especiais.",
+    "embalagem": "500 g",
+    "imagem_url": "assets/images/feijao_branco.webp",
+    "ativo": true,
+    "destaque": false,
+    "ordem": 5
+  },
+  {
+    "nome": "Arroz Branco",
+    "categoria": "arroz",
+    "descricao": "Grãos selecionados, branquinhos e soltinhos.",
+    "embalagem": "1 Kg",
+    "imagem_url": "assets/images/arroz_branco.webp",
+    "ativo": true,
+    "destaque": false,
+    "ordem": 1
+  },
+  {
+    "nome": "Arroz Parboilizado",
+    "categoria": "arroz",
+    "descricao": "Mais nutritivo e soltinho.",
+    "embalagem": "1 Kg",
+    "imagem_url": "assets/images/arroz_parboilizado.webp",
+    "ativo": true,
+    "destaque": false,
+    "ordem": 2
+  },
+  {
+    "nome": "Arroz Integral",
+    "categoria": "arroz",
+    "descricao": "Saúde e sabor em cada grão.",
+    "embalagem": "1 Kg",
+    "imagem_url": "assets/images/arroz_integral.webp",
+    "ativo": true,
+    "destaque": false,
+    "ordem": 3
+  },
+  {
+    "nome": "Milho de Pipoca",
+    "categoria": "milho",
+    "descricao": "Grãos selecionados que estouram muito!",
+    "embalagem": "500 g",
+    "imagem_url": "assets/images/produtos/milho-pipoca.webp",
+    "ativo": true,
+    "destaque": false,
+    "ordem": 1
+  },
+  {
+    "nome": "Milho de Mungunzá",
+    "categoria": "milho",
+    "descricao": "Tradicional e delicioso.",
+    "embalagem": "500 g",
+    "imagem_url": "assets/images/produtos/milho-mungunza.webp",
+    "ativo": true,
+    "destaque": false,
+    "ordem": 2
+  },
+  {
+    "nome": "Flocão Premium",
+    "categoria": "milho",
+    "descricao": "Para o melhor bolo de fubá e cuscuz.",
+    "embalagem": "400 g",
+    "imagem_url": "assets/images/produtos/flocao-premium.webp",
+    "ativo": true,
+    "destaque": false,
+    "ordem": 3
+  },
+  {
+    "nome": "Molho de Pimenta",
+    "categoria": "temperos",
+    "descricao": "Picante e saboroso.",
+    "embalagem": "100 ml",
+    "imagem_url": "assets/images/produtos/molho-pimenta.webp",
+    "ativo": true,
+    "destaque": false,
+    "ordem": 1
+  },
+  {
+    "nome": "Molho de Alho",
+    "categoria": "temperos",
+    "descricao": "Intenso e aromático.",
+    "embalagem": "100 ml",
+    "imagem_url": "assets/images/produtos/molho-alho.webp",
+    "ativo": true,
+    "destaque": false,
+    "ordem": 2
+  },
+  {
+    "nome": "Vinagre de Álcool",
+    "categoria": "temperos",
+    "descricao": "O verdadeiro sabor do vinagre.",
+    "embalagem": "500 e 750 ml",
+    "imagem_url": "assets/images/produtos/vinagre-alcool.webp",
+    "ativo": true,
+    "destaque": false,
+    "ordem": 3
+  },
+  {
+    "nome": "Chá de Camomila",
+    "categoria": "chas",
+    "descricao": "Calmante natural.",
+    "embalagem": "10 g",
+    "imagem_url": "assets/images/produtos/cha-camomila.webp",
+    "ativo": true,
+    "destaque": false,
+    "ordem": 1
+  },
+  {
+    "nome": "Chá de Boldo",
+    "categoria": "chas",
+    "descricao": "Digestivo natural.",
+    "embalagem": "10 g",
+    "imagem_url": "assets/images/produtos/cha-boldo.webp",
+    "ativo": true,
+    "destaque": false,
+    "ordem": 2
+  },
+  {
+    "nome": "Chá de Hortelã",
+    "categoria": "chas",
+    "descricao": "Refrescante e aromático.",
+    "embalagem": "10 g",
+    "imagem_url": "assets/images/produtos/cha-hortela.webp",
+    "ativo": true,
+    "destaque": false,
+    "ordem": 3
+  },
+  {
+    "nome": "Chá de Cidreira",
+    "categoria": "chas",
+    "descricao": "Relaxante e suave.",
+    "embalagem": "10 g",
+    "imagem_url": "assets/images/produtos/cha-cidreira.webp",
+    "ativo": true,
+    "destaque": false,
+    "ordem": 4
+  },
+  {
+    "nome": "Chá de Erva-Doce",
+    "categoria": "chas",
+    "descricao": "Digestivo e saboroso.",
+    "embalagem": "15 g",
+    "imagem_url": "assets/images/produtos/cha-erva-doce.webp",
+    "ativo": true,
+    "destaque": false,
+    "ordem": 5
+  },
+  {
+    "nome": "Massa para Tapioca",
+    "categoria": "outros",
+    "descricao": "Goma de tapioca de qualidade.",
+    "embalagem": "500 g e 1 Kg",
+    "imagem_url": "assets/images/produtos/tapioca.webp",
+    "ativo": true,
+    "destaque": false,
+    "ordem": 1
+  },
+  {
+    "nome": "Lámen Sabor Carne",
+    "categoria": "outros",
+    "descricao": "Prático e saboroso.",
+    "embalagem": "80 g",
+    "imagem_url": "assets/images/produtos/lamen-carne.webp",
+    "ativo": true,
+    "destaque": false,
+    "ordem": 2
+  },
+  {
+    "nome": "Lámen Sabor Galinha",
+    "categoria": "outros",
+    "descricao": "Refeição rápida e deliciosa.",
+    "embalagem": "80 g",
+    "imagem_url": "assets/images/produtos/lamen-frango.webp",
+    "ativo": true,
+    "destaque": false,
+    "ordem": 3
+  },
+  {
+    "nome": "Lámen Sabor Galinha Caipira",
+    "categoria": "outros",
+    "descricao": "Sabor tradicional.",
+    "embalagem": "80 g",
+    "imagem_url": "assets/images/produtos/lamen-galinha-caipira.webp",
+    "ativo": true,
+    "destaque": false,
+    "ordem": 4
+  },
+  {
+    "nome": "Queijo Parmesão Ralado",
+    "categoria": "outros",
+    "descricao": "Toque especial nas massas.",
+    "embalagem": "40 g",
+    "imagem_url": "assets/images/produtos/queijo-parmesao.webp",
+    "ativo": true,
+    "destaque": false,
+    "ordem": 5
+  },
+  {
+    "nome": "Alimento para Calopsita e Agapornis",
+    "nome_curto": "Calopsita e Agapornis",
+    "categoria": "pet-aves",
+    "descricao": "Alimento balanceado para calopsitas e agapornis, com sementes e partículas nutritivas variadas.",
+    "embalagem": "500 g",
+    "imagem_url": "assets/images/calopsita.webp",
+    "ativo": true,
+    "destaque": false,
+    "ordem": 1
+  },
+  {
+    "nome": "Alimento para Periquito",
+    "nome_curto": "Periquito",
+    "categoria": "pet-aves",
+    "descricao": "Alimento completo para periquitos, rico em vitaminas e sementes selecionadas.",
+    "embalagem": "500 g",
+    "imagem_url": "assets/images/periquito.webp",
+    "ativo": true,
+    "destaque": false,
+    "ordem": 2
+  },
+  {
+    "nome": "Alimento para Cardeal e Galo-de-campina",
+    "nome_curto": "Cardeal e Galo-de-campina",
+    "categoria": "pet-aves",
+    "descricao": "Alimento completo para cardeal e galo-de-campina, rico em vitaminas e minerais selecionados.",
+    "embalagem": "500 g",
+    "imagem_url": "assets/images/cardeal.webp",
+    "ativo": true,
+    "destaque": false,
+    "ordem": 3
+  },
+  {
+    "nome": "Alimento para Papagaio",
+    "nome_curto": "Papagaio",
+    "categoria": "pet-aves",
+    "descricao": "Alimento completo para papagaios e aves grandes, com sementes, grãos e vitaminas.",
+    "embalagem": "500 g",
+    "imagem_url": "assets/images/papagaio.webp",
+    "ativo": true,
+    "destaque": false,
+    "ordem": 4
+  },
+  {
+    "nome": "Triturada com Flocos",
+    "nome_curto": "Triturada com Flocos",
+    "categoria": "pet-aves",
+    "descricao": "Alimento triturado com flocos, completo e nutritivo para pássaros variados.",
+    "embalagem": "500 g",
+    "imagem_url": "assets/images/triturada.webp",
+    "ativo": true,
+    "destaque": false,
+    "ordem": 5
+  },
+  {
+    "nome": "Arroz para Cães",
+    "nome_curto": "Cães",
+    "categoria": "pet-caes",
+    "descricao": "Arroz de qualidade, perfeito como complemento na alimentação natural do seu cachorro. Fácil digestão e rica fonte de energia.",
+    "embalagem": "5 Kg",
+    "imagem_url": "assets/images/arroz_caes.webp",
+    "ativo": true,
+    "destaque": false,
+    "ordem": 1
+  }
+]

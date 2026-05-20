@@ -105,82 +105,7 @@
                     Alimento para Pássaros
                 </h3>
 
-                <div class="grid grid--3">
-                    <!-- Produto 1: Calopsita e Agapornis -->
-                    <div class="pet-card fade-in">
-                        <span class="pet-badge">Calopsita e Agapornis</span>
-                        <img src="assets/images/calopsita.webp" alt="Calopsita e Agapornis" class="pet-card__image">
-                        <h4 class="card__title" style="color: #ff6f00;">Alimento para Calopsita e Agapornis</h4>
-                        <p class="card__text">
-                            Alimento balanceado para calopsitas e agapornis, com sementes e partículas nutritivas variadas.
-                        </p>
-                        <div class="pet-card__footer">
-                            <p style="font-size: 0.875rem; color: var(--color-gray-600); margin: 0;">
-                                <strong>Embalagem:</strong> 500g
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- Produto 2: Periquito -->
-                    <div class="pet-card fade-in">
-                        <span class="pet-badge">Periquito</span>
-                        <img src="assets/images/periquito.webp" alt="Periquito" class="pet-card__image">
-                        <h4 class="card__title" style="color: #ff6f00;">Alimento para Periquito</h4>
-                        <p class="card__text">
-                           Alimento completo para periquitos, rico em vitaminas e sementes selecionadas.
-                        </p>
-                        <div class="pet-card__footer">
-                            <p style="font-size: 0.875rem; color: var(--color-gray-600); margin: 0;">
-                                <strong>Embalagem:</strong> 500g
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- Produto 3: Cardeal e galo -->
-                    <div class="pet-card fade-in">
-                        <span class="pet-badge">Cardeal e Galo-de-campina</span>
-                        <img src="assets/images/cardeal.webp" alt="Cardeal e Galo-de-campina" class="pet-card__image">
-                        <h4 class="card__title" style="color: #ff6f00;">Alimento para Cardeal e Galo-de-campina</h4>
-                        <p class="card__text">
-                            Alimento completo para cardeal e galo-de-campina, rico em vitaminas e minerais selecionados.
-                        </p>
-                        <div class="pet-card__footer">
-                            <p style="font-size: 0.875rem; color: var(--color-gray-600); margin: 0;">
-                                <strong>Embalagem:</strong> 500g
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- Produto 4: Papagaio -->
-                    <div class="pet-card fade-in">
-                        <span class="pet-badge">Papagaio</span>
-                        <img src="assets/images/papagaio.webp" alt="Papagaio" class="pet-card__image">
-                        <h4 class="card__title" style="color: #ff6f00;">Alimento para Papagaio</h4>
-                        <p class="card__text">
-                            Alimento completo para papagaios e aves grandes, com sementes, grãos e vitaminas.
-                        </p>
-                        <div class="pet-card__footer">
-                            <p style="font-size: 0.875rem; color: var(--color-gray-600); margin: 0;">
-                                <strong>Embalagem:</strong> 500g
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- Produto 5: Triturada com Flocos -->
-                    <div class="pet-card fade-in">
-                        <span class="pet-badge">Triturada com Flocos</span>
-                        <img src="assets/images/triturada.webp" alt="Triturada com Flocos" class="pet-card__image">
-                        <h4 class="card__title" style="color: #ff6f00;">Triturada com Flocos</h4>
-                        <p class="card__text">
-                            Alimento triturado com flocos, completo e nutritivo para pássaros variados.
-                        </p>
-                        <div class="pet-card__footer">
-                            <p style="font-size: 0.875rem; color: var(--color-gray-600); margin: 0;">
-                                <strong>Embalagem:</strong> 500g
-                            </p>
-                        </div>
-                    </div>
-                </div>
+                <div class="grid grid--3 pet-cards" data-category="pet-aves"></div>
             </div>
 
             <!-- ARROZ PARA CÃES -->
@@ -189,21 +114,7 @@
                     Arroz para Cães
                 </h3>
 
-                <div class="grid grid--3 grid--arroz-caes">
-                    <div class="pet-card fade-in">
-                        <span class="pet-badge">Cães</span>
-                        <img src="assets/images/arroz_caes.webp" alt="Arroz para Cães Tio Luiz" class="pet-card__image">
-                        <h4 class="card__title" style="color: #ff6f00;">Arroz para Cães</h4>
-                        <p class="card__text">
-                            Arroz de qualidade, perfeito como complemento na alimentação natural do seu cachorro. Fácil digestão e rica fonte de energia.
-                        </p>
-                        <div class="pet-card__footer">
-                            <p style="font-size: 0.875rem; color: var(--color-gray-600); margin: 0;">
-                                <strong>Embalagem:</strong> 5kg
-                            </p>
-                        </div>
-                    </div>
-                </div>
+                <div class="grid grid--3 grid--arroz-caes pet-cards" data-category="pet-caes"></div>
             </div>
         </div>
     </section>
@@ -356,7 +267,7 @@
         </svg>
     </a>
 
-    <script type="module" src="assets/js/firebase-config.js"></script>
+    <script type="module" src="assets/js/produtos-publico.js"></script>
     <script src="assets/js/script.js"></script>
 </body>
 
