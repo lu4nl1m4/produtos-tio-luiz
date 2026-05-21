@@ -316,6 +316,18 @@ body.theme-pet .btn--outline:hover {
   color: white;
 }
 
+/* Variante do outline pra contexto de fundo claro (não usar sobre o hero).
+   Usa --detail-accent — verde no default, laranja em body.theme-pet. */
+.btn--outline-themed {
+  background-color: transparent;
+  border-color: var(--detail-accent);
+  color: var(--detail-accent);
+}
+.btn--outline-themed:hover {
+  background-color: var(--detail-accent);
+  color: white !important;
+}
+
 /* === HEADER / NAVIGATION === */
 .header {
   position: sticky;
