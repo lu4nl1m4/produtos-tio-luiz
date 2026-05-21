@@ -297,19 +297,38 @@ A seção "Nossos Produtos" da [`index.html`](index.html) era estática (6 cards
 
 ---
 
-### 🔜 Fase 7 — Polimento (SEO + acessibilidade + performance)
+### ✅ Fase 7 — Performance + Polimento
+**Concluída em 2026-05-20**
 
-Pendências técnicas levantadas na análise inicial — tratar quando o core estiver pronto:
+Auditoria de performance + correções aplicadas. Antes do trabalho, a home pet-food carregava 16 MB de GIF + index/sobre carregavam ~2 MB de PNGs não otimizados; Google Fonts via `@import` bloqueava render; cada navegação refazia fetch Firestore.
 
-- [ ] Adicionar `favicon.ico`
-- [ ] Open Graph tags (preview no WhatsApp/Facebook)
-- [ ] `loading="lazy"` em todas as imagens abaixo da dobra
-- [ ] Preload da fonte do Google em vez de `@import` no CSS
-- [ ] Substituir URLs placeholder das redes sociais (instagram.com, facebook.com) pelas reais
-- [ ] Remover handlers `onmouseover`/`onmouseout` inline em [contato.html:332-348](contato.html#L332-L348) — usar `:hover` no CSS
-- [ ] Adicionar `required` e remover `novalidate` dos formulários
-- [ ] `sitemap.xml` e `robots.txt`
-- [ ] Imagens quebradas em `assets/images/produtos/` — vão sumir naturalmente quando a Fase 6 (Storage) ficar pronta
+**Imagens (maior ganho):**
+- [x] `pet_foot_aves.gif` (16 MB), `hero_banner_*.png` (748 KB), `mesa.png` (964 KB), `tradicao.png` (934 KB) movidos pro Cloudinary com `f_auto,q_auto` — o GIF agora é servido como animated WebP/AVIF quando suportado (~1 MB). Arquivos locais deletados (~18 MB recuperados).
+- [x] `loading="lazy" decoding="async"` em imagens abaixo da dobra (3 estáticas + cards renderizados dinamicamente em produtos.html/pet-food.html/index.html via produtos-publico.js / home-categorias.js).
+- [x] `fetchpriority="high"` nas 3 imagens hero LCP (index, pet-food, sobre).
+
+**Bundle / network:**
+- [x] `@import` Google Fonts removido do CSS → `<link rel="stylesheet">` no `<head>` (não bloqueia mais o render do CSS).
+- [x] `<link rel="preconnect">` para `fonts.googleapis.com`, `fonts.gstatic.com`, `firestore.googleapis.com`, `res.cloudinary.com`.
+- [x] [`firebase-config.js`](assets/js/firebase-config.js) público slim: só importa Firestore. Auth e Storage SDKs (~80 KB) não baixam mais nas páginas públicas — [`auth.js`](assets/js/auth.js) cria sua própria instância usando `app` exportado.
+
+**Cache:**
+- [x] Novo [`assets/js/cache.js`](assets/js/cache.js): helper `cached(key, ttl, factory)` em sessionStorage. Aplicado em produtos-publico, home-categorias, produto-detalhe. TTLs: categorias/home_cards 10 min, produtos 5 min. Navegação interna (home → produtos → produto) deixa de refazer fetches.
+
+**JS:**
+- [x] `script.js`: scroll listeners passaram a usar `requestAnimationFrame` throttle (`rafThrottle`) + `{ passive: true }`. Antes disparavam ~60×/segundo forçando reflow.
+- [x] `console.log` de boot removido.
+
+**Meta / SEO:**
+- [x] Open Graph + Twitter Card meta tags em todas as 7 páginas públicas (preview no WhatsApp/Facebook).
+- [x] `<link rel="icon">` apontando pra `logo.webp` em todas (favicon placeholder até ter um `.ico` dedicado).
+
+**Pendências da auditoria adiadas / não-bloqueantes:**
+- `width`/`height` anti-CLS nas imagens — CSS já dimensiona; revisitar se Lighthouse acusar score CLS ruim em produção.
+- Extração dos SVGs sociais duplicados pra sprite externo — ganho real ~5 KB após gzip, esforço alto, baixa prioridade.
+- Substituir URLs placeholder das redes sociais (`instagram.com`, `facebook.com`) pelas reais — depende do usuário ter os perfis.
+- Remover handlers `onmouseover`/`onmouseout` inline em [contato.html](contato.html) — refactor pequeno, pendente.
+- `sitemap.xml` + `robots.txt` — fará mais sentido após o deploy (Fase 8) com a URL final.
 
 ---
 

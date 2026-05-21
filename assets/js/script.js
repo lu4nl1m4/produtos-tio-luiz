@@ -119,23 +119,30 @@ function highlightNavigation() {
     // Se nenhuma seção com âncora no menu foi encontrada, mantém o destaque original da página
 }
 
+    // Throttle helper via requestAnimationFrame — coalesce scroll events em no máximo 1/frame.
+    function rafThrottle(fn) {
+        let pending = false;
+        return function () {
+            if (pending) return;
+            pending = true;
+            requestAnimationFrame(() => {
+                pending = false;
+                fn();
+            });
+        };
+    }
+
     if (sections.length > 0) {
-        window.addEventListener('scroll', highlightNavigation);
+        window.addEventListener('scroll', rafThrottle(highlightNavigation), { passive: true });
     }
 
     // ===== HEADER SCROLL EFFECT =====
     const header = document.getElementById('header');
-    let lastScroll = 0;
-
-    window.addEventListener('scroll', () => {
-        const currentScroll = window.pageYOffset;
-        if (currentScroll > 100) {
-            header.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.1)';
-        } else {
-            header.style.boxShadow = '';
-        }
-        lastScroll = currentScroll;
-    });
+    if (header) {
+        window.addEventListener('scroll', rafThrottle(() => {
+            header.style.boxShadow = window.pageYOffset > 100 ? '0 4px 12px rgba(0, 0, 0, 0.1)' : '';
+        }), { passive: true });
+    }
 
     // ===== FADE IN ON SCROLL =====
     const observerOptions = {
@@ -197,6 +204,4 @@ function highlightNavigation() {
         yearElement.textContent = new Date().getFullYear();
     }
 
-    // ===== INITIALIZE =====
-    console.log('Produtos Tio Luiz - Website carregado com sucesso!');
 });

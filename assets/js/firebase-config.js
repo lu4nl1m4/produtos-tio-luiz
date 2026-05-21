@@ -1,16 +1,15 @@
 // Firebase Web SDK v10.14.1 — modular, via CDN (sem build step)
 // Docs: https://firebase.google.com/docs/web/setup
 //
-// IMPORTANTE: substitua os valores abaixo pela config real do seu projeto.
-// Onde achar: Firebase Console → Configurações do projeto → Seus apps → Web → Config.
+// IMPORTANTE: este config-público só inicializa o Firestore para evitar baixar
+// SDKs de Auth/Storage em páginas públicas que não os utilizam. Quem precisa
+// de Auth (auth.js, painel admin) importa diretamente do firebase-auth SDK.
 //
-// Esses valores são públicos por design — a segurança vem das regras
+// Os valores abaixo são públicos por design — a segurança vem das regras
 // (firestore.rules / storage.rules) e do Firebase Auth, não de esconder a chave.
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
 import { getFirestore } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
-import { getAuth } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
-import { getStorage } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-storage.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyB0lJrlsHERnH2ZArBRbiOD-bk32hsxECs",
@@ -24,5 +23,3 @@ const firebaseConfig = {
 
 export const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
-export const auth = getAuth(app);
-export const storage = getStorage(app);

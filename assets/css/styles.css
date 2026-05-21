@@ -4,7 +4,7 @@
    ======================================== */
 
 /* === IMPORTS === */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+/* Fonte Inter movida para <link rel="preconnect"> + <link rel="stylesheet"> no <head> de cada HTML — @import bloqueia render serializando a request. */
 
 /* === VARIABLES === */
 :root {

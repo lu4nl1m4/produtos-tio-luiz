@@ -4,10 +4,14 @@
 // A ordem das seções segue o campo `ordem` da coleção `categorias` no admin.
 
 import { db } from "./firebase-config.js";
+import { cached } from "./cache.js";
 import {
   collection,
   getDocs
 } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
+const TTL_CATEGORIAS = 10 * 60 * 1000;  // 10 min
+const TTL_PRODUTOS   = 5 * 60 * 1000;   // 5 min
 
 const FALLBACK_IMAGE = "assets/images/todos_os_produtos.webp";
 
@@ -39,7 +43,7 @@ function renderPetCard(p) {
     <div class="pet-card" style="position:relative;">
       ${p.destaque ? BADGE_DESTAQUE : ""}
       <span class="pet-badge">${escapeHtml(badge)}</span>
-      <img src="${escapeHtml(p.imagem_url || FALLBACK_IMAGE)}" alt="${escapeHtml(badge)}" class="pet-card__image" onerror="this.src='${FALLBACK_IMAGE}'">
+      <img src="${escapeHtml(p.imagem_url || FALLBACK_IMAGE)}" alt="${escapeHtml(badge)}" class="pet-card__image" loading="lazy" decoding="async" onerror="this.src='${FALLBACK_IMAGE}'">
       <h4 class="card__title" style="color: #ff6f00;">${escapeHtml(p.nome)}</h4>
       <p class="card__text">${escapeHtml(p.descricao || "")}</p>
       <div class="pet-card__footer">
@@ -80,7 +84,7 @@ function renderSecaoRegular(cat, produtos, index) {
 
   const imagemBloco = `
     <div class="fade-in"${imagemDireita ? ' style="order: 2;"' : ""}>
-      <img id="${escapeHtml(cat.id)}-image" src="${escapeHtml(imagemSrc)}" alt="${escapeHtml(imagemAlt)}" class="product-image" style="width: 100%;" onerror="this.src='${FALLBACK_IMAGE}'">
+      <img id="${escapeHtml(cat.id)}-image" src="${escapeHtml(imagemSrc)}" alt="${escapeHtml(imagemAlt)}" class="product-image" style="width: 100%;" loading="lazy" decoding="async" onerror="this.src='${FALLBACK_IMAGE}'">
     </div>
   `;
 
@@ -136,26 +140,29 @@ function renderSecaoPet(cat, produtos) {
 // ---------- Carregamento ----------
 
 async function carregarCategorias() {
-  try {
-    const snap = await getDocs(collection(db, "categorias"));
-    if (snap.size > 0) {
-      return snap.docs
-        .map((d) => ({ id: d.id, ...d.data() }))
-        .sort((a, b) => (a.ordem ?? 99) - (b.ordem ?? 99));
+  return cached("categorias", TTL_CATEGORIAS, async () => {
+    try {
+      const snap = await getDocs(collection(db, "categorias"));
+      if (snap.size > 0) {
+        return snap.docs
+          .map((d) => ({ id: d.id, ...d.data() }))
+          .sort((a, b) => (a.ordem ?? 99) - (b.ordem ?? 99));
+      }
+    } catch (e) {
+      console.warn("Falha ao ler categorias do Firestore, usando JSON:", e);
     }
-  } catch (e) {
-    console.warn("Falha ao ler categorias do Firestore, usando JSON:", e);
-  }
-  // Fallback: data/categorias.json
-  const res = await fetch("data/categorias.json");
-  if (!res.ok) throw new Error("Falha ao carregar categorias.");
-  const lista = await res.json();
-  return lista.sort((a, b) => (a.ordem ?? 99) - (b.ordem ?? 99));
+    const res = await fetch("data/categorias.json");
+    if (!res.ok) throw new Error("Falha ao carregar categorias.");
+    const lista = await res.json();
+    return lista.sort((a, b) => (a.ordem ?? 99) - (b.ordem ?? 99));
+  });
 }
 
 async function carregarProdutos() {
-  const snap = await getDocs(collection(db, "produtos"));
-  return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+  return cached("produtos", TTL_PRODUTOS, async () => {
+    const snap = await getDocs(collection(db, "produtos"));
+    return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+  });
 }
 
 function produtosDaCategoria(produtos, catId) {

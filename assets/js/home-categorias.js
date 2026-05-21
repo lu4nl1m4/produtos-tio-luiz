@@ -6,10 +6,15 @@
 // fica em branco mesmo antes de o admin importar/criar os cards.
 
 import { db } from "./firebase-config.js";
+import { cached } from "./cache.js";
 import {
   collection,
   getDocs
 } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
+const TTL_HOME_CARDS  = 10 * 60 * 1000;
+const TTL_CATEGORIAS  = 10 * 60 * 1000;
+const TTL_PRODUTOS    = 5 * 60 * 1000;
 
 const FALLBACK_IMAGE = "assets/images/todos_os_produtos.webp";
 
@@ -20,7 +25,7 @@ function escapeHtml(s) {
 function renderCardNormal({ titulo, texto, imagem, link }) {
   return `
     <a href="${escapeHtml(link)}" class="card fade-in">
-      <img src="${escapeHtml(imagem || FALLBACK_IMAGE)}" alt="${escapeHtml(titulo)}" class="card__image" onerror="this.src='${FALLBACK_IMAGE}'">
+      <img src="${escapeHtml(imagem || FALLBACK_IMAGE)}" alt="${escapeHtml(titulo)}" class="card__image" loading="lazy" decoding="async" onerror="this.src='${FALLBACK_IMAGE}'">
       <div class="card__content">
         <h3 class="card__title">${escapeHtml(titulo)}</h3>
         <p class="card__text">${escapeHtml(texto || "")}</p>
@@ -40,32 +45,37 @@ function renderCardCta({ titulo, link }) {
 }
 
 async function carregarHomeCards() {
-  // Fonte principal: coleção home_cards (ativos, na ordem).
+  // Fonte principal: coleção home_cards (ativos, na ordem). Cache via sessionStorage.
   try {
-    const snap = await getDocs(collection(db, "home_cards"));
-    if (snap.size > 0) {
+    return await cached("home_cards", TTL_HOME_CARDS, async () => {
+      const snap = await getDocs(collection(db, "home_cards"));
+      if (snap.size === 0) return null;
       return snap.docs
         .map((d) => ({ id: d.id, ...d.data() }))
         .filter((c) => c.ativo !== false)
         .sort((a, b) => (a.ordem ?? 99) - (b.ordem ?? 99));
-    }
+    });
   } catch (e) {
     console.warn("Falha ao ler home_cards do Firestore:", e);
+    return null;  // sinaliza pra usar o fallback
   }
-  return null;  // sinaliza pra usar o fallback
 }
 
 async function carregarFallback() {
   // Fallback: categorias regulares + card CTA "Ver Todos"
-  const [catsSnap, prodsSnap] = await Promise.all([
-    getDocs(collection(db, "categorias")),
-    getDocs(collection(db, "produtos"))
+  const [cats, prods] = await Promise.all([
+    cached("categorias", TTL_CATEGORIAS, async () => {
+      const snap = await getDocs(collection(db, "categorias"));
+      return snap.docs
+        .map((d) => ({ id: d.id, ...d.data() }))
+        .filter((c) => (c.tipo || "regular") !== "pet")
+        .sort((a, b) => (a.ordem ?? 99) - (b.ordem ?? 99));
+    }),
+    cached("produtos", TTL_PRODUTOS, async () => {
+      const snap = await getDocs(collection(db, "produtos"));
+      return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+    })
   ]);
-  const cats = catsSnap.docs
-    .map((d) => ({ id: d.id, ...d.data() }))
-    .filter((c) => (c.tipo || "regular") !== "pet")
-    .sort((a, b) => (a.ordem ?? 99) - (b.ordem ?? 99));
-  const prods = prodsSnap.docs.map((d) => d.data());
 
   const cards = cats.map((cat) => {
     const primeiroProdComImg = prods

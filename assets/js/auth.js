@@ -1,11 +1,16 @@
 // Helpers de autenticação para o painel admin.
+// Importa o SDK de Auth aqui (e não em firebase-config.js) pra que páginas
+// públicas, que só importam `db`, não baixem o Auth bundle (~80 KB).
 
-import { auth } from "./firebase-config.js";
+import { app } from "./firebase-config.js";
 import {
+  getAuth,
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+
+const auth = getAuth(app);
 
 export function login(email, password) {
   return signInWithEmailAndPassword(auth, email, password);

@@ -1,7 +1,10 @@
 // Página de detalhe — lê ?id=XXX, busca o produto no Firestore e renderiza.
 
 import { db } from "./firebase-config.js";
-import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+import { cached } from "./cache.js";
+import { doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
+const TTL_CATEGORIAS = 10 * 60 * 1000;
 
 const FALLBACK_IMAGE = "assets/images/todos_os_produtos.webp";
 
@@ -17,12 +20,17 @@ function getIdFromUrl() {
 }
 
 async function carregarCategoria(id) {
-  // Tenta Firestore primeiro. Cai para data/categorias.json se não encontrar.
+  // Cacheia toda a coleção (idem outras páginas — tende a estar quente).
+  // Se a coleção estiver vazia/falhar, cai para data/categorias.json.
   try {
-    const snap = await getDoc(doc(db, "categorias", id));
-    if (snap.exists()) return { id, ...snap.data() };
+    const lista = await cached("categorias", TTL_CATEGORIAS, async () => {
+      const snap = await getDocs(collection(db, "categorias"));
+      return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+    });
+    const hit = lista.find((c) => c.id === id);
+    if (hit) return hit;
   } catch (e) {
-    console.warn("Falha ao ler categoria do Firestore:", e);
+    console.warn("Falha ao ler categorias do Firestore:", e);
   }
   try {
     const res = await fetch("data/categorias.json");
