@@ -87,3 +87,61 @@ export async function uploadImagem(file, { onProgress } = {}) {
     xhr.send(form);
   });
 }
+
+// Upload de arquivo genérico (PDF, imagem). Usado por /admin/downloads.
+// Diferenças vs uploadImagem:
+// - Aceita PDF além de imagem
+// - Limite 10 MB (catálogos costumam ser maiores que fotos de produto)
+// - Endpoint /auto/upload — Cloudinary detecta resource_type (image vs raw)
+const MAX_BYTES_DOC = 10 * 1024 * 1024;
+const TIPOS_DOC_PERMITIDOS = ["application/pdf", "image/jpeg", "image/png", "image/webp"];
+
+export async function uploadArquivo(file, { onProgress } = {}) {
+  if (!cloudinaryConfigurado()) {
+    throw new Error("Cloudinary não configurado — preencha CLOUD_NAME em cloudinary-upload.js.");
+  }
+  if (!file) throw new Error("Nenhum arquivo selecionado.");
+  if (!TIPOS_DOC_PERMITIDOS.includes(file.type)) {
+    throw new Error("Formato não suportado. Use PDF, JPG, PNG ou WEBP.");
+  }
+  if (file.size > MAX_BYTES_DOC) {
+    throw new Error(`Arquivo muito grande (${(file.size / 1024 / 1024).toFixed(1)} MB). Limite: ${MAX_BYTES_DOC / 1024 / 1024} MB.`);
+  }
+
+  const form = new FormData();
+  form.append("file", file);
+  form.append("upload_preset", UPLOAD_PRESET);
+
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/auto/upload`);
+
+    xhr.upload.addEventListener("progress", (e) => {
+      if (e.lengthComputable && onProgress) onProgress(Math.round((e.loaded / e.total) * 100));
+    });
+
+    xhr.addEventListener("load", () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        try {
+          const data = JSON.parse(xhr.responseText);
+          if (data.secure_url) resolve(data.secure_url);
+          else reject(new Error("Resposta inesperada do Cloudinary."));
+        } catch {
+          reject(new Error("Resposta inválida do Cloudinary."));
+        }
+      } else {
+        let msg = `Cloudinary retornou ${xhr.status}.`;
+        try {
+          const err = JSON.parse(xhr.responseText);
+          if (err.error?.message) msg = `Cloudinary: ${err.error.message}`;
+        } catch {}
+        reject(new Error(msg));
+      }
+    });
+
+    xhr.addEventListener("error", () => reject(new Error("Falha de rede no upload.")));
+    xhr.addEventListener("abort", () => reject(new Error("Upload cancelado.")));
+
+    xhr.send(form);
+  });
+}
