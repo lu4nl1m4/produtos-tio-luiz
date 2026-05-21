@@ -199,6 +199,19 @@ async function init() {
   // O IntersectionObserver de fade-in (script.js) já rodou antes da inserção
   // dinâmica e não enxerga os novos elementos. Marca como visíveis manualmente.
   container.querySelectorAll(".fade-in").forEach((el) => el.classList.add("visible"));
+
+  // Se a URL tem hash (ex: produtos.html#feijoes), o browser tentou rolar antes
+  // dessas seções existirem. Rola manualmente agora que estão no DOM.
+  if (window.location.hash) {
+    const target = document.getElementById(window.location.hash.slice(1));
+    if (target) {
+      requestAnimationFrame(() => {
+        const headerOffset = 80;
+        const top = target.getBoundingClientRect().top + window.pageYOffset - headerOffset;
+        window.scrollTo({ top, behavior: "smooth" });
+      });
+    }
+  }
 }
 
 document.addEventListener("DOMContentLoaded", init);

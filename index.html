@@ -108,58 +108,8 @@
         <p class="section-subtitle">Variedade e qualidade para todas as ocasiões</p>
       </div>
       
-      <div class="grid grid--3">
-        <!-- Grãos -->
-        <a href="produtos.html#graos" class="card fade-in">
-          <img src="assets/images/graos.webp" alt="Grãos - Arroz e Feijão" class="card__image">
-          <div class="card__content">
-            <h3 class="card__title">Grãos</h3>
-            <p class="card__text">Conheça nossos tipos de feijão e arroz para o dia a dia da sua família.</p>
-          </div>
-        </a>
-        
-        <!-- Milho e Derivados -->
-        <a href="produtos.html#milho" class="card fade-in">
-          <img src="assets/images/milho-e-derivados.webp" alt="Milho e Derivados" class="card__image">
-          <div class="card__content">
-            <h3 class="card__title">Milho e Derivados</h3>
-            <p class="card__text">Flocão, pipoca e mungunzá de alta qualidade.</p>
-          </div>
-        </a>
-        
-        <!-- Temperos -->
-        <a href="produtos.html#temperos" class="card fade-in">
-          <img src="assets/images/molhos.webp" alt="Temperos e Molhos" class="card__image">
-          <div class="card__content">
-            <h3 class="card__title">Molhos e Vinagre</h3>
-            <p class="card__text">Sabor especial para suas receitas favoritas.</p>
-          </div>
-        </a>
-        
-        <!-- Chás -->
-        <a href="produtos.html#chas" class="card fade-in">
-          <img src="assets/images/chas.webp" alt="Chás e Infusões" class="card__image">
-          <div class="card__content">
-            <h3 class="card__title">Chás</h3>
-            <p class="card__text">Variedades selecionadas para momentos relaxantes.</p>
-          </div>
-        </a>
-        
-        <!-- Outros -->
-        <a href="produtos.html#outros" class="card fade-in">
-          <img src="assets/images/tapioca.webp" alt="Outros Produtos" class="card__image">
-          <div class="card__content">
-            <h3 class="card__title">Outros Produtos</h3>
-            <p class="card__text">Tapioca, lámen, amendoim, queijo ralado e muito mais.</p>
-          </div>
-        </a>
-        
-        <!-- Ver Todos -->
-        <a href="produtos.html" class="card fade-in" style="background: linear-gradient(135deg, var(--color-primary), var(--color-accent)); display: flex; align-items: center; justify-content: center;">
-          <div class="card__content u-text-center">
-            <h3 style="color: white; font-size: 2rem; margin: 0;">Ver Todos os Produtos →</h3>
-          </div>
-        </a>
+      <div class="grid grid--3" id="home-cards-container">
+        <!-- Cards renderizados dinamicamente por home-categorias.js — uma categoria regular por card (na ordem do painel admin) + um "Ver Todos" no final. -->
       </div>
     </div>
   </section>
@@ -259,6 +209,7 @@
     </svg>
   </a>
 
+  <script type="module" src="assets/js/home-categorias.js"></script>
   <script src="assets/js/script.js"></script>
 </body>
 </html>

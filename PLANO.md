@@ -281,6 +281,22 @@ Optamos pelo **Cloudinary free tier** em vez do Firebase Storage (que exige plan
 
 ---
 
+### ✅ Fase 6.5 — Cards da home dinâmicos
+**Concluída em 2026-05-20**
+
+A seção "Nossos Produtos" da [`index.html`](index.html) era estática (6 cards hardcoded com links inconsistentes — `produtos.html#graos` quando a section é `#feijoes`, `arroz` faltava da listagem). Tornamos totalmente dinâmica, gerenciada pelo admin.
+
+- [x] Nova coleção Firestore `home_cards` com modelo `{ titulo, texto, imagem_url, link, tipo: "normal"|"cta", ativo, ordem, criado_em, atualizado_em }`.
+- [x] [`firestore.rules`](firestore.rules): regras para `/home_cards` (leitura pública, escrita só autenticado).
+- [x] Nova página [`admin/home.html`](admin/home.html) + [`admin-home.js`](assets/js/admin-home.js) com CRUD completo, drag-and-drop pra reordenar, upload de imagem via Cloudinary.
+- [x] Tipo `cta` renderiza como card gradiente "Ver Todos →" — usuário controla quais cards CTA existem e onde.
+- [x] Sub-nav admin reordenada e estendida: **Home | Categorias | Produtos**.
+- [x] Botão "Importar das categorias" gera os cards iniciais a partir das 6 categorias regulares + 1 CTA (one-shot, depois CRUD livre).
+- [x] [`home-categorias.js`](assets/js/home-categorias.js) lê `home_cards` ativos e ordenados; **fallback** automático pras categorias regulares se a coleção estiver vazia (site nunca fica em branco).
+- [x] Fix em `produtos-publico.js`: após renderizar seções, faz scroll suave pro hash da URL (resolve race condition de navegação tipo `produtos.html#feijoes` vinda da home).
+
+---
+
 ### 🔜 Fase 7 — Polimento (SEO + acessibilidade + performance)
 
 Pendências técnicas levantadas na análise inicial — tratar quando o core estiver pronto:

@@ -15,6 +15,12 @@ service cloud.firestore {
       allow write: if request.auth != null;
     }
 
+    // Cards da home (preview na index.html): leitura pública, escrita só autenticado.
+    match /home_cards/{cardId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+
     // Negar qualquer outro caminho por padrão.
     match /{document=**} {
       allow read, write: if false;
