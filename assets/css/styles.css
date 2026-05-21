@@ -582,8 +582,8 @@ body.theme-pet .btn--outline:hover {
 
 .footer__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: var(--spacing-lg);
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--spacing-2xl);
   margin-bottom: var(--spacing-2xl);
 }
 

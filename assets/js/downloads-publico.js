@@ -17,6 +17,15 @@ function escapeHtml(s) {
 }
 function escapeAttr(s) { return String(s ?? "").replace(/"/g, "&quot;"); }
 
+// Injeta fl_attachment em URLs do Cloudinary — força o browser a baixar
+// (Content-Disposition: attachment) em vez de exibir inline.
+// Funciona pra PDF, imagem e raw. URLs externas (Google Drive, etc.) ficam intactas.
+function comDownload(url) {
+  if (!url || !url.includes("res.cloudinary.com")) return url;
+  if (/\/(?:image|raw|video)\/upload\/[^/]*fl_attachment/.test(url)) return url;
+  return url.replace(/\/(image|raw|video)\/upload\//, "/$1/upload/fl_attachment/");
+}
+
 async function carregarItens() {
   try {
     const cached = sessionStorage.getItem(CACHE_KEY);
@@ -48,7 +57,7 @@ function renderListas(itens) {
   }
 
   const html = itens.map((it) => `
-    <li><a href="${escapeAttr(it.url)}" target="_blank" rel="noopener noreferrer" class="footer__link">${escapeHtml(it.titulo)}</a></li>
+    <li><a href="${escapeAttr(comDownload(it.url))}" target="_blank" rel="noopener noreferrer" class="footer__link" download>${escapeHtml(it.titulo)}</a></li>
   `).join("");
 
   containers.forEach((c) => { c.innerHTML = html; });
