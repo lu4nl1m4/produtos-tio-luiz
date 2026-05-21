@@ -272,9 +272,12 @@ Optamos pelo **Cloudinary free tier** em vez do Firebase Storage (que exige plan
 - [x] Imagens novas servidas direto do CDN Cloudinary (`https://res.cloudinary.com/dwy3jzhyz/...`).
 - [x] `storage.rules` permanece no repo para referência futura caso a gente migre pro Firebase Storage.
 
+- [x] `f_auto,q_auto` injetado automaticamente pelo `cloudinary-upload.js` em toda URL retornada (`/image/upload/f_auto,q_auto/...`) — formato e qualidade otimizados sob demanda pelo CDN, sem mexer no preset.
+- [x] Migração one-shot das imagens locais para Cloudinary (via `admin/migrate-imagens.html`, depois deletada): 19 produtos+categorias migrados, 16 produtos sem arquivo local (subpasta `assets/images/produtos/` que nunca existiu) ficaram com `imagem_url=""` e precisam de upload manual conforme as fotos reais chegarem.
+- [x] Fix em `produtos.js`: produtos sem `imagem_url` ainda respondem ao clique no card (highlight + swap pra imagem fallback).
+
 **Adiado / não feito:**
-- Compressão extra no front-end (canvas API) — desnecessária porque o Cloudinary suporta transformações via URL (`f_auto,q_auto` aplicado no preset auto-otimiza tudo).
-- Migração das imagens locais existentes pro Cloudinary — fica como tarefa manual conforme cada produto for editado.
+- Compressão extra no front-end (canvas API) — desnecessária porque `f_auto,q_auto` já cuida disso.
 
 ---
 

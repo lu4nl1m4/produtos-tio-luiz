@@ -11,8 +11,10 @@ document.addEventListener('click', function (event) {
     if (!card) return;
 
     const category = card.dataset.category;
-    const imagePath = card.dataset.image;
-    if (!category || !imagePath) return;
+    if (!category) return;
+
+    // Sem imagem cadastrada → usa o fallback. O highlight ainda funciona.
+    const imagePath = card.dataset.image || FALLBACK_IMAGE;
 
     document.querySelectorAll(`.product-card[data-category="${category}"]`).forEach(c => {
         c.classList.remove('active');

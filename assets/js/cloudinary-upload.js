@@ -15,8 +15,22 @@ const UPLOAD_PRESET = "tio-luiz-produtos";
 
 const MAX_BYTES = 2 * 1024 * 1024;  // 2 MB — também limite o preset no Cloudinary
 
+// Transformações on-the-fly aplicadas na URL retornada:
+// - f_auto: serve no melhor formato suportado pelo browser (webp/avif quando disponível)
+// - q_auto: comprime mantendo qualidade visual aceitável
+// Resultado: imagens menores e mais rápidas sem reupload nem config no painel Cloudinary.
+const AUTO_OPTIMIZE = "f_auto,q_auto";
+
 export function cloudinaryConfigurado() {
   return CLOUD_NAME && CLOUD_NAME !== "COLE_AQUI_O_CLOUD_NAME";
+}
+
+// Injeta f_auto,q_auto na URL Cloudinary (no segmento de transformações).
+// Idempotente: se a URL já tem f_auto ou q_auto, deixa como está.
+function comAutoOptimize(url) {
+  if (!url || !url.includes("res.cloudinary.com")) return url;
+  if (/\/image\/upload\/[^/]*(?:f_auto|q_auto)/.test(url)) return url;
+  return url.replace("/image/upload/", `/image/upload/${AUTO_OPTIMIZE}/`);
 }
 
 // Upload de um único arquivo. Retorna a URL segura (https) da imagem.
@@ -52,7 +66,7 @@ export async function uploadImagem(file, { onProgress } = {}) {
       if (xhr.status >= 200 && xhr.status < 300) {
         try {
           const data = JSON.parse(xhr.responseText);
-          if (data.secure_url) resolve(data.secure_url);
+          if (data.secure_url) resolve(comAutoOptimize(data.secure_url));
           else reject(new Error("Resposta inesperada do Cloudinary."));
         } catch {
           reject(new Error("Resposta inválida do Cloudinary."));
