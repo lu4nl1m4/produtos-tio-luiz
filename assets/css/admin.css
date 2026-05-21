@@ -105,13 +105,12 @@ body {
 .drag-handle {
   font-size: 1.1rem;
   letter-spacing: -1px;
-  /* Garante área de toque confortável (44×44) — antes era só o ícone (~20×30) */
+  /* Área de toque 44×44 mantendo display:table-cell — usar flex aqui quebra
+     o alinhamento da linha (a célula sai da baseline das outras). */
   min-width: 44px;
-  min-height: 44px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  /* No mobile, deixa mais visível pra indicar que é arrastável */
+  height: 44px;
+  vertical-align: middle;
+  user-select: none;
   touch-action: none;
 }
 .drag-handle:hover {
