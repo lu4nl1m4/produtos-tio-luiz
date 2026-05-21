@@ -1,7 +1,14 @@
-// ===================================
-// CONTATO — validação + máscara + contador de caracteres
-// Depende de form-utils.js
-// ===================================
+// CONTATO — validação + máscara + contador de caracteres.
+// Importa as utilities do form-utils.js (módulo ES).
+
+import {
+  showToast,
+  isValidEmail,
+  isValidPhone,
+  applyPhoneMask,
+  addShakeAnimation,
+  submitFormToScript
+} from "./form-utils.js";
 
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('contactForm');
@@ -89,6 +96,7 @@ document.addEventListener('DOMContentLoaded', function() {
     form.addEventListener('submit', function(e) {
         e.preventDefault();
         submitFormToScript({
+            tipo: "contato",
             formElement: form,
             submitBtnElement: submitBtn,
             validator: validateContactForm,

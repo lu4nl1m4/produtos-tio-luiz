@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mensagens — Produtos Tio Luiz</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/admin.css">
+</head>
+<body>
+
+  <nav class="navbar-admin d-flex justify-content-between align-items-center flex-wrap gap-2">
+    <div class="d-flex align-items-center gap-3 flex-wrap">
+      <a href="../index.html" class="brand">Tio Luiz · Painel</a>
+      <span class="text-muted">|</span>
+      <a href="home.html"       class="admin-nav-link">Home</a>
+      <a href="banners.html"    class="admin-nav-link">Banners</a>
+      <a href="categorias.html" class="admin-nav-link">Categorias</a>
+      <a href="painel.html"     class="admin-nav-link">Produtos</a>
+      <a href="receitas.html"   class="admin-nav-link">Receitas</a>
+      <a href="mensagens.html"  class="admin-nav-link admin-nav-link--active">Mensagens <span id="unread-badge" class="badge bg-danger" style="font-size:0.65rem;display:none;">0</span></a>
+    </div>
+    <div class="d-flex align-items-center gap-3">
+      <span id="user-email" class="text-muted small"></span>
+      <button id="logout-btn" class="btn btn-outline-secondary btn-sm">Sair</button>
+    </div>
+  </nav>
+
+  <div class="container-fluid py-4">
+
+    <h4 class="mb-1">Mensagens recebidas</h4>
+    <p class="small text-muted mb-3">
+      Submissões do formulário de contato e cadastro de revendedor. As mensagens também continuam sendo enviadas por e-mail / planilha do Google Apps Script (backup).
+    </p>
+
+    <!-- Toolbar -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+      <div class="d-flex align-items-center gap-2 flex-wrap">
+        <select id="filtro-tipo" class="form-select form-select-sm" style="width: auto;">
+          <option value="">Todos os tipos</option>
+          <option value="contato">Contato</option>
+          <option value="revendedor">Revendedor</option>
+        </select>
+        <select id="filtro-status" class="form-select form-select-sm" style="width: auto;">
+          <option value="">Todas</option>
+          <option value="nao-lidas">Apenas não lidas</option>
+          <option value="lidas">Apenas lidas</option>
+        </select>
+        <input id="filtro-busca" type="search" class="form-control form-control-sm" placeholder="Buscar por nome/email..." style="width: 240px;">
+      </div>
+      <span id="contagem" class="small text-muted"></span>
+    </div>
+
+    <!-- Lista -->
+    <div id="lista-container">
+      <div class="state-message">Carregando...</div>
+    </div>
+
+  </div>
+
+  <!-- Modal de detalhes -->
+  <div class="modal fade" id="msg-modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modal-titulo">Mensagem</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+        <div class="modal-body" id="modal-body">
+          <!-- Conteúdo populado pelo JS -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-danger" id="modal-deletar">Excluir</button>
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Fechar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-area" id="toast-area"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script type="module" src="../assets/js/admin-mensagens.js"></script>
+
+</body>
+</html>

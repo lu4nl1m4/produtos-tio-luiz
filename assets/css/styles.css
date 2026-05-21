@@ -431,11 +431,25 @@ body.theme-pet .btn--outline:hover {
   padding: var(--spacing-2xl);
 }
 
+/* Animação de entrada do hero — sobe suave + fade.
+   Aplicada em todos os heros (todas as páginas), com cascata escalonada. */
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .hero__title {
   color: var(--color-white);
   font-size: var(--font-size-5xl);
   margin-bottom: var(--spacing-lg);
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+  animation: hero-rise 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .hero__subtitle {
@@ -444,6 +458,7 @@ body.theme-pet .btn--outline:hover {
   font-weight: 400;
   opacity: 0.95;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  animation: hero-rise 0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both;
 }
 
 .hero__cta {
@@ -451,6 +466,16 @@ body.theme-pet .btn--outline:hover {
   gap: var(--spacing-md);
   justify-content: center;
   flex-wrap: wrap;
+  animation: hero-rise 0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both;
+}
+
+/* Respeita preferência do usuário por menos animação (acessibilidade) */
+@media (prefers-reduced-motion: reduce) {
+  .hero__title,
+  .hero__subtitle,
+  .hero__cta {
+    animation: none;
+  }
 }
 
 /* === FEATURES === */
@@ -579,6 +604,19 @@ body.theme-pet .btn--outline:hover {
 .footer__social {
   display: flex;
   gap: var(--spacing-md);
+}
+
+/* Item de contato no footer: ícone SVG outline branco + texto cinza claro alinhados */
+.footer__contact-item {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  margin-bottom: 0.5rem;
+  color: var(--color-gray-300);
+}
+.footer__contact-item svg {
+  flex-shrink: 0;
+  stroke: white;
 }
 
 .footer__social-link {

@@ -371,6 +371,30 @@ Várias frentes adicionadas após a auditoria de perf, antes do deploy.
 
 ---
 
+### ✅ Fase 7.6 — Mensagens admin + polimento UX + Apps Script desabilitado
+**Concluídas em 2026-05-21**
+
+**Mensagens / Forms migrados pro Firestore:**
+- [x] Nova coleção Firestore `mensagens` + regras (`/mensagens`) com create público validado (tipo in ["contato","revendedor"], size<25, lida=false) e read/update/delete só autenticado.
+- [x] `form-utils.js` convertido pra módulo ES (era classic). Mesma coisa em `contato.js` e `onde-encontrar.js`. HTMLs ajustados pra `type="module"`.
+- [x] Submit dos forms grava direto no Firestore (Apps Script removido). Latência caiu de ~2-3s para <500ms.
+- [x] Normalização de nomes na escrita: `emailReseller→email`, `telefoneReseller→telefone`, `tipoEstabelecimento→tipo_estabelecimento`.
+- [x] Nova página [`admin/mensagens.html`](admin/mensagens.html) + [`admin-mensagens.js`](assets/js/admin-mensagens.js): lista todas as mensagens (contato + revendedor) com filtros por tipo / lida-não lida / busca; clica abre modal com todos os campos + botões "Responder por email" (mailto:) e "Abrir WhatsApp" (wa.me/55...); auto-marca como lida ao abrir; badge vermelho na nav com contagem de não lidas.
+
+**Ícones SVG (Tabler/svgrepo) + remoção de emojis:**
+- [x] Emojis 📞 📧 ⏰ do footer Contato substituídos por SVGs outline brancos em todas as 9 páginas + nova classe `.footer__contact-item`.
+- [x] Footer (phone, mail, clock) e receita detalhe (clock, users, chart-bar) atualizados de Feather para estilo Tabler Icons (via svgrepo) — paths mais refinados, geometria mais clean.
+
+**Animação do hero (todas as páginas):**
+- [x] Novo `@keyframes hero-rise` em [`styles.css`](assets/css/styles.css) — sobe 24px + fade-in 0.75s com `cubic-bezier(0.22, 1, 0.36, 1)`.
+- [x] Cascata escalonada: `.hero__title` (0s), `.hero__subtitle` (0.15s delay), `.hero__cta` (0.3s delay).
+- [x] Respeita `prefers-reduced-motion` — usuário com sensibilidade não vê animação.
+
+**Sub-nav admin com 6 abas finais:**
+- [x] Home | Banners | Categorias | Produtos | Receitas | **Mensagens** (com badge de não lidas).
+
+---
+
 ### 🔜 Fase 8 — Deploy
 
 **Objetivo:** site no ar com URL pública e deploy automático.

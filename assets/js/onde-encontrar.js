@@ -1,7 +1,14 @@
-// ===================================
-// ONDE ENCONTRAR — validação do formulário de revendedor
-// Depende de form-utils.js
-// ===================================
+// ONDE ENCONTRAR — validação do formulário de revendedor.
+// Importa as utilities do form-utils.js (módulo ES).
+
+import {
+  showToast,
+  isValidEmail,
+  isValidPhone,
+  applyPhoneMask,
+  addShakeAnimation,
+  submitFormToScript
+} from "./form-utils.js";
 
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('resellerForm');
@@ -62,6 +69,7 @@ document.addEventListener('DOMContentLoaded', function() {
     form.addEventListener('submit', function(e) {
         e.preventDefault();
         submitFormToScript({
+            tipo: "revendedor",
             formElement: form,
             submitBtnElement: submitBtn,
             validator: validateResellerForm,

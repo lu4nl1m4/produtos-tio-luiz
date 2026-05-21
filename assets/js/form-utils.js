@@ -1,124 +1,115 @@
-// ===================================
-// FORM UTILS — funções compartilhadas entre formulários
-// (Usado por contato.js e onde-encontrar.js)
-// ===================================
+// FORM UTILS — funções compartilhadas entre formulários (módulo ES)
+// Usado por contato.js e onde-encontrar.js.
+// Sinks: Firestore /mensagens (único — Apps Script foi removido em 2026-05-21).
 
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwS8kCuFdSG4yBf5oRQgx6U4RTybHQNXyU8quLploy-UcUBrRCifJUsZyV9A0psPv87/exec';
+import { db } from "./firebase-config.js";
+import {
+  collection,
+  addDoc,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
 function sanitizeInput(input) {
-    const temp = document.createElement('div');
-    temp.textContent = input;
-    return temp.innerHTML;
+  const temp = document.createElement("div");
+  temp.textContent = input;
+  return temp.innerHTML;
 }
 
-function isValidEmail(email) {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return regex.test(email);
+export function isValidEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
-function isValidPhone(phone) {
-    const numbers = phone.replace(/\D/g, '');
-    return numbers.length === 10 || numbers.length === 11;
+export function isValidPhone(phone) {
+  const numbers = phone.replace(/\D/g, "");
+  return numbers.length === 10 || numbers.length === 11;
 }
 
-function showToast(type, title, message) {
-    const container = document.getElementById('toastContainer');
-    if (!container) return;
-
-    const toast = document.createElement('div');
-    toast.className = `toast ${type}`;
-    toast.innerHTML = `
-        <div class="toast-icon">${type === 'success' ? '✓' : '✕'}</div>
-        <div class="toast-content">
-            <div class="toast-title">${sanitizeInput(title)}</div>
-            <div class="toast-message">${sanitizeInput(message)}</div>
-        </div>
-    `;
-
-    container.appendChild(toast);
-    setTimeout(() => toast.classList.add('show'), 10);
-    setTimeout(() => {
-        toast.classList.remove('show');
-        setTimeout(() => toast.remove(), 400);
-    }, 5000);
+export function showToast(type, title, message) {
+  const container = document.getElementById("toastContainer");
+  if (!container) return;
+  const toast = document.createElement("div");
+  toast.className = `toast ${type}`;
+  toast.innerHTML = `
+    <div class="toast-icon">${type === "success" ? "✓" : "✕"}</div>
+    <div class="toast-content">
+      <div class="toast-title">${sanitizeInput(title)}</div>
+      <div class="toast-message">${sanitizeInput(message)}</div>
+    </div>
+  `;
+  container.appendChild(toast);
+  setTimeout(() => toast.classList.add("show"), 10);
+  setTimeout(() => {
+    toast.classList.remove("show");
+    setTimeout(() => toast.remove(), 400);
+  }, 5000);
 }
 
-function addShakeAnimation(element) {
-    element.classList.add('error-shake');
-    setTimeout(() => element.classList.remove('error-shake'), 500);
+export function addShakeAnimation(el) {
+  el.classList.add("error-shake");
+  setTimeout(() => el.classList.remove("error-shake"), 500);
 }
 
-function applyPhoneMask(inputElement) {
-    inputElement.addEventListener('input', function(e) {
-        let value = e.target.value.replace(/\D/g, '');
-        if (value.length > 11) value = value.slice(0, 11);
+export function applyPhoneMask(input) {
+  input.addEventListener("input", function (e) {
+    let value = e.target.value.replace(/\D/g, "");
+    if (value.length > 11) value = value.slice(0, 11);
+    if (value.length > 10)      value = value.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
+    else if (value.length > 6)  value = value.replace(/(\d{2})(\d{4})(\d{0,4})/, "($1) $2-$3");
+    else if (value.length > 2)  value = value.replace(/(\d{2})(\d{0,5})/, "($1) $2");
+    else if (value.length > 0)  value = value.replace(/(\d*)/, "($1");
+    e.target.value = value;
+  });
+}
 
-        if (value.length > 10) {
-            value = value.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
-        } else if (value.length > 6) {
-            value = value.replace(/(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
-        } else if (value.length > 2) {
-            value = value.replace(/(\d{2})(\d{0,5})/, '($1) $2');
-        } else if (value.length > 0) {
-            value = value.replace(/(\d*)/, '($1');
-        }
+// Converte FormData → objeto com nomes normalizados pra Firestore.
+// (O Apps Script continua recebendo a FormData original — não muda.)
+function dadosParaFirestore(formData) {
+  const dados = Object.fromEntries(formData);
+  // Normalização de nomes do form de revendedor
+  if (dados.emailReseller)        { dados.email = dados.emailReseller;             delete dados.emailReseller; }
+  if (dados.telefoneReseller)     { dados.telefone = dados.telefoneReseller;       delete dados.telefoneReseller; }
+  if (dados.tipoEstabelecimento)  { dados.tipo_estabelecimento = dados.tipoEstabelecimento; delete dados.tipoEstabelecimento; }
+  return dados;
+}
 
-        e.target.value = value;
+let _isSubmitting = false;
+
+// Salva o submit em /mensagens no Firestore (fonte única).
+// O nome da função foi mantido por compatibilidade com chamadores existentes (contato.js, onde-encontrar.js),
+// mas o sink Apps Script foi removido — não há mais email automático nem backup em planilha.
+export async function submitFormToScript({ formElement, submitBtnElement, validator, onSuccessMessage, onSuccessExtra, tipo }) {
+  if (_isSubmitting) {
+    showToast("error", "Aguarde", "Já estamos processando seu envio...");
+    return;
+  }
+
+  const formData = new FormData(formElement);
+  if (!validator(formData)) return;
+
+  _isSubmitting = true;
+  submitBtnElement.disabled = true;
+  submitBtnElement.classList.add("btn--loading");
+  const originalText = submitBtnElement.textContent;
+  submitBtnElement.textContent = "";
+
+  try {
+    await addDoc(collection(db, "mensagens"), {
+      tipo: tipo || "contato",
+      ...dadosParaFirestore(formData),
+      lida: false,
+      respondida: false,
+      criado_em: serverTimestamp()
     });
+    showToast("success", onSuccessMessage.title, onSuccessMessage.message);
+    formElement.reset();
+    if (onSuccessExtra) onSuccessExtra();
+  } catch (error) {
+    console.error("[mensagem] Erro ao salvar no Firestore:", error);
+    showToast("error", "Erro ao Enviar", "Tente novamente ou entre em contato pelo WhatsApp.");
+  } finally {
+    _isSubmitting = false;
+    submitBtnElement.disabled = false;
+    submitBtnElement.classList.remove("btn--loading");
+    submitBtnElement.textContent = originalText;
+  }
 }
-
-async function submitFormToScript({ formElement, submitBtnElement, validator, onSuccessMessage, onSuccessExtra }) {
-    if (submitFormToScript._isSubmitting) {
-        showToast('error', 'Aguarde', 'Já estamos processando seu envio...');
-        return;
-    }
-
-    const formData = new FormData(formElement);
-
-    if (!validator(formData)) {
-        return;
-    }
-
-    submitFormToScript._isSubmitting = true;
-    submitBtnElement.disabled = true;
-    submitBtnElement.classList.add('btn--loading');
-    const originalText = submitBtnElement.textContent;
-    submitBtnElement.textContent = '';
-
-    try {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 10000);
-
-        const response = await fetch(SCRIPT_URL, {
-            method: 'POST',
-            body: formData,
-            signal: controller.signal
-        });
-
-        clearTimeout(timeoutId);
-        const result = await response.json();
-
-        if (result.success) {
-            showToast('success', onSuccessMessage.title, onSuccessMessage.message);
-            formElement.reset();
-            if (onSuccessExtra) onSuccessExtra();
-        } else {
-            showToast('error', 'Erro ao Enviar', result.message || 'Tente novamente ou entre em contato pelo WhatsApp.');
-        }
-    } catch (error) {
-        console.error('Erro:', error);
-
-        if (error.name === 'AbortError') {
-            showToast('error', 'Tempo Esgotado', 'O servidor demorou muito. Tente novamente.');
-        } else {
-            showToast('error', 'Erro de Conexão', 'Verifique sua internet e tente novamente.');
-        }
-    } finally {
-        submitFormToScript._isSubmitting = false;
-        submitBtnElement.disabled = false;
-        submitBtnElement.classList.remove('btn--loading');
-        submitBtnElement.textContent = originalText;
-    }
-}
-
-submitFormToScript._isSubmitting = false;
