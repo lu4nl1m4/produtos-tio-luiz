@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Banners — Produtos Tio Luiz</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/admin.css">
+</head>
+<body>
+
+  <nav class="navbar-admin d-flex justify-content-between align-items-center flex-wrap gap-2">
+    <div class="d-flex align-items-center gap-3 flex-wrap">
+      <a href="../index.html" class="brand">Tio Luiz · Painel</a>
+      <span class="text-muted">|</span>
+      <a href="home.html"       class="admin-nav-link">Home</a>
+      <a href="banners.html"    class="admin-nav-link admin-nav-link--active">Banners</a>
+      <a href="categorias.html" class="admin-nav-link">Categorias</a>
+      <a href="painel.html"     class="admin-nav-link">Produtos</a>
+      <a href="receitas.html"   class="admin-nav-link">Receitas</a>
+    </div>
+    <div class="d-flex align-items-center gap-3">
+      <span id="user-email" class="text-muted small"></span>
+      <button id="logout-btn" class="btn btn-outline-secondary btn-sm">Sair</button>
+    </div>
+  </nav>
+
+  <div class="container-fluid py-4">
+
+    <h4 class="mb-1">Banners das páginas</h4>
+    <p class="small text-muted mb-3">
+      Controla o título, subtítulo e imagem de fundo do hero de cada página pública.
+      Os 7 banners são fixos (um por página). Se um banner não estiver configurado, a página usa o conteúdo que já está no HTML como fallback.
+    </p>
+
+    <!-- Banner de import inicial -->
+    <div id="import-banner" class="alert alert-info d-none align-items-center justify-content-between flex-wrap gap-2">
+      <div>
+        <strong>Nenhum banner configurado.</strong>
+        Quer importar os valores atuais que estão no HTML? Você pode editar/customizar depois.
+      </div>
+      <button id="import-btn" class="btn btn-primary btn-sm">Importar dos defaults</button>
+    </div>
+
+    <div class="d-flex justify-content-end mb-3">
+      <span id="contagem" class="small text-muted"></span>
+    </div>
+
+    <!-- Tabela -->
+    <div class="card-table">
+      <div class="table-responsive">
+        <table class="table align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th style="width:120px;">Página</th>
+              <th style="width:100px;">Imagem</th>
+              <th>Título</th>
+              <th>Subtítulo</th>
+              <th class="text-end" style="width:120px;">Ações</th>
+            </tr>
+          </thead>
+          <tbody id="tabela-body">
+            <tr><td colspan="5" class="state-message">Carregando...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="banner-modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <form id="banner-form" novalidate>
+          <div class="modal-header">
+            <h5 class="modal-title" id="modal-titulo">Editar banner</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+          </div>
+          <div class="modal-body">
+            <input type="hidden" id="banner-id">
+            <p class="small text-muted">Página: <strong id="banner-pagina-label"></strong> (<code id="banner-pagina-url"></code>)</p>
+
+            <div class="mb-3">
+              <label class="form-label">Título *</label>
+              <input id="banner-titulo" type="text" class="form-control" required placeholder="Nossos Produtos">
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Subtítulo</label>
+              <input id="banner-subtitulo" type="text" class="form-control" placeholder="Variedade e qualidade para todas as ocasiões">
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Imagem de fundo</label>
+              <div class="d-flex align-items-center gap-3 mb-2 flex-wrap">
+                <img id="banner-imagem-preview" src="" alt="preview" style="width: 120px; height: 70px; object-fit: cover; border-radius: 4px; background: #eee; display: none;">
+                <div class="d-flex align-items-center gap-2 flex-wrap">
+                  <input type="file" id="banner-imagem-file" accept="image/jpeg,image/png,image/webp,image/gif" class="form-control form-control-sm" style="max-width: 280px;">
+                  <span id="banner-imagem-status" class="small text-muted"></span>
+                </div>
+              </div>
+              <input id="banner-imagem" type="text" class="form-control form-control-sm" placeholder="URL preenchida pelo upload ou cole manualmente">
+              <div class="form-text">Recomendado: imagem horizontal larga (1920×600 ou similar), com foco no centro.</div>
+            </div>
+
+            <div id="form-erro" class="alert alert-danger mt-3 d-none small mb-0"></div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary" id="salvar-btn">Salvar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-area" id="toast-area"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script type="module" src="../assets/js/admin-banners.js"></script>
+
+</body>
+</html>

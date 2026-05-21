@@ -332,6 +332,45 @@ Auditoria de performance + correções aplicadas. Antes do trabalho, a home pet-
 
 ---
 
+### ✅ Fase 7.5 — Features pós-perf
+**Concluídas em 2026-05-21**
+
+Várias frentes adicionadas após a auditoria de perf, antes do deploy.
+
+**Mobile polish (5 ajustes):**
+- [x] Ícones sociais do footer: 40px → 44px (touch target adequado)
+- [x] Drag handles do admin (`⋮⋮`): min 44×44px + verde em mobile + `touch-action: none`
+- [x] Tabela nutricional ANVISA: font + padding reduzidos em <480px (cabe sem scroll)
+- [x] Hero `.hero` em mobile: 500px → 380px (`.hero--compact` → 280px)
+- [x] Inputs já estavam em 16px → sem iOS auto-zoom
+
+**Receitas (nova coleção + páginas + admin):**
+- [x] Coleção Firestore `receitas` com modelo `{ titulo, descricao_curta, tempo, porcoes, dificuldade, ingredientes, modo_preparo, imagem_url, ativa, destaque, ordem }`.
+- [x] `firestore.rules`: regras `/receitas` (publicadas no Console).
+- [x] [`admin/receitas.html`](admin/receitas.html) + [`admin-receitas.js`](assets/js/admin-receitas.js): CRUD completo (drag-and-drop, busca, modal com 2 tabs Básico/Preparo, upload Cloudinary).
+- [x] Botão "Importar 3 exemplos" pré-popula receitas didáticas (Feijão Carioca, Cuscuz Nordestino, Tapioca de Queijo).
+- [x] [`receitas.html`](receitas.html) (listagem) + [`receita.html`](receita.html) (detalhe `?id=XXX`) + JS módulos correspondentes.
+- [x] Detalhe usa ícones SVG outline (estilo Feather/Lucide) pra meta (tempo/porções/dificuldade) em verde.
+- [x] Nav público (7 páginas) e sub-nav admin (4 páginas) atualizados com link "Receitas".
+
+**Tema laranja na linha pet (produto.html):**
+- [x] CSS var `--detail-accent` (verde por default, laranja `#ff6f00` quando `body.theme-pet`).
+- [x] [`produto-detalhe.js`](assets/js/produto-detalhe.js) aplica `theme-pet` no body se a categoria for tipo "pet". Título h1, h2 das seções, breadcrumb, botão outline ficam laranja em produtos pet — verde nos demais.
+
+**Banners das páginas (admin/banners + dinâmico no público):**
+- [x] Coleção `banners` (doc id = slug da página: home, sobre, produtos, pet-food, receitas, onde-encontrar, contato).
+- [x] `firestore.rules`: `/banners`.
+- [x] [`admin/banners.html`](admin/banners.html) + [`admin-banners.js`](assets/js/admin-banners.js): tabela com 7 banners fixos (não permite criar/deletar — apenas editar), modal com upload Cloudinary.
+- [x] Botão "Importar dos defaults" semeia com os valores atuais do HTML estático.
+- [x] [`banners-publico.js`](assets/js/banners-publico.js) procura `[data-page-banner]` no hero da página atual, busca o doc Firestore correspondente e substitui `.hero__background`, `.hero__title`, `.hero__subtitle`. **Fallback** automático pro conteúdo estático se o banner não estiver configurado.
+- [x] Todas as 7 páginas com hero ganharam `data-page-banner="slug"` + tag `<script type="module">` pro banners-publico.js.
+
+**Nav cleanup (corrigido após adicionar "Receitas"):**
+- [x] `.nav__list` gap reduzido (2rem → 1.25rem) e `.nav__link` com `white-space: nowrap` + padding menor.
+- [x] Breakpoint mobile do menu hamburger subiu de 768px → **1024px** (acomoda 7 itens + botão Pet Food sem estourar em laptops pequenos / tablets).
+
+---
+
 ### 🔜 Fase 8 — Deploy
 
 **Objetivo:** site no ar com URL pública e deploy automático.

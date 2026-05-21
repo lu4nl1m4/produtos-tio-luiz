@@ -142,8 +142,11 @@ async function init() {
   $("produto-imagem").onerror = function () { this.src = FALLBACK_IMAGE; };
 
   $("produto-badge-categoria").textContent = catNome;
+  // Em produtos da linha pet, aplica tema laranja (badge, h1, h2, breadcrumb, botões via --detail-accent).
   if (isPet) {
-    $("produto-badge-categoria").style.background = "var(--color-accent, #ff6f00)";
+    document.body.classList.add("theme-pet");
+  } else {
+    document.body.classList.remove("theme-pet");
   }
 
   $("produto-nome").textContent = p.nome || "";

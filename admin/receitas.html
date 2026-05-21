@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Receitas — Produtos Tio Luiz</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/admin.css">
+</head>
+<body>
+
+  <nav class="navbar-admin d-flex justify-content-between align-items-center flex-wrap gap-2">
+    <div class="d-flex align-items-center gap-3 flex-wrap">
+      <a href="../index.html" class="brand">Tio Luiz · Painel</a>
+      <span class="text-muted">|</span>
+      <a href="home.html"       class="admin-nav-link">Home</a>
+      <a href="banners.html"    class="admin-nav-link">Banners</a>
+      <a href="categorias.html" class="admin-nav-link">Categorias</a>
+      <a href="painel.html"     class="admin-nav-link">Produtos</a>
+      <a href="receitas.html"   class="admin-nav-link admin-nav-link--active">Receitas</a>
+    </div>
+    <div class="d-flex align-items-center gap-3">
+      <span id="user-email" class="text-muted small"></span>
+      <button id="logout-btn" class="btn btn-outline-secondary btn-sm">Sair</button>
+    </div>
+  </nav>
+
+  <div class="container-fluid py-4">
+
+    <h4 class="mb-1">Receitas</h4>
+    <p class="small text-muted mb-3">
+      Cada receita vira uma página própria em <code>receita.html?id=...</code> e aparece listada em <code>receitas.html</code>.
+      Arraste pelo <span style="font-family:monospace;">⋮⋮</span> pra reordenar a listagem pública.
+    </p>
+
+    <!-- Banner de import inicial -->
+    <div id="import-banner" class="alert alert-info d-none align-items-center justify-content-between flex-wrap gap-2">
+      <div>
+        <strong>Nenhuma receita cadastrada.</strong>
+        Quer importar 3 exemplos pra começar (Feijão Carioca Caseiro, Cuscuz Nordestino, Tapioca de Queijo)?
+      </div>
+      <button id="import-btn" class="btn btn-primary btn-sm">Importar 3 exemplos</button>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+      <input id="filtro-busca" type="search" class="form-control form-control-sm" placeholder="Buscar por título..." style="width: 280px;">
+      <div class="d-flex align-items-center gap-2">
+        <span id="contagem" class="small text-muted"></span>
+        <button id="novo-btn" class="btn btn-primary btn-sm">+ Nova receita</button>
+      </div>
+    </div>
+
+    <!-- Tabela -->
+    <div class="card-table">
+      <div class="table-responsive">
+        <table class="table align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th style="width:36px;"></th>
+              <th class="text-center" style="width:50px;">#</th>
+              <th style="width:80px;"></th>
+              <th>Título</th>
+              <th>Resumo</th>
+              <th class="text-center" style="width:80px;">Tempo</th>
+              <th class="text-center" style="width:100px;">Dificuldade</th>
+              <th class="text-center" style="width:100px;">Ativa</th>
+              <th class="text-center" style="width:100px;">Destaque</th>
+              <th class="text-end"   style="width:170px;">Ações</th>
+            </tr>
+          </thead>
+          <tbody id="tabela-body">
+            <tr><td colspan="10" class="state-message">Carregando...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="receita-modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <form id="receita-form" novalidate>
+          <div class="modal-header">
+            <h5 class="modal-title" id="modal-titulo">Nova receita</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+          </div>
+          <div class="modal-body">
+            <input type="hidden" id="receita-id">
+
+            <ul class="nav nav-tabs mb-3" role="tablist">
+              <li class="nav-item"><button type="button" class="nav-link active" data-bs-toggle="tab" data-bs-target="#rec-tab-basico">Básico</button></li>
+              <li class="nav-item"><button type="button" class="nav-link" data-bs-toggle="tab" data-bs-target="#rec-tab-preparo">Preparo</button></li>
+            </ul>
+
+            <div class="tab-content">
+
+              <!-- TAB BÁSICO -->
+              <div class="tab-pane fade show active" id="rec-tab-basico">
+                <div class="row g-3">
+                  <div class="col-12">
+                    <label class="form-label">Título *</label>
+                    <input id="rec-titulo" type="text" class="form-control" required placeholder="Feijão Carioca Caseiro">
+                  </div>
+
+                  <div class="col-12">
+                    <label class="form-label">Resumo (aparece no card da listagem)</label>
+                    <input id="rec-descricao" type="text" class="form-control" maxlength="160" placeholder="Receita tradicional na panela de pressão — soltinho e saboroso.">
+                  </div>
+
+                  <div class="col-md-4">
+                    <label class="form-label">Tempo</label>
+                    <input id="rec-tempo" type="text" class="form-control" placeholder="1h 30min">
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label">Porções</label>
+                    <input id="rec-porcoes" type="text" class="form-control" placeholder="6 porções">
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label">Dificuldade</label>
+                    <select id="rec-dificuldade" class="form-select">
+                      <option value="">—</option>
+                      <option value="Fácil">Fácil</option>
+                      <option value="Médio">Médio</option>
+                      <option value="Difícil">Difícil</option>
+                    </select>
+                  </div>
+
+                  <div class="col-12">
+                    <label class="form-label">Imagem da receita</label>
+                    <div class="d-flex align-items-center gap-3 mb-2 flex-wrap">
+                      <img id="rec-imagem-preview" src="" alt="preview" style="width: 80px; height: 80px; object-fit: cover; border-radius: 4px; background: #eee; display: none;">
+                      <div class="d-flex align-items-center gap-2 flex-wrap">
+                        <input type="file" id="rec-imagem-file" accept="image/jpeg,image/png,image/webp" class="form-control form-control-sm" style="max-width: 280px;">
+                        <span id="rec-imagem-status" class="small text-muted"></span>
+                      </div>
+                    </div>
+                    <input id="rec-imagem" type="text" class="form-control form-control-sm" placeholder="URL preenchida pelo upload ou cole manualmente">
+                  </div>
+
+                  <div class="col-md-6">
+                    <div class="form-check">
+                      <input id="rec-ativa" type="checkbox" class="form-check-input" checked>
+                      <label class="form-check-label" for="rec-ativa">Ativa (visível no site público)</label>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-check">
+                      <input id="rec-destaque" type="checkbox" class="form-check-input">
+                      <label class="form-check-label" for="rec-destaque">Destaque (badge ★ no card)</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- TAB PREPARO -->
+              <div class="tab-pane fade" id="rec-tab-preparo">
+                <div class="row g-3">
+                  <div class="col-12">
+                    <label class="form-label">Ingredientes *</label>
+                    <textarea id="rec-ingredientes" class="form-control" rows="8" required placeholder="2 xícaras de Feijão Carioca Tio Luiz&#10;1 cebola média picada&#10;3 dentes de alho amassados&#10;..."></textarea>
+                    <div class="form-text">Um ingrediente por linha.</div>
+                  </div>
+                  <div class="col-12">
+                    <label class="form-label">Modo de preparo *</label>
+                    <textarea id="rec-preparo" class="form-control" rows="12" required placeholder="1. Deixe o feijão de molho por 4 horas.&#10;2. Cozinhe na pressão por 25 minutos.&#10;..."></textarea>
+                    <div class="form-text">Use numeração ou marcadores. Quebras de linha são preservadas.</div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <div id="form-erro" class="alert alert-danger mt-3 d-none small mb-0"></div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary" id="salvar-btn">Salvar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-area" id="toast-area"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+  <script type="module" src="../assets/js/admin-receitas.js"></script>
+
+</body>
+</html>

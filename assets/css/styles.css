@@ -302,6 +302,20 @@ p {
   margin-bottom: 0;
 }
 
+/* === TEMA DA PÁGINA DE DETALHE (produto.html) === */
+/* Padrão: verde. Em produtos da linha Pet Food (body.theme-pet), vira laranja. */
+:root { --detail-accent: var(--color-primary); }
+body.theme-pet { --detail-accent: #ff6f00; }
+
+body.theme-pet .btn--outline {
+  border-color: var(--detail-accent);
+  color: var(--detail-accent);
+}
+body.theme-pet .btn--outline:hover {
+  background-color: var(--detail-accent);
+  color: white;
+}
+
 /* === HEADER / NAVIGATION === */
 .header {
   position: sticky;
@@ -339,15 +353,16 @@ p {
 
 .nav__list {
   display: flex;
-  gap: var(--spacing-xl);
+  gap: 1.25rem;
   align-items: center;
 }
 
 .nav__link {
   font-weight: 600;
   color: var(--color-gray-800);
-  padding: var(--spacing-sm) var(--spacing-md);
+  padding: var(--spacing-sm) 0.75rem;
   border-radius: var(--radius-md);
+  white-space: nowrap;
   transition: color var(--transition-base), background-color var(--transition-base);
 }
 
@@ -567,8 +582,8 @@ p {
 }
 
 .footer__social-link {
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   background-color: var(--color-gray-800);
   border-radius: var(--radius-full);
   display: flex;
@@ -1012,13 +1027,8 @@ p {
 }
 
 /* === RESPONSIVE === */
-@media (max-width: 768px) {
-  :root {
-    --font-size-5xl: 2rem;
-    --font-size-4xl: 1.75rem;
-    --font-size-3xl: 1.5rem;
-  }
-
+/* Nav: vira hamburger antes de 768px pra acomodar 7 itens + botão Pet Food sem estourar */
+@media (max-width: 1024px) {
   .nav__list {
     position: fixed;
     top: 70px;
@@ -1031,6 +1041,7 @@ p {
     gap: var(--spacing-lg);
     box-shadow: var(--shadow-lg);
     transition: left var(--transition-slow);
+    overflow-y: auto;
   }
 
   .nav__list.active {
@@ -1040,9 +1051,20 @@ p {
   .nav__toggle {
     display: flex;
   }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --font-size-5xl: 2rem;
+    --font-size-4xl: 1.75rem;
+    --font-size-3xl: 1.5rem;
+  }
 
   .hero {
-    min-height: 500px;
+    min-height: 380px;
+  }
+  .hero--compact {
+    min-height: 280px;
   }
 
   .hero__title {
@@ -1099,5 +1121,14 @@ p {
 
   .section {
     padding: var(--spacing-2xl) 0;
+  }
+
+  /* Tabela nutricional ANVISA (produto.html) — mais compacta em telas pequenas */
+  #sec-nutricional table {
+    font-size: 0.8125rem;
+  }
+  #sec-nutricional th,
+  #sec-nutricional td {
+    padding: 0.4rem 0.5rem !important;
   }
 }

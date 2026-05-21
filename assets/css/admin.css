@@ -105,12 +105,23 @@ body {
 .drag-handle {
   font-size: 1.1rem;
   letter-spacing: -1px;
+  /* Garante área de toque confortável (44×44) — antes era só o ícone (~20×30) */
+  min-width: 44px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* No mobile, deixa mais visível pra indicar que é arrastável */
+  touch-action: none;
 }
 .drag-handle:hover {
   color: var(--admin-primary) !important;
 }
 .drag-handle:active {
   cursor: grabbing !important;
+}
+@media (max-width: 768px) {
+  .drag-handle { color: var(--admin-primary) !important; }
 }
 .sortable-ghost { opacity: 0.35; }
 .sortable-drag  { background: white !important; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
