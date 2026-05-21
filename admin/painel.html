@@ -91,9 +91,16 @@
                     <input id="produto-embalagem" type="text" class="form-control" placeholder="500 g">
                   </div>
                   <div class="col-12">
-                    <label class="form-label">URL da imagem</label>
-                    <input id="produto-imagem" type="text" class="form-control" placeholder="assets/images/produto.webp">
-                    <div class="form-text">Caminho relativo enquanto Storage não está ativo (Fase 6).</div>
+                    <label class="form-label">Imagem</label>
+                    <div class="d-flex align-items-center gap-3 mb-2 flex-wrap">
+                      <img id="produto-imagem-preview" src="" alt="preview" style="width: 80px; height: 80px; object-fit: cover; border-radius: 4px; background: #eee; display: none;">
+                      <div class="d-flex align-items-center gap-2 flex-wrap">
+                        <input type="file" id="produto-imagem-file" accept="image/jpeg,image/png,image/webp" class="form-control form-control-sm" style="max-width: 280px;">
+                        <span id="produto-imagem-status" class="small text-muted"></span>
+                      </div>
+                    </div>
+                    <input id="produto-imagem" type="text" class="form-control form-control-sm" placeholder="URL preenchida pelo upload ou cole manualmente (Cloudinary, etc.)">
+                    <div class="form-text">Selecione um arquivo (jpg/png/webp, até 2 MB) — o upload vai pro Cloudinary e a URL é preenchida automaticamente. Ou cole qualquer URL externa.</div>
                   </div>
                   <div class="col-md-8">
                     <label class="form-label">Nome curto <span class="text-muted small">(badge dos pet-cards)</span></label>

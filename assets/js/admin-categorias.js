@@ -3,6 +3,7 @@
 
 import { db } from "./firebase-config.js";
 import { requireAuth, logout, watchAuth } from "./auth.js";
+import { uploadImagem, cloudinaryConfigurado } from "./cloudinary-upload.js";
 import {
   collection,
   getDocs,
@@ -199,6 +200,52 @@ function getModal() {
   return modalInstance;
 }
 
+function atualizarPreviewImagemCat() {
+  const url = $("cat-imagem").value.trim();
+  const img = $("cat-imagem-preview");
+  if (url) {
+    img.src = url;
+    img.style.display = "block";
+    img.onerror = () => { img.style.display = "none"; };
+  } else {
+    img.style.display = "none";
+  }
+}
+
+async function handleUploadImagemCat(e) {
+  const file = e.target.files?.[0];
+  if (!file) return;
+  const statusEl = $("cat-imagem-status");
+  const fileInput = e.target;
+
+  if (!cloudinaryConfigurado()) {
+    statusEl.textContent = "Cloudinary não configurado.";
+    statusEl.className = "small text-danger";
+    fileInput.value = "";
+    return;
+  }
+
+  statusEl.textContent = "Enviando 0%...";
+  statusEl.className = "small text-muted";
+  fileInput.disabled = true;
+
+  try {
+    const url = await uploadImagem(file, {
+      onProgress: (pct) => { statusEl.textContent = `Enviando ${pct}%...`; }
+    });
+    $("cat-imagem").value = url;
+    atualizarPreviewImagemCat();
+    statusEl.textContent = "✓ Imagem enviada.";
+    statusEl.className = "small text-success";
+  } catch (err) {
+    statusEl.textContent = err.message || "Erro no upload.";
+    statusEl.className = "small text-danger";
+  } finally {
+    fileInput.disabled = false;
+    fileInput.value = "";
+  }
+}
+
 function abrirModalNovo() {
   $("modal-titulo").textContent = "Nova categoria";
   $("cat-original-id").value = "";
@@ -209,6 +256,8 @@ function abrirModalNovo() {
   $("cat-subtitulo").value = "";
   $("cat-frase").value = "";
   $("cat-imagem").value = "";
+  $("cat-imagem-status").textContent = "";
+  atualizarPreviewImagemCat();
   $("form-erro").classList.add("d-none");
   getModal().show();
 }
@@ -223,6 +272,8 @@ function abrirModalEditar(c) {
   $("cat-subtitulo").value = c.subtitulo || "";
   $("cat-frase").value = c.frase_destaque || "";
   $("cat-imagem").value = c.imagem_secao || "";
+  $("cat-imagem-status").textContent = "";
+  atualizarPreviewImagemCat();
   $("form-erro").classList.add("d-none");
   getModal().show();
 }
@@ -350,6 +401,8 @@ async function init() {
   $("cat-form").addEventListener("submit", salvarCategoria);
   $("tabela-body-regular").addEventListener("click", handleTabelaClick);
   $("tabela-body-pet").addEventListener("click", handleTabelaClick);
+  $("cat-imagem-file").addEventListener("change", handleUploadImagemCat);
+  $("cat-imagem").addEventListener("input", atualizarPreviewImagemCat);
 
   $("import-btn").addEventListener("click", async () => {
     $("import-btn").disabled = true;

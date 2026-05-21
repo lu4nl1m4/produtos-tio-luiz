@@ -5,6 +5,7 @@
 
 import { db } from "./firebase-config.js";
 import { requireAuth, logout, watchAuth } from "./auth.js";
+import { uploadImagem, cloudinaryConfigurado } from "./cloudinary-upload.js";
 import {
   collection,
   getDocs,
@@ -363,6 +364,52 @@ function preencherInfoNutricional(info) {
   });
 }
 
+function atualizarPreviewImagemProduto() {
+  const url = $("produto-imagem").value.trim();
+  const img = $("produto-imagem-preview");
+  if (url) {
+    img.src = url;
+    img.style.display = "block";
+    img.onerror = () => { img.style.display = "none"; };
+  } else {
+    img.style.display = "none";
+  }
+}
+
+async function handleUploadImagemProduto(e) {
+  const file = e.target.files?.[0];
+  if (!file) return;
+  const statusEl = $("produto-imagem-status");
+  const fileInput = e.target;
+
+  if (!cloudinaryConfigurado()) {
+    statusEl.textContent = "Cloudinary não configurado.";
+    statusEl.className = "small text-danger";
+    fileInput.value = "";
+    return;
+  }
+
+  statusEl.textContent = "Enviando 0%...";
+  statusEl.className = "small text-muted";
+  fileInput.disabled = true;
+
+  try {
+    const url = await uploadImagem(file, {
+      onProgress: (pct) => { statusEl.textContent = `Enviando ${pct}%...`; }
+    });
+    $("produto-imagem").value = url;
+    atualizarPreviewImagemProduto();
+    statusEl.textContent = "✓ Imagem enviada.";
+    statusEl.className = "small text-success";
+  } catch (err) {
+    statusEl.textContent = err.message || "Erro no upload.";
+    statusEl.className = "small text-danger";
+  } finally {
+    fileInput.disabled = false;
+    fileInput.value = "";  // permite reupload do mesmo arquivo
+  }
+}
+
 function abrirModalNovo() {
   $("modal-titulo").textContent = "Novo produto";
   $("produto-id").value = "";
@@ -372,6 +419,8 @@ function abrirModalNovo() {
   $("produto-descricao").value = "";
   $("produto-embalagem").value = "";
   $("produto-imagem").value = "";
+  $("produto-imagem-status").textContent = "";
+  atualizarPreviewImagemProduto();
   $("produto-ativo").checked = true;
   $("produto-destaque").checked = false;
   $("produto-descricao-longa").value = "";
@@ -394,6 +443,8 @@ function abrirModalEditar(p) {
   $("produto-descricao").value = p.descricao || "";
   $("produto-embalagem").value = p.embalagem || "";
   $("produto-imagem").value = p.imagem_url || "";
+  $("produto-imagem-status").textContent = "";
+  atualizarPreviewImagemProduto();
   $("produto-ativo").checked = p.ativo !== false;
   $("produto-destaque").checked = !!p.destaque;
   $("produto-descricao-longa").value = p.descricao_longa || "";
@@ -554,6 +605,8 @@ async function init() {
   $("nutri-add").addEventListener("click", () => addNutriRow());
   $("nutri-preset").addEventListener("click", preencherPresetAnvisa);
   $("nutri-clear").addEventListener("click", limparTabelaNutricional);
+  $("produto-imagem-file").addEventListener("change", handleUploadImagemProduto);
+  $("produto-imagem").addEventListener("input", atualizarPreviewImagemProduto);
 
   $("logout-btn").addEventListener("click", async () => {
     await logout();

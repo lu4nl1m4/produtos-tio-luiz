@@ -259,19 +259,22 @@ Fase ampla que cobriu três frentes interligadas:
 
 ---
 
-### 🔜 Fase 6 — Upload de imagens (Firebase Storage)
+### ✅ Fase 6 — Upload de imagens (Cloudinary)
+**Concluída em 2026-05-20**
 
-**Objetivo:** subir imagens de produtos pelo painel admin, sem mexer no Git.
+Optamos pelo **Cloudinary free tier** em vez do Firebase Storage (que exige plano Blaze). Free tier: 25 GB armazenamento + 25 GB tráfego/mês + transformações de imagem na URL, sem cartão.
 
-**Passos:**
-1. Adicionar `<input type="file">` no formulário de produto.
-2. Comprimir imagem no front-end antes de subir (canvas API) — limite 500KB.
-3. Subir via Firebase Storage, salvar URL pública no campo `imagem_url`.
-4. Mostrar preview da imagem atual ao editar.
-5. Publicar `storage.rules` (já existe no repo) no Console.
+- [x] Conta Cloudinary criada (cloud_name: `dwy3jzhyz`).
+- [x] Upload preset `tio-luiz-produtos` (unsigned, restrito a jpg/png/webp + 2 MB + pasta `produtos-tio-luiz`).
+- [x] [`assets/js/cloudinary-upload.js`](assets/js/cloudinary-upload.js): helper compartilhado com upload via `XMLHttpRequest` (suporta progresso) + validação de formato e tamanho no client.
+- [x] Modal de produto ([`admin/painel.html`](admin/painel.html) + [`admin-painel.js`](assets/js/admin-painel.js)): file input + thumb preview 80×80 + status do upload + URL preenchida automaticamente. Campo URL ainda aceita paste manual para URLs externas.
+- [x] Modal de categoria ([`admin/categorias.html`](admin/categorias.html) + [`admin-categorias.js`](assets/js/admin-categorias.js)): mesma UX pro campo `imagem_secao`.
+- [x] Imagens novas servidas direto do CDN Cloudinary (`https://res.cloudinary.com/dwy3jzhyz/...`).
+- [x] `storage.rules` permanece no repo para referência futura caso a gente migre pro Firebase Storage.
 
-**Critério de pronto:**
-- Subir uma imagem nova pelo painel atualiza o produto e mostra no site público.
+**Adiado / não feito:**
+- Compressão extra no front-end (canvas API) — desnecessária porque o Cloudinary suporta transformações via URL (`f_auto,q_auto` aplicado no preset auto-otimiza tudo).
+- Migração das imagens locais existentes pro Cloudinary — fica como tarefa manual conforme cada produto for editado.
 
 ---
 

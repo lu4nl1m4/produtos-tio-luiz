@@ -148,9 +148,16 @@
             </div>
 
             <div class="mb-3">
-              <label class="form-label">URL da imagem da seção</label>
-              <input id="cat-imagem" type="text" class="form-control" placeholder="assets/images/feijao_carioca_especial.webp">
-              <div class="form-text">Imagem grande que aparece ao lado dos cards. É substituída pela imagem do produto quando o usuário clica num card.</div>
+              <label class="form-label">Imagem da seção</label>
+              <div class="d-flex align-items-center gap-3 mb-2 flex-wrap">
+                <img id="cat-imagem-preview" src="" alt="preview" style="width: 80px; height: 80px; object-fit: cover; border-radius: 4px; background: #eee; display: none;">
+                <div class="d-flex align-items-center gap-2 flex-wrap">
+                  <input type="file" id="cat-imagem-file" accept="image/jpeg,image/png,image/webp" class="form-control form-control-sm" style="max-width: 280px;">
+                  <span id="cat-imagem-status" class="small text-muted"></span>
+                </div>
+              </div>
+              <input id="cat-imagem" type="text" class="form-control form-control-sm" placeholder="URL preenchida pelo upload ou cole manualmente">
+              <div class="form-text">Imagem grande que aparece ao lado dos cards. Selecione um arquivo (jpg/png/webp, até 2 MB) para upload no Cloudinary, ou cole uma URL externa. É substituída pela imagem do produto quando o usuário clica num card.</div>
             </div>
 
             <div id="form-erro" class="alert alert-danger mt-3 d-none small mb-0"></div>
