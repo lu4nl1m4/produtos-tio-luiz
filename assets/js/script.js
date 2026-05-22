@@ -76,6 +76,61 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // ===== INTERNAL PAGE PREFETCH =====
+    // Como o site e multi-pagina, cada menu abre outro HTML. Prefetch deixa os
+    // documentos principais quentes no cache e diminui o flash entre cliques.
+    const prefetchedPages = new Set();
+
+    function getPrefetchHref(rawHref) {
+        if (!rawHref) return null;
+
+        let url;
+        try {
+            url = new URL(rawHref, window.location.href);
+        } catch {
+            return null;
+        }
+
+        if (url.origin !== window.location.origin) return null;
+        if (url.search) return null;
+        if (url.hash && url.pathname === window.location.pathname) return null;
+        if (!url.pathname.endsWith('.html') && url.pathname !== '/') return null;
+
+        url.hash = '';
+        return url.href;
+    }
+
+    function prefetchPage(rawHref) {
+        const href = getPrefetchHref(rawHref);
+        if (!href || prefetchedPages.has(href)) return;
+
+        prefetchedPages.add(href);
+        const link = document.createElement('link');
+        link.rel = 'prefetch';
+        link.as = 'document';
+        link.href = href;
+        document.head.appendChild(link);
+    }
+
+    const schedulePrefetch = window.requestIdleCallback || function(callback) {
+        return window.setTimeout(callback, 600);
+    };
+
+    schedulePrefetch(() => {
+        document.querySelectorAll('.nav__link[href], .footer__link[href], .hero__cta a[href], .btn-group--centered a[href]')
+            .forEach(link => prefetchPage(link.getAttribute('href')));
+    });
+
+    document.addEventListener('pointerover', (event) => {
+        const link = event.target.closest && event.target.closest('a[href]');
+        if (link) prefetchPage(link.getAttribute('href'));
+    }, { passive: true });
+
+    document.addEventListener('touchstart', (event) => {
+        const link = event.target.closest && event.target.closest('a[href]');
+        if (link) prefetchPage(link.getAttribute('href'));
+    }, { passive: true });
+
     // Highlight por scroll (para páginas com âncoras/seções)
     const sections = document.querySelectorAll('section[id]');
 function highlightNavigation() {
@@ -160,7 +215,13 @@ function highlightNavigation() {
 
     // Observe all elements with fade-in class
     const fadeElements = document.querySelectorAll('.fade-in');
-    fadeElements.forEach(element => observer.observe(element));
+    fadeElements.forEach(element => {
+        const rect = element.getBoundingClientRect();
+        if (rect.top < window.innerHeight && rect.bottom > 0) {
+            element.classList.add('visible');
+        }
+        observer.observe(element);
+    });
 
     // ===== FORM VALIDATION - REMOVIDA =====
     // A validação do formulário agora está no HTML inline com toasts personalizados

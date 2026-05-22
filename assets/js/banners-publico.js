@@ -28,7 +28,14 @@ function aplicarBanner(heroEl, banner) {
   if (!banner) return;
   if (banner.imagem_url) {
     const img = heroEl.querySelector(".hero__background");
-    if (img && img.getAttribute("src") !== banner.imagem_url) img.src = banner.imagem_url;
+    if (img && img.getAttribute("src") !== banner.imagem_url) {
+      const nextImage = new Image();
+      nextImage.decoding = "async";
+      nextImage.onload = () => {
+        img.src = banner.imagem_url;
+      };
+      nextImage.src = banner.imagem_url;
+    }
   }
   if (banner.titulo) {
     const t = heroEl.querySelector(".hero__title");
