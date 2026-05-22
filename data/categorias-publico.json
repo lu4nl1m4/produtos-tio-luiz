@@ -1,0 +1,84 @@
+[
+  {
+    "id": "pet-aves",
+    "nome": "Alimento para Aves",
+    "criado_em": "2026-05-20T03:42:46.238Z",
+    "ordem": 1,
+    "atualizado_em": "2026-05-20T04:20:23.481Z",
+    "tipo": "pet"
+  },
+  {
+    "id": "feijoes",
+    "imagem_secao": "https://res.cloudinary.com/dwy3jzhyz/image/upload/f_auto,q_auto/v1779328608/qxyutfhthyjm5epi99ws.webp",
+    "tipo": "regular",
+    "subtitulo": "Variedade e qualidade em cada grão",
+    "criado_em": "2026-05-20T03:42:46.238Z",
+    "frase_destaque": "Tradição na Mesa Brasileira",
+    "ordem": 1,
+    "atualizado_em": "2026-05-21T01:56:49.169Z",
+    "nome": "Feijões"
+  },
+  {
+    "id": "pet-caes",
+    "tipo": "pet",
+    "ordem": 2,
+    "atualizado_em": "2026-05-20T04:20:23.481Z",
+    "criado_em": "2026-05-20T03:42:46.238Z",
+    "nome": "Alimento para Cães"
+  },
+  {
+    "id": "arroz",
+    "tipo": "regular",
+    "imagem_secao": "https://res.cloudinary.com/dwy3jzhyz/image/upload/f_auto,q_auto/v1779328607/qwzefdkxlesaifc3d3zt.webp",
+    "subtitulo": "Grãos selecionados, sempre soltinhos",
+    "ordem": 2,
+    "atualizado_em": "2026-05-21T01:56:47.788Z",
+    "frase_destaque": "Acompanhamento Perfeito",
+    "criado_em": "2026-05-20T03:42:46.238Z",
+    "nome": "Arroz"
+  },
+  {
+    "id": "milho",
+    "subtitulo": "Tradição e sabor nas festas juninas e o ano todo",
+    "tipo": "regular",
+    "imagem_secao": "https://res.cloudinary.com/dwy3jzhyz/image/upload/f_auto,q_auto/v1779328609/s4kfti1it3fswuuzplue.webp",
+    "nome": "Milho e Derivados",
+    "criado_em": "2026-05-20T03:42:46.238Z",
+    "atualizado_em": "2026-05-21T01:56:50.179Z",
+    "ordem": 3,
+    "frase_destaque": "Sabor das Tradições"
+  },
+  {
+    "id": "temperos",
+    "ordem": 4,
+    "criado_em": "2026-05-20T03:42:46.238Z",
+    "frase_destaque": "Arte de Temperar",
+    "atualizado_em": "2026-05-21T01:56:51.518Z",
+    "nome": "Molhos e Vinagre",
+    "imagem_secao": "https://res.cloudinary.com/dwy3jzhyz/image/upload/f_auto,q_auto/v1779328610/cgsg2xiiovglic52wppq.webp",
+    "tipo": "regular",
+    "subtitulo": "Sabor especial para suas receitas"
+  },
+  {
+    "id": "chas",
+    "frase_destaque": "Saúde e Sabor",
+    "atualizado_em": "2026-05-21T01:56:48.422Z",
+    "criado_em": "2026-05-20T03:42:46.238Z",
+    "ordem": 5,
+    "nome": "Chás",
+    "tipo": "regular",
+    "imagem_secao": "https://res.cloudinary.com/dwy3jzhyz/image/upload/f_auto,q_auto/v1779328607/kkvdgw30mgksquxwpgq3.webp",
+    "subtitulo": "Momentos de relaxamento e bem-estar"
+  },
+  {
+    "id": "outros",
+    "imagem_secao": "https://res.cloudinary.com/dwy3jzhyz/image/upload/f_auto,q_auto/v1779328610/p2fx2zzdonv8gvxuudxj.webp",
+    "tipo": "regular",
+    "subtitulo": "Ingredientes essenciais para sua despensa",
+    "ordem": 6,
+    "criado_em": "2026-05-20T03:42:46.238Z",
+    "frase_destaque": "Despensa Completa",
+    "atualizado_em": "2026-05-21T01:56:50.848Z",
+    "nome": "Outros Produtos"
+  }
+]

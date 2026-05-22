@@ -16,6 +16,8 @@
     <link rel="dns-prefetch" href="https://res.cloudinary.com">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
     <link rel="preload" as="image" href="https://res.cloudinary.com/dwy3jzhyz/image/upload/f_auto,q_auto/v1779335257/bryjonte0lyxvexf9uki.webp" fetchpriority="high">
+    <link rel="preload" as="fetch" href="data/categorias-publico.json" crossorigin>
+    <link rel="preload" as="fetch" href="data/produtos-publico.json" crossorigin>
     <link rel="stylesheet" href="assets/css/styles.css">
 
     <meta property="og:type" content="website">
@@ -69,11 +71,7 @@
 
     <!-- SEÇÕES DE CATEGORIAS — renderizadas dinamicamente por produtos-publico.js
          na ordem definida no painel admin (campo `ordem` da coleção `categorias`). -->
-    <main id="secoes-container" data-tipo="regular">
-        <div class="u-text-center" style="padding: 4rem 1rem; color: var(--color-gray-600);">
-            Carregando produtos...
-        </div>
-    </main>
+    <main id="secoes-container" data-tipo="regular"></main>
 
     <!-- CTA SECTION -->
     <section class="section cta">

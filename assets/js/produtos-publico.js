@@ -1,17 +1,16 @@
-// Renderiza seções inteiras de categorias (com cards dentro) a partir do Firestore.
-// Cada página pública (produtos.html, pet-food.html) tem um único elemento
-// <div id="secoes-container" data-tipo="regular|pet"></div> que é preenchido aqui.
-// A ordem das seções segue o campo `ordem` da coleção `categorias` no admin.
+// Renderiza secoes de produtos nas paginas publicas.
+// Primeiro usa um snapshot estatico em /data para evitar a tela de carregamento;
+// depois atualiza em segundo plano via Firestore REST, sem baixar o SDK Firebase.
 
-import { db } from "./firebase-config.js";
 import { cached } from "./cache.js";
-import {
-  collection,
-  getDocs
-} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
-const TTL_CATEGORIAS = 10 * 60 * 1000;  // 10 min
-const TTL_PRODUTOS   = 5 * 60 * 1000;   // 5 min
+const TTL_CATEGORIAS = 10 * 60 * 1000;
+const TTL_PRODUTOS = 5 * 60 * 1000;
+
+const API_KEY = "AIzaSyB0lJrlsHERnH2ZArBRbiOD-bk32hsxECs";
+const FIRESTORE_BASE = "https://firestore.googleapis.com/v1/projects/site-produtos-tio-luiz/databases/(default)/documents";
+const STATIC_CATEGORIAS = "data/categorias-publico.json";
+const STATIC_PRODUTOS = "data/produtos-publico.json";
 
 const FALLBACK_IMAGE = "assets/images/todos_os_produtos.webp";
 
@@ -21,17 +20,16 @@ function escapeHtml(s) {
   return String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 }
 
-// ---------- Cards ----------
-
 function renderRegularCard(p, isFirst) {
   const active = isFirst ? " active" : "";
+  const detailsHref = p.id ? `produto.html?id=${encodeURIComponent(p.id)}` : "#";
   return `
     <div class="card product-card${active}" data-category="${escapeHtml(p.categoria)}" data-image="${escapeHtml(p.imagem_url || "")}" style="position:relative;">
       ${p.destaque ? BADGE_DESTAQUE : ""}
       <div class="card__content">
         <h4 class="card__title" style="font-size: 1.125rem;">${escapeHtml(p.nome)}${p.embalagem ? ` - ${escapeHtml(p.embalagem)}` : ""}</h4>
         <p class="card__text">${escapeHtml(p.descricao || "")}</p>
-        <a href="produto.html?id=${encodeURIComponent(p.id)}" data-no-card-action class="card__details-link" style="display:inline-block;margin-top:0.5rem;font-size:0.875rem;color:var(--color-primary);font-weight:500;text-decoration:none;">+ Detalhes →</a>
+        <a href="${detailsHref}" data-no-card-action class="card__details-link" style="display:inline-block;margin-top:0.5rem;font-size:0.875rem;color:var(--color-primary);font-weight:500;text-decoration:none;">+ Detalhes →</a>
       </div>
     </div>
   `;
@@ -39,6 +37,7 @@ function renderRegularCard(p, isFirst) {
 
 function renderPetCard(p) {
   const badge = p.nome_curto || p.nome;
+  const detailsHref = p.id ? `produto.html?id=${encodeURIComponent(p.id)}` : "#";
   return `
     <div class="pet-card" style="position:relative;">
       ${p.destaque ? BADGE_DESTAQUE : ""}
@@ -50,7 +49,7 @@ function renderPetCard(p) {
         <p style="font-size: 0.875rem; color: var(--color-gray-600); margin: 0;">
           <strong>Embalagem:</strong> ${escapeHtml(p.embalagem || "-")}
         </p>
-        <a href="produto.html?id=${encodeURIComponent(p.id)}" class="card__details-link" style="display:inline-block;margin-top:0.5rem;font-size:0.875rem;color:#ff6f00;font-weight:500;text-decoration:none;">+ Detalhes →</a>
+        <a href="${detailsHref}" class="card__details-link" style="display:inline-block;margin-top:0.5rem;font-size:0.875rem;color:#ff6f00;font-weight:500;text-decoration:none;">+ Detalhes →</a>
       </div>
     </div>
   `;
@@ -62,10 +61,7 @@ function renderCardsHtml(produtos, tipo) {
     .join("");
 }
 
-// ---------- Seções ----------
-
 function renderSecaoRegular(cat, produtos, index) {
-  // Alterna fundo claro/branco e lado da imagem usando o índice de exibição.
   const isLight = index % 2 === 1;
   const imagemDireita = index % 2 === 1;
   const sectionClass = isLight ? "section section--light" : "section";
@@ -137,32 +133,65 @@ function renderSecaoPet(cat, produtos) {
   `;
 }
 
-// ---------- Carregamento ----------
+async function carregarJson(url) {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`Falha ao carregar ${url}.`);
+  return res.json();
+}
 
-async function carregarCategorias() {
-  return cached("categorias", TTL_CATEGORIAS, async () => {
-    try {
-      const snap = await getDocs(collection(db, "categorias"));
-      if (snap.size > 0) {
-        return snap.docs
-          .map((d) => ({ id: d.id, ...d.data() }))
-          .sort((a, b) => (a.ordem ?? 99) - (b.ordem ?? 99));
-      }
-    } catch (e) {
-      console.warn("Falha ao ler categorias do Firestore, usando JSON:", e);
-    }
-    const res = await fetch("data/categorias.json");
-    if (!res.ok) throw new Error("Falha ao carregar categorias.");
-    const lista = await res.json();
-    return lista.sort((a, b) => (a.ordem ?? 99) - (b.ordem ?? 99));
+function valorFirestore(field) {
+  if (!field || typeof field !== "object") return null;
+  if ("stringValue" in field) return field.stringValue;
+  if ("integerValue" in field) return Number(field.integerValue);
+  if ("doubleValue" in field) return Number(field.doubleValue);
+  if ("booleanValue" in field) return Boolean(field.booleanValue);
+  if ("timestampValue" in field) return field.timestampValue;
+  if ("nullValue" in field) return null;
+  if ("arrayValue" in field) return (field.arrayValue.values || []).map(valorFirestore);
+  if ("mapValue" in field) {
+    return Object.fromEntries(
+      Object.entries(field.mapValue.fields || {}).map(([key, value]) => [key, valorFirestore(value)])
+    );
+  }
+  return null;
+}
+
+async function carregarColecaoFirestore(nome) {
+  const url = `${FIRESTORE_BASE}/${nome}?key=${API_KEY}&pageSize=100`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`Falha ao carregar ${nome} do Firestore.`);
+  const data = await res.json();
+  return (data.documents || []).map((doc) => {
+    const item = { id: doc.name.split("/").pop() };
+    Object.entries(doc.fields || {}).forEach(([key, field]) => {
+      item[key] = valorFirestore(field);
+    });
+    return item;
   });
 }
 
-async function carregarProdutos() {
-  return cached("produtos", TTL_PRODUTOS, async () => {
-    const snap = await getDocs(collection(db, "produtos"));
-    return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
-  });
+function carregarCategorias() {
+  return cached("categorias", TTL_CATEGORIAS, () => carregarColecaoFirestore("categorias"));
+}
+
+function carregarProdutos() {
+  return cached("produtos", TTL_PRODUTOS, () => carregarColecaoFirestore("produtos"));
+}
+
+async function carregarSnapshotEstatico() {
+  const [categorias, produtos] = await Promise.all([
+    carregarJson(STATIC_CATEGORIAS),
+    carregarJson(STATIC_PRODUTOS)
+  ]);
+  return { categorias, produtos };
+}
+
+async function carregarSnapshotDinamico() {
+  const [categorias, produtos] = await Promise.all([
+    carregarCategorias(),
+    carregarProdutos()
+  ]);
+  return { categorias, produtos };
 }
 
 function produtosDaCategoria(produtos, catId) {
@@ -171,29 +200,19 @@ function produtosDaCategoria(produtos, catId) {
     .sort((a, b) => (a.ordem || 0) - (b.ordem || 0));
 }
 
-// ---------- Entry point ----------
+let ultimoHtmlRenderizado = "";
+let hashAjustado = false;
 
-async function init() {
-  const container = document.getElementById("secoes-container");
-  if (!container) return;
-  const tipoDesejado = container.dataset.tipo || "regular";
+function renderizarSnapshot(container, tipoDesejado, { categorias, produtos }) {
+  if (!Array.isArray(categorias) || !Array.isArray(produtos)) return false;
 
-  let categorias, produtos;
-  try {
-    [categorias, produtos] = await Promise.all([carregarCategorias(), carregarProdutos()]);
-  } catch (e) {
-    console.error("Erro ao carregar dados do Firestore:", e);
-    container.innerHTML = `<p style="color: #d32f2f; text-align: center; padding: 2rem;">Erro ao carregar produtos. Veja o console para detalhes.</p>`;
-    return;
-  }
-
-  // Filtra por tipo e re-ordena (ordens são independentes entre regulares e pet).
   const doTipo = categorias
     .filter((c) => (c.tipo || "regular") === tipoDesejado)
     .sort((a, b) => (a.ordem ?? 99) - (b.ordem ?? 99));
+
   if (doTipo.length === 0) {
     container.innerHTML = `<p style="color: var(--color-gray-600); text-align: center; padding: 2rem;">Nenhuma categoria cadastrada${tipoDesejado === "pet" ? " na linha Pet Food" : ""}.</p>`;
-    return;
+    return false;
   }
 
   const html = doTipo.map((cat, i) => {
@@ -201,22 +220,51 @@ async function init() {
     return tipoDesejado === "pet" ? renderSecaoPet(cat, prods) : renderSecaoRegular(cat, prods, i);
   }).join("");
 
+  if (html === ultimoHtmlRenderizado) return true;
+
+  ultimoHtmlRenderizado = html;
   container.innerHTML = html;
-
-  // O IntersectionObserver de fade-in (script.js) já rodou antes da inserção
-  // dinâmica e não enxerga os novos elementos. Marca como visíveis manualmente.
   container.querySelectorAll(".fade-in").forEach((el) => el.classList.add("visible"));
+  ajustarHashDepoisDoRender();
+  return true;
+}
 
-  // Se a URL tem hash (ex: produtos.html#feijoes), o browser tentou rolar antes
-  // dessas seções existirem. Rola manualmente agora que estão no DOM.
-  if (window.location.hash) {
-    const target = document.getElementById(window.location.hash.slice(1));
-    if (target) {
-      requestAnimationFrame(() => {
-        const headerOffset = 80;
-        const top = target.getBoundingClientRect().top + window.pageYOffset - headerOffset;
-        window.scrollTo({ top, behavior: "smooth" });
-      });
+function ajustarHashDepoisDoRender() {
+  if (hashAjustado || !window.location.hash) return;
+
+  const target = document.getElementById(window.location.hash.slice(1));
+  if (!target) return;
+
+  hashAjustado = true;
+  requestAnimationFrame(() => {
+    const headerOffset = 80;
+    const top = target.getBoundingClientRect().top + window.pageYOffset - headerOffset;
+    window.scrollTo({ top, behavior: "smooth" });
+  });
+}
+
+async function init() {
+  const container = document.getElementById("secoes-container");
+  if (!container) return;
+
+  const tipoDesejado = container.dataset.tipo || "regular";
+  const dinamicoPromise = carregarSnapshotDinamico();
+  let renderizou = false;
+
+  try {
+    renderizou = renderizarSnapshot(container, tipoDesejado, await carregarSnapshotEstatico());
+  } catch (e) {
+    console.warn("Falha ao carregar snapshot estatico de produtos:", e);
+  }
+
+  try {
+    renderizou = renderizarSnapshot(container, tipoDesejado, await dinamicoPromise) || renderizou;
+  } catch (e) {
+    if (!renderizou) {
+      console.error("Erro ao carregar dados do Firestore:", e);
+      container.innerHTML = `<p style="color: #d32f2f; text-align: center; padding: 2rem;">Erro ao carregar produtos. Veja o console para detalhes.</p>`;
+    } else {
+      console.warn("Falha ao atualizar produtos em segundo plano:", e);
     }
   }
 }
