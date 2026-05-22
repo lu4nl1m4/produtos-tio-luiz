@@ -28,15 +28,15 @@ function aplicarBanner(heroEl, banner) {
   if (!banner) return;
   if (banner.imagem_url) {
     const img = heroEl.querySelector(".hero__background");
-    if (img) img.src = banner.imagem_url;
+    if (img && img.getAttribute("src") !== banner.imagem_url) img.src = banner.imagem_url;
   }
   if (banner.titulo) {
     const t = heroEl.querySelector(".hero__title");
-    if (t) t.textContent = banner.titulo;
+    if (t && t.textContent !== banner.titulo) t.textContent = banner.titulo;
   }
   if (banner.subtitulo) {
     const s = heroEl.querySelector(".hero__subtitle");
-    if (s) s.textContent = banner.subtitulo;
+    if (s && s.textContent !== banner.subtitulo) s.textContent = banner.subtitulo;
   }
 }
 

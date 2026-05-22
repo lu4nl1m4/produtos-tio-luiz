@@ -81,13 +81,13 @@ function aplicar(cfg) {
   document.querySelectorAll("[data-contato]").forEach((el) => {
     const tipo = el.dataset.contato;
     const v = valor(cfg, tipo);
-    if (v) el.textContent = v;
+    if (v && el.textContent !== v) el.textContent = v;
   });
 
   document.querySelectorAll("[data-contato-href]").forEach((el) => {
     const tipo = el.dataset.contatoHref;
     const v = href(cfg, tipo);
-    if (v) el.setAttribute("href", v);
+    if (v && el.getAttribute("href") !== v) el.setAttribute("href", v);
   });
 }
 
