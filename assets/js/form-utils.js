@@ -2,12 +2,6 @@
 // Usado por contato.js e onde-encontrar.js.
 // Sinks: Firestore /mensagens (único — Apps Script foi removido em 2026-05-21).
 
-import { db } from "./firebase-config.js";
-import {
-  collection,
-  addDoc,
-  serverTimestamp
-} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
 function sanitizeInput(input) {
   const temp = document.createElement("div");
@@ -73,6 +67,22 @@ function dadosParaFirestore(formData) {
 }
 
 let _isSubmitting = false;
+let _firestorePromise = null;
+
+async function carregarFirestore() {
+  if (!_firestorePromise) {
+    _firestorePromise = Promise.all([
+      import("./firebase-config.js"),
+      import("https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js")
+    ]).then(([config, firestore]) => ({
+      db: config.db,
+      collection: firestore.collection,
+      addDoc: firestore.addDoc,
+      serverTimestamp: firestore.serverTimestamp
+    }));
+  }
+  return _firestorePromise;
+}
 
 // Salva o submit em /mensagens no Firestore (fonte única).
 // O nome da função foi mantido por compatibilidade com chamadores existentes (contato.js, onde-encontrar.js),
@@ -93,6 +103,7 @@ export async function submitFormToScript({ formElement, submitBtnElement, valida
   submitBtnElement.textContent = "";
 
   try {
+    const { db, collection, addDoc, serverTimestamp } = await carregarFirestore();
     await addDoc(collection(db, "mensagens"), {
       tipo: tipo || "contato",
       ...dadosParaFirestore(formData),

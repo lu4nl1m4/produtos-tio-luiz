@@ -15,6 +15,9 @@
     <link rel="dns-prefetch" href="https://res.cloudinary.com">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
     <link rel="preload" as="image" href="https://res.cloudinary.com/dwy3jzhyz/image/upload/f_auto,q_auto/v1779331704/pet_foot_aves_g7egg2.gif" fetchpriority="high">
+    <link rel="preload" as="fetch" href="data/categorias-publico.json" crossorigin>
+    <link rel="preload" as="fetch" href="data/produtos-publico.json" crossorigin>
+    <link rel="modulepreload" href="assets/js/public-data.js">
     <link rel="stylesheet" href="assets/css/styles.css">
 
     <meta property="og:type" content="website">
@@ -119,11 +122,7 @@
 
             <!-- BLOCOS POR CATEGORIA PET — renderizados dinamicamente por
                  produtos-publico.js na ordem definida no painel admin. -->
-            <div id="secoes-container" data-tipo="pet">
-                <div class="u-text-center" style="padding: 2rem 1rem; color: var(--color-gray-600);">
-                    Carregando produtos...
-                </div>
-            </div>
+            <div id="secoes-container" data-tipo="pet"></div>
         </div>
     </section>
 

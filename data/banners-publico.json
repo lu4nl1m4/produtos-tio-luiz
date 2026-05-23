@@ -1,0 +1,51 @@
+{
+  "contato": {
+    "id": "contato",
+    "imagem_url": "https://res.cloudinary.com/dwy3jzhyz/image/upload/f_auto,q_auto/v1779335280/ihdyjkqovhkk1etlvv5k.webp",
+    "atualizado_em": "2026-05-21T03:48:01.480Z",
+    "titulo": "Entre em Contato",
+    "subtitulo": "Estamos prontos para atendê-lo"
+  },
+  "home": {
+    "id": "home",
+    "imagem_url": "https://res.cloudinary.com/dwy3jzhyz/image/upload/f_auto,q_auto/v1779331317/hero_banner_1770150132774_jrrlka.jpg",
+    "atualizado_em": "2026-05-21T03:49:16.819Z",
+    "titulo": "Sua Família Feliz!",
+    "subtitulo": "Qualidade e tradição em cada produto"
+  },
+  "onde-encontrar": {
+    "id": "onde-encontrar",
+    "atualizado_em": "2026-05-21T03:48:13.969Z",
+    "imagem_url": "https://res.cloudinary.com/dwy3jzhyz/image/upload/f_auto,q_auto/v1779335291/gouhx1osddxp18qxouv2.webp",
+    "subtitulo": "Disponíveis em supermercados em todo o estado de Sergipe",
+    "titulo": "Onde Encontrar"
+  },
+  "pet-food": {
+    "id": "pet-food",
+    "imagem_url": "https://res.cloudinary.com/dwy3jzhyz/image/upload/f_auto,q_auto/v1779331704/pet_foot_aves_g7egg2.gif",
+    "atualizado_em": "2026-05-21T03:42:26.855Z",
+    "titulo": "Linha Pet Food",
+    "subtitulo": "Nutrição completa para pássaros e cães com a qualidade Tio Luiz"
+  },
+  "produtos": {
+    "id": "produtos",
+    "subtitulo": "Variedade e qualidade para todas as ocasiões",
+    "titulo": "Nossos Produtos",
+    "atualizado_em": "2026-05-21T03:47:39.506Z",
+    "imagem_url": "https://res.cloudinary.com/dwy3jzhyz/image/upload/f_auto,q_auto/v1779335257/bryjonte0lyxvexf9uki.webp"
+  },
+  "receitas": {
+    "id": "receitas",
+    "imagem_url": "https://res.cloudinary.com/dwy3jzhyz/image/upload/f_auto,q_auto/v1779335302/ldcfnpoaqw1do81dalan.webp",
+    "atualizado_em": "2026-05-21T03:48:23.792Z",
+    "subtitulo": "Pratos tradicionais com a qualidade Tio Luiz",
+    "titulo": "Receitas"
+  },
+  "sobre": {
+    "id": "sobre",
+    "subtitulo": "Conheça nossa história e compromisso com sua família",
+    "titulo": "Sobre Nós",
+    "imagem_url": "https://res.cloudinary.com/dwy3jzhyz/image/upload/f_auto,q_auto/v1779331317/tradicao_oqvvhj.jpg",
+    "atualizado_em": "2026-05-21T03:42:26.855Z"
+  }
+}

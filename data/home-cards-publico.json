@@ -1,0 +1,74 @@
+[
+  {
+    "id": "SSWFGLro9gsrOYkOUQg8",
+    "ordem": 1,
+    "criado_em": "2026-05-21T02:23:22.169Z",
+    "link": "produtos.html#feijoes",
+    "tipo": "normal",
+    "titulo": "Grãos",
+    "imagem_url": "https://res.cloudinary.com/dwy3jzhyz/image/upload/f_auto,q_auto/v1779330253/lljexnsewcws8c7yhjhs.webp",
+    "atualizado_em": "2026-05-21T02:24:47.281Z",
+    "ativo": true,
+    "texto": "Variedade e qualidade em cada grão"
+  },
+  {
+    "id": "B58IibF39tTVpSBAFKMN",
+    "tipo": "normal",
+    "link": "produtos.html#milho",
+    "criado_em": "2026-05-21T02:23:22.169Z",
+    "ordem": 3,
+    "ativo": true,
+    "atualizado_em": "2026-05-21T23:01:14.013Z",
+    "texto": "Tradição e sabor nas festas juninas e o ano todo",
+    "imagem_url": "https://res.cloudinary.com/dwy3jzhyz/image/upload/f_auto,q_auto/v1779404472/vwz3l82s7nxtqp984dnx.webp",
+    "titulo": "Milho e Derivados"
+  },
+  {
+    "id": "aMUMCxoEujEP4vQROkjv",
+    "ativo": true,
+    "atualizado_em": "2026-05-21T02:26:26.652Z",
+    "texto": "Sabor especial para suas receitas",
+    "imagem_url": "https://res.cloudinary.com/dwy3jzhyz/image/upload/f_auto,q_auto/v1779330380/oxus0impnvuaakrdsvtp.webp",
+    "titulo": "Molhos e Vinagre",
+    "tipo": "normal",
+    "criado_em": "2026-05-21T02:23:22.169Z",
+    "link": "produtos.html#temperos",
+    "ordem": 4
+  },
+  {
+    "id": "EZQuJ3LiANBxrhQTy2qa",
+    "titulo": "Chás",
+    "imagem_url": "https://res.cloudinary.com/dwy3jzhyz/image/upload/f_auto,q_auto/v1779330395/imae6djgzngwlthvad7c.webp",
+    "atualizado_em": "2026-05-21T02:26:36.818Z",
+    "ativo": true,
+    "texto": "Momentos de relaxamento e bem-estar",
+    "ordem": 5,
+    "tipo": "normal",
+    "link": "produtos.html#chas",
+    "criado_em": "2026-05-21T02:23:22.169Z"
+  },
+  {
+    "id": "a6GvCYehlE4uQ7VGvbZT",
+    "atualizado_em": "2026-05-21T23:02:30.884Z",
+    "ativo": true,
+    "texto": "Ingredientes essenciais para sua despensa",
+    "titulo": "Outros Produtos",
+    "imagem_url": "https://res.cloudinary.com/dwy3jzhyz/image/upload/f_auto,q_auto/v1779404549/yl6iaiefmtyvc9cmebh1.webp",
+    "tipo": "normal",
+    "link": "produtos.html#outros",
+    "criado_em": "2026-05-21T02:23:22.169Z",
+    "ordem": 6
+  },
+  {
+    "id": "doNX6Q8xy2keaW5UwVel",
+    "link": "produtos.html",
+    "criado_em": "2026-05-21T02:23:22.169Z",
+    "tipo": "cta",
+    "ordem": 7,
+    "ativo": true,
+    "atualizado_em": "2026-05-21T02:23:22.169Z",
+    "texto": "",
+    "imagem_url": "",
+    "titulo": "Ver Todos os Produtos →"
+  }
+]

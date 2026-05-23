@@ -1,31 +1,20 @@
-// Aplica o banner configurado no admin/banners ao hero da página.
-// Procura <section ... data-page-banner="slug">. Se houver banner cadastrado
-// pra esse slug, substitui imagem de fundo, título e subtítulo. Senão, mantém
-// o conteúdo estático do HTML (fallback).
+// Aplica o banner configurado no admin.
+// Usa cache/snapshot primeiro e revalida o Firestore em segundo plano.
 
-import { db } from "./firebase-config.js";
-import { cached } from "./cache.js";
 import {
-  doc,
-  getDoc
-} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+  carregarDocumentoFirestore,
+  carregarJsonPublico,
+  lerCachePublico,
+  removerCachePublico,
+  salvarCachePublico
+} from "./public-data.js";
 
-const TTL_BANNER = 10 * 60 * 1000;  // 10 min — banners mudam raramente
-
-async function carregarBanner(slug) {
-  return cached(`banner:${slug}`, TTL_BANNER, async () => {
-    try {
-      const snap = await getDoc(doc(db, "banners", slug));
-      return snap.exists() ? snap.data() : null;
-    } catch (e) {
-      console.warn(`Falha ao ler banner '${slug}':`, e);
-      return null;
-    }
-  });
-}
+const STATIC_BANNERS = "data/banners-publico.json";
 
 function aplicarBanner(heroEl, banner) {
-  if (!banner) return;
+  if (!banner) return false;
+  let mudou = false;
+
   if (banner.imagem_url) {
     const img = heroEl.querySelector(".hero__background");
     if (img && img.getAttribute("src") !== banner.imagem_url) {
@@ -35,25 +24,61 @@ function aplicarBanner(heroEl, banner) {
         img.src = banner.imagem_url;
       };
       nextImage.src = banner.imagem_url;
+      mudou = true;
     }
   }
+
   if (banner.titulo) {
     const t = heroEl.querySelector(".hero__title");
-    if (t && t.textContent !== banner.titulo) t.textContent = banner.titulo;
+    if (t && t.textContent !== banner.titulo) {
+      t.textContent = banner.titulo;
+      mudou = true;
+    }
   }
+
   if (banner.subtitulo) {
     const s = heroEl.querySelector(".hero__subtitle");
-    if (s && s.textContent !== banner.subtitulo) s.textContent = banner.subtitulo;
+    if (s && s.textContent !== banner.subtitulo) {
+      s.textContent = banner.subtitulo;
+      mudou = true;
+    }
   }
+
+  return mudou;
 }
 
 async function init() {
   const heroEl = document.querySelector("[data-page-banner]");
   if (!heroEl) return;
+
   const slug = heroEl.dataset.pageBanner;
   if (!slug) return;
-  const banner = await carregarBanner(slug);
-  aplicarBanner(heroEl, banner);
+
+  const cacheKey = `banner:${slug}`;
+  const cache = lerCachePublico(cacheKey);
+
+  if (cache) {
+    aplicarBanner(heroEl, cache);
+  } else {
+    try {
+      const banners = await carregarJsonPublico(STATIC_BANNERS);
+      if (banners?.[slug]) aplicarBanner(heroEl, banners[slug]);
+    } catch (e) {
+      console.warn(`Falha ao carregar snapshot do banner '${slug}':`, e);
+    }
+  }
+
+  try {
+    const banner = await carregarDocumentoFirestore(`banners/${slug}`);
+    if (banner) {
+      salvarCachePublico(cacheKey, banner);
+      aplicarBanner(heroEl, banner);
+    } else {
+      removerCachePublico(cacheKey);
+    }
+  } catch (e) {
+    console.warn(`Falha ao atualizar banner '${slug}' em segundo plano:`, e);
+  }
 }
 
 document.addEventListener("DOMContentLoaded", init);

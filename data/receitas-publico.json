@@ -1,0 +1,50 @@
+[
+  {
+    "id": "RFxUw13HMRzbC4CpCluk",
+    "criado_em": "2026-05-21T03:17:51.483Z",
+    "destaque": false,
+    "ingredientes": "2 xícaras de Feijão Carioca Tio Luiz\n1 cebola média picada\n3 dentes de alho amassados\n2 folhas de louro\n2 colheres (sopa) de óleo\n1 colher (chá) de sal\nÁgua suficiente para cobrir 2 dedos acima",
+    "dificuldade": "Fácil",
+    "imagem_url": "",
+    "ativa": true,
+    "porcoes": "6 porções",
+    "modo_preparo": "1. Deixe o feijão de molho na água por pelo menos 4 horas (ou de um dia para o outro).\n2. Escorra e coloque na panela de pressão com água nova, cobrindo 2 dedos acima do feijão.\n3. Adicione as folhas de louro e cozinhe por 25 minutos após pegar pressão.\n4. Aqueça o óleo numa frigideira e refogue a cebola até dourar; adicione o alho e mexa até liberar o aroma.\n5. Despeje o refogado na panela com o feijão cozido. Acerte o sal e cozinhe por mais 10 minutos sem pressão, com a panela parcialmente tampada — o caldo engrossa.\n6. Sirva quente com arroz branco e farofa.",
+    "descricao_curta": "Receita tradicional na panela de pressão — soltinho, saboroso e o acompanhamento perfeito.",
+    "atualizado_em": "2026-05-21T22:56:56.611Z",
+    "titulo": "Feijão Carioca Caseiro",
+    "ordem": 1,
+    "tempo": "1h 10min"
+  },
+  {
+    "id": "g8gmbtS1egyMRTabQ3SC",
+    "dificuldade": "Fácil",
+    "ingredientes": "1 xícara de Flocão Premium Tio Luiz\n1/2 xícara de água\n1 pitada generosa de sal\nManteiga a gosto (para servir)\nQueijo coalho ou Queijo Parmesão Ralado Tio Luiz a gosto",
+    "destaque": false,
+    "criado_em": "2026-05-21T03:17:51.483Z",
+    "porcoes": "2 porções",
+    "ativa": true,
+    "imagem_url": "",
+    "modo_preparo": "1. Numa tigela, misture o flocão com o sal.\n2. Adicione a água aos poucos, mexendo com a mão até a massa ficar levemente úmida — quando você aperta na mão, ela forma uma bola que se desmancha sozinha.\n3. Coloque a massa no cuscuzeiro sem apertar (deixa o vapor circular).\n4. Cozinhe no vapor por 8 a 10 minutos, ou até o cuscuz estar firme.\n5. Desenforme num prato, espalhe manteiga por cima até derreter e finalize com o queijo. Sirva imediatamente.",
+    "descricao_curta": "Café da manhã tradicional do Nordeste — rápido, prático e cheio de sabor.",
+    "atualizado_em": "2026-05-21T03:17:51.483Z",
+    "titulo": "Cuscuz Nordestino com Flocão",
+    "tempo": "15 min",
+    "ordem": 2
+  },
+  {
+    "id": "4FLqeejkfztVe1lSrL7W",
+    "titulo": "Tapioca de Queijo",
+    "ordem": 3,
+    "tempo": "10 min",
+    "ativa": true,
+    "imagem_url": "",
+    "porcoes": "1 tapioca",
+    "destaque": false,
+    "criado_em": "2026-05-21T03:17:51.483Z",
+    "ingredientes": "1/2 xícara de Massa para Tapioca Tio Luiz\nQueijo coalho ou mussarela em fatias finas\n1 pitada de sal (opcional)\nManteiga ou orégano a gosto (opcional)",
+    "dificuldade": "Fácil",
+    "atualizado_em": "2026-05-21T03:32:34.440Z",
+    "descricao_curta": "Tapioca crocante por fora, queijo derretido por dentro — café da tarde clássico em 10 minutos.",
+    "modo_preparo": "1. Peneire a massa de tapioca direto sobre uma frigideira antiaderente bem quente, formando um disco fino e uniforme.\n2. Em poucos segundos a massa se compacta e forma uma película — você verá quando começar a soltar das bordas (em ~1 min).\n3. Vire a tapioca com cuidado usando uma espátula.\n4. Coloque o queijo no centro e dobre a tapioca ao meio.\n5. Aguarde mais 1-2 minutos até o queijo derreter e a tapioca ficar levemente dourada nas bordas.\n6. Sirva imediatamente, ainda quente."
+  }
+]

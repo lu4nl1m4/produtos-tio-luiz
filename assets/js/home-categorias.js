@@ -1,21 +1,18 @@
-// Renderiza dinamicamente os cards de preview na seção "Nossos Produtos" da home (index.html).
-// Procura <div id="home-cards-container"></div> e popula.
-//
-// Fonte principal: coleção `home_cards` no Firestore (gerenciada via admin/home.html).
-// Fallback: se a coleção estiver vazia, usa as categorias regulares — assim o site nunca
-// fica em branco mesmo antes de o admin importar/criar os cards.
+// Cards da home.
+// Renderiza cache/snapshot e revalida o Firestore sem bloquear a tela.
 
-import { db } from "./firebase-config.js";
-import { cached } from "./cache.js";
 import {
-  collection,
-  getDocs
-} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+  carregarColecaoFirestore,
+  carregarJsonPublico,
+  lerCachePublico,
+  ordenarPorOrdem,
+  salvarCachePublico
+} from "./public-data.js";
 
-const TTL_HOME_CARDS  = 10 * 60 * 1000;
-const TTL_CATEGORIAS  = 10 * 60 * 1000;
-const TTL_PRODUTOS    = 5 * 60 * 1000;
-
+const STATIC_HOME_CARDS = "data/home-cards-publico.json";
+const STATIC_CATEGORIAS = "data/categorias-publico.json";
+const STATIC_PRODUTOS = "data/produtos-publico.json";
+const CACHE_KEY = "home_cards";
 const FALLBACK_IMAGE = "assets/images/todos_os_produtos.webp";
 
 function escapeHtml(s) {
@@ -44,38 +41,15 @@ function renderCardCta({ titulo, link }) {
   `;
 }
 
-async function carregarHomeCards() {
-  // Fonte principal: coleção home_cards (ativos, na ordem). Cache via sessionStorage.
-  try {
-    return await cached("home_cards", TTL_HOME_CARDS, async () => {
-      const snap = await getDocs(collection(db, "home_cards"));
-      if (snap.size === 0) return null;
-      return snap.docs
-        .map((d) => ({ id: d.id, ...d.data() }))
-        .filter((c) => c.ativo !== false)
-        .sort((a, b) => (a.ordem ?? 99) - (b.ordem ?? 99));
-    });
-  } catch (e) {
-    console.warn("Falha ao ler home_cards do Firestore:", e);
-    return null;  // sinaliza pra usar o fallback
-  }
+function normalizarHomeCards(cards) {
+  return ordenarPorOrdem(cards || [])
+    .filter((c) => c.ativo !== false);
 }
 
-async function carregarFallback() {
-  // Fallback: categorias regulares + card CTA "Ver Todos"
-  const [cats, prods] = await Promise.all([
-    cached("categorias", TTL_CATEGORIAS, async () => {
-      const snap = await getDocs(collection(db, "categorias"));
-      return snap.docs
-        .map((d) => ({ id: d.id, ...d.data() }))
-        .filter((c) => (c.tipo || "regular") !== "pet")
-        .sort((a, b) => (a.ordem ?? 99) - (b.ordem ?? 99));
-    }),
-    cached("produtos", TTL_PRODUTOS, async () => {
-      const snap = await getDocs(collection(db, "produtos"));
-      return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
-    })
-  ]);
+function montarFallback(categorias, produtos) {
+  const cats = ordenarPorOrdem(categorias || [])
+    .filter((c) => (c.tipo || "regular") !== "pet");
+  const prods = produtos || [];
 
   const cards = cats.map((cat) => {
     const primeiroProdComImg = prods
@@ -89,38 +63,85 @@ async function carregarFallback() {
       tipo: "normal"
     };
   });
+
   cards.push({
-    titulo: "Ver Todos os Produtos →",
+    titulo: "Ver Todos os Produtos ->",
     link: "produtos.html",
     tipo: "cta"
   });
   return cards;
 }
 
-async function init() {
-  const container = document.getElementById("home-cards-container");
-  if (!container) return;
+async function carregarSnapshotEstatico() {
+  const cards = normalizarHomeCards(await carregarJsonPublico(STATIC_HOME_CARDS));
+  if (cards.length) return cards;
 
-  let cards = await carregarHomeCards();
-  if (cards === null) {
-    try {
-      cards = await carregarFallback();
-    } catch (e) {
-      console.error("Erro ao carregar fallback de home cards:", e);
-      return;
-    }
-  }
-  if (!cards || cards.length === 0) return;
+  const [categorias, produtos] = await Promise.all([
+    carregarJsonPublico(STATIC_CATEGORIAS),
+    carregarJsonPublico(STATIC_PRODUTOS)
+  ]);
+  return montarFallback(categorias, produtos);
+}
+
+async function carregarSnapshotDinamico() {
+  const cards = normalizarHomeCards(await carregarColecaoFirestore("home_cards"));
+  if (cards.length) return cards;
+
+  const [categorias, produtos] = await Promise.all([
+    carregarColecaoFirestore("categorias"),
+    carregarColecaoFirestore("produtos")
+  ]);
+  return montarFallback(categorias, produtos);
+}
+
+let ultimoHtmlRenderizado = "";
+
+function renderizarCards(container, cards) {
+  if (!cards || cards.length === 0) return false;
 
   const html = cards.map((c) => {
     if (c.tipo === "cta") return renderCardCta({ titulo: c.titulo, link: c.link });
     return renderCardNormal({ titulo: c.titulo, texto: c.texto, imagem: c.imagem_url, link: c.link });
   }).join("");
 
-  container.innerHTML = html;
+  if (html === ultimoHtmlRenderizado) return true;
 
-  // Força .visible nos fade-in inseridos (o IntersectionObserver de script.js já rodou antes).
+  ultimoHtmlRenderizado = html;
+  container.innerHTML = html;
   container.querySelectorAll(".fade-in").forEach((el) => el.classList.add("visible"));
+  return true;
+}
+
+async function init() {
+  const container = document.getElementById("home-cards-container");
+  if (!container) return;
+
+  let renderizou = false;
+  const cache = lerCachePublico(CACHE_KEY);
+
+  if (cache) {
+    renderizou = renderizarCards(container, cache);
+  }
+
+  if (!renderizou) {
+    try {
+      renderizou = renderizarCards(container, await carregarSnapshotEstatico());
+    } catch (e) {
+      console.warn("Falha ao carregar snapshot de home cards:", e);
+    }
+  }
+
+  try {
+    const cards = await carregarSnapshotDinamico();
+    salvarCachePublico(CACHE_KEY, cards);
+    renderizou = renderizarCards(container, cards) || renderizou;
+  } catch (e) {
+    if (!renderizou) {
+      console.error("Erro ao carregar home cards:", e);
+    } else {
+      console.warn("Falha ao atualizar home cards em segundo plano:", e);
+    }
+  }
 }
 
 document.addEventListener("DOMContentLoaded", init);

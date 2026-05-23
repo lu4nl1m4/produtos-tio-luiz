@@ -1,75 +1,89 @@
-// Renderiza a coluna "Downloads" no rodapé de todas as páginas públicas.
-// Lê /downloads do Firestore (ativos, ordenados por `ordem`) e injeta nos
-// containers [data-footer-downloads]. Se não houver itens ativos, esconde
-// a coluna inteira (via [data-footer-downloads-col]).
+// Renderiza a coluna "Downloads" no rodape.
+// Cache/snapshot aparecem rapido; Firestore REST atualiza em segundo plano.
 
-import { db } from "./firebase-config.js";
 import {
-  collection,
-  getDocs
-} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+  carregarColecaoFirestore,
+  carregarJsonPublico,
+  lerCachePublico,
+  ordenarPorOrdem,
+  salvarCachePublico
+} from "./public-data.js";
 
-const CACHE_KEY = "downloads_publicos_v1";
-const CACHE_TTL = 5 * 60 * 1000; // 5 min
+const STATIC_DOWNLOADS = "data/downloads-publico.json";
+const CACHE_KEY = "downloads";
 
 function escapeHtml(s) {
   return String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 }
-function escapeAttr(s) { return String(s ?? "").replace(/"/g, "&quot;"); }
 
-// Injeta fl_attachment em URLs do Cloudinary — força o browser a baixar
-// (Content-Disposition: attachment) em vez de exibir inline.
-// Funciona pra PDF, imagem e raw. URLs externas (Google Drive, etc.) ficam intactas.
+function escapeAttr(s) {
+  return String(s ?? "").replace(/"/g, "&quot;");
+}
+
 function comDownload(url) {
   if (!url || !url.includes("res.cloudinary.com")) return url;
   if (/\/(?:image|raw|video)\/upload\/[^/]*fl_attachment/.test(url)) return url;
   return url.replace(/\/(image|raw|video)\/upload\//, "/$1/upload/fl_attachment/");
 }
 
-async function carregarItens() {
-  try {
-    const cached = sessionStorage.getItem(CACHE_KEY);
-    if (cached) {
-      const { ts, data } = JSON.parse(cached);
-      if (Date.now() - ts < CACHE_TTL) return data;
-    }
-  } catch {}
-
-  const snap = await getDocs(collection(db, "downloads"));
-  const itens = snap.docs
-    .map((d) => ({ id: d.id, ...d.data() }))
-    .filter((d) => d.ativo !== false)
-    .sort((a, b) => (a.ordem ?? 9999) - (b.ordem ?? 9999));
-
-  try { sessionStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), data: itens })); } catch {}
-  return itens;
+function normalizarItens(itens) {
+  return ordenarPorOrdem(itens || [], 9999)
+    .filter((d) => d.ativo !== false);
 }
+
+let ultimoHtmlRenderizado = "";
 
 function renderListas(itens) {
   const containers = document.querySelectorAll("[data-footer-downloads]");
-  if (!containers.length) return;
+  if (!containers.length) return false;
 
   const colunas = document.querySelectorAll("[data-footer-downloads-col]");
+  const lista = normalizarItens(itens);
 
-  if (!itens.length) {
+  if (!lista.length) {
     colunas.forEach((c) => { c.hidden = true; });
-    return;
+    ultimoHtmlRenderizado = "";
+    return true;
   }
 
-  const html = itens.map((it) => `
+  const html = lista.map((it) => `
     <li><a href="${escapeAttr(comDownload(it.url))}" target="_blank" rel="noopener noreferrer" class="footer__link" download>${escapeHtml(it.titulo)}</a></li>
   `).join("");
 
+  if (html === ultimoHtmlRenderizado) return true;
+
+  ultimoHtmlRenderizado = html;
   containers.forEach((c) => { c.innerHTML = html; });
   colunas.forEach((c) => { c.hidden = false; });
+  return true;
 }
 
 (async () => {
+  let renderizou = false;
+  const cache = lerCachePublico(CACHE_KEY);
+
+  if (cache) {
+    renderizou = renderListas(cache);
+  }
+
+  if (!renderizou) {
+    try {
+      renderizou = renderListas(await carregarJsonPublico(STATIC_DOWNLOADS));
+    } catch (err) {
+      console.warn("[downloads] Falha ao carregar snapshot:", err);
+    }
+  }
+
   try {
-    const itens = await carregarItens();
-    renderListas(itens);
+    const itens = normalizarItens(await carregarColecaoFirestore("downloads"));
+    salvarCachePublico(CACHE_KEY, itens);
+    renderizou = renderListas(itens) || renderizou;
   } catch (err) {
-    console.error("[downloads] Falha ao carregar:", err);
-    document.querySelectorAll("[data-footer-downloads-col]").forEach((c) => { c.hidden = true; });
+    if (!renderizou) {
+      console.error("[downloads] Falha ao carregar:", err);
+      document.querySelectorAll("[data-footer-downloads-col]").forEach((c) => { c.hidden = true; });
+    } else {
+      console.warn("[downloads] Falha ao atualizar em segundo plano:", err);
+    }
   }
 })();

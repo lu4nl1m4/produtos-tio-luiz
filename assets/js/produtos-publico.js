@@ -1,14 +1,15 @@
 // Renderiza secoes de produtos nas paginas publicas.
-// Primeiro usa um snapshot estatico em /data para evitar a tela de carregamento;
-// depois atualiza em segundo plano via Firestore REST, sem baixar o SDK Firebase.
+// Mostra cache/snapshot imediatamente e sempre confere o Firestore em segundo plano.
 
-import { cached } from "./cache.js";
+import {
+  carregarColecaoFirestore,
+  carregarJsonPublico,
+  lerCachePublico,
+  ordenarPorOrdem,
+  salvarCachePublico
+} from "./public-data.js";
 
-const TTL_CATEGORIAS = 10 * 60 * 1000;
-const TTL_PRODUTOS = 5 * 60 * 1000;
-
-const API_KEY = "AIzaSyB0lJrlsHERnH2ZArBRbiOD-bk32hsxECs";
-const FIRESTORE_BASE = "https://firestore.googleapis.com/v1/projects/site-produtos-tio-luiz/databases/(default)/documents";
+const CACHE_KEY = "produtos:snapshot";
 const STATIC_CATEGORIAS = "data/categorias-publico.json";
 const STATIC_PRODUTOS = "data/produtos-publico.json";
 
@@ -133,65 +134,23 @@ function renderSecaoPet(cat, produtos) {
   `;
 }
 
-async function carregarJson(url) {
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`Falha ao carregar ${url}.`);
-  return res.json();
-}
-
-function valorFirestore(field) {
-  if (!field || typeof field !== "object") return null;
-  if ("stringValue" in field) return field.stringValue;
-  if ("integerValue" in field) return Number(field.integerValue);
-  if ("doubleValue" in field) return Number(field.doubleValue);
-  if ("booleanValue" in field) return Boolean(field.booleanValue);
-  if ("timestampValue" in field) return field.timestampValue;
-  if ("nullValue" in field) return null;
-  if ("arrayValue" in field) return (field.arrayValue.values || []).map(valorFirestore);
-  if ("mapValue" in field) {
-    return Object.fromEntries(
-      Object.entries(field.mapValue.fields || {}).map(([key, value]) => [key, valorFirestore(value)])
-    );
-  }
-  return null;
-}
-
-async function carregarColecaoFirestore(nome) {
-  const url = `${FIRESTORE_BASE}/${nome}?key=${API_KEY}&pageSize=100`;
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`Falha ao carregar ${nome} do Firestore.`);
-  const data = await res.json();
-  return (data.documents || []).map((doc) => {
-    const item = { id: doc.name.split("/").pop() };
-    Object.entries(doc.fields || {}).forEach(([key, field]) => {
-      item[key] = valorFirestore(field);
-    });
-    return item;
-  });
-}
-
-function carregarCategorias() {
-  return cached("categorias", TTL_CATEGORIAS, () => carregarColecaoFirestore("categorias"));
-}
-
-function carregarProdutos() {
-  return cached("produtos", TTL_PRODUTOS, () => carregarColecaoFirestore("produtos"));
-}
-
 async function carregarSnapshotEstatico() {
   const [categorias, produtos] = await Promise.all([
-    carregarJson(STATIC_CATEGORIAS),
-    carregarJson(STATIC_PRODUTOS)
+    carregarJsonPublico(STATIC_CATEGORIAS),
+    carregarJsonPublico(STATIC_PRODUTOS)
   ]);
   return { categorias, produtos };
 }
 
 async function carregarSnapshotDinamico() {
   const [categorias, produtos] = await Promise.all([
-    carregarCategorias(),
-    carregarProdutos()
+    carregarColecaoFirestore("categorias"),
+    carregarColecaoFirestore("produtos")
   ]);
-  return { categorias, produtos };
+  return {
+    categorias: ordenarPorOrdem(categorias),
+    produtos: ordenarPorOrdem(produtos)
+  };
 }
 
 function produtosDaCategoria(produtos, catId) {
@@ -248,17 +207,25 @@ async function init() {
   if (!container) return;
 
   const tipoDesejado = container.dataset.tipo || "regular";
-  const dinamicoPromise = carregarSnapshotDinamico();
   let renderizou = false;
+  const cache = lerCachePublico(CACHE_KEY);
 
-  try {
-    renderizou = renderizarSnapshot(container, tipoDesejado, await carregarSnapshotEstatico());
-  } catch (e) {
-    console.warn("Falha ao carregar snapshot estatico de produtos:", e);
+  if (cache) {
+    renderizou = renderizarSnapshot(container, tipoDesejado, cache);
+  }
+
+  if (!renderizou) {
+    try {
+      renderizou = renderizarSnapshot(container, tipoDesejado, await carregarSnapshotEstatico());
+    } catch (e) {
+      console.warn("Falha ao carregar snapshot estatico de produtos:", e);
+    }
   }
 
   try {
-    renderizou = renderizarSnapshot(container, tipoDesejado, await dinamicoPromise) || renderizou;
+    const dinamico = await carregarSnapshotDinamico();
+    salvarCachePublico(CACHE_KEY, dinamico);
+    renderizou = renderizarSnapshot(container, tipoDesejado, dinamico) || renderizou;
   } catch (e) {
     if (!renderizou) {
       console.error("Erro ao carregar dados do Firestore:", e);
