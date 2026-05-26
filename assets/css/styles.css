@@ -490,7 +490,7 @@ body.theme-pet .btn--outline:hover {
   font-size: var(--font-size-5xl);
   margin-bottom: var(--spacing-lg);
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
-  animation: none;
+  animation: hero-rise 0.48s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .hero__subtitle {
@@ -499,7 +499,7 @@ body.theme-pet .btn--outline:hover {
   font-weight: 400;
   opacity: 0.95;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-  animation: none;
+  animation: hero-rise 0.48s cubic-bezier(0.22, 1, 0.36, 1) 0.07s both;
 }
 
 .hero__cta {
@@ -507,7 +507,7 @@ body.theme-pet .btn--outline:hover {
   gap: var(--spacing-md);
   justify-content: center;
   flex-wrap: wrap;
-  animation: none;
+  animation: hero-rise 0.48s cubic-bezier(0.22, 1, 0.36, 1) 0.14s both;
 }
 
 /* Respeita preferência do usuário por menos animação (acessibilidade) */
@@ -762,9 +762,9 @@ body.theme-pet .btn--outline:hover {
 
 /* === ANIMATIONS === */
 .fade-in {
-  opacity: 1;
-  transform: none;
-  transition: none;
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.36s ease-out, transform 0.36s ease-out;
 }
 
 .hero__content.fade-in {

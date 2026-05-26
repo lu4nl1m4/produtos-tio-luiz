@@ -197,10 +197,28 @@ function highlightNavigation() {
         }), { passive: true });
     }
 
-    // ===== FADE IN ON SCROLL - DISABLED FOR PERFORMANCE TEST =====
+    // ===== FADE IN ON SCROLL =====
+    const observerOptions = {
+        threshold: 0.08,
+        rootMargin: '0px 0px -24px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+
     const fadeElements = document.querySelectorAll('.fade-in');
     fadeElements.forEach(element => {
-        element.classList.add('visible');
+        const rect = element.getBoundingClientRect();
+        if (rect.top < window.innerHeight && rect.bottom > 0) {
+            element.classList.add('visible');
+        }
+        observer.observe(element);
     });
 
     // ===== FORM VALIDATION - REMOVIDA =====
