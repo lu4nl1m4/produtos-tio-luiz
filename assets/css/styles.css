@@ -44,8 +44,8 @@
   --color-bg-warm: #C8E6C9;
 
   /* ─── Tipografia ─── */
-  --font-display: 'Inter', sans-serif;
-  --font-body: 'Inter', sans-serif;
+  --font-display: system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+  --font-body: system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
 
   /* ─── Escala Tipográfica ─── */
   --font-size-xs: 0.75rem;
@@ -675,7 +675,7 @@ body.theme-pet .btn--outline:hover {
   box-shadow: var(--shadow-lg);
   z-index: 999;
   transition: transform var(--transition-base), box-shadow var(--transition-base);
-  animation: none;
+  animation: pulse 2s infinite;
 }
 
 .whatsapp-float:hover {
