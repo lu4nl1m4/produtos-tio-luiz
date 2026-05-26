@@ -198,9 +198,10 @@ function highlightNavigation() {
     }
 
     // ===== FADE IN ON SCROLL =====
+    const revealAhead = 180;
     const observerOptions = {
         threshold: 0.08,
-        rootMargin: '0px 0px -24px 0px'
+        rootMargin: `0px 0px ${revealAhead}px 0px`
     };
 
     const observer = new IntersectionObserver((entries) => {
@@ -215,8 +216,9 @@ function highlightNavigation() {
     const fadeElements = document.querySelectorAll('.fade-in');
     fadeElements.forEach(element => {
         const rect = element.getBoundingClientRect();
-        if (rect.top < window.innerHeight && rect.bottom > 0) {
+        if (rect.top < window.innerHeight + revealAhead && rect.bottom > -revealAhead) {
             element.classList.add('visible');
+            return;
         }
         observer.observe(element);
     });

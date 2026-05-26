@@ -10,20 +10,38 @@ import {
 } from "./public-data.js";
 
 const STATIC_BANNERS = "data/banners-publico.json";
+const BANNERS_OTIMIZADOS = new Set(["produtos", "receitas"]);
+
+function otimizarImagemBanner(url, slug) {
+  if (!url || !BANNERS_OTIMIZADOS.has(slug) || !url.includes("res.cloudinary.com")) return url;
+  return url.replace(
+    /\/image\/upload\/(?:[^/]+\/)?(v\d+\/)/,
+    "/image/upload/f_auto,q_auto,c_limit,w_1200/$1"
+  );
+}
+
+function trocarImagemAposCarregar(img, url) {
+  img.dataset.bannerSrcPending = url;
+  const nextImage = new Image();
+  nextImage.decoding = "async";
+  nextImage.onload = () => {
+    if (img.dataset.bannerSrcPending === url && img.getAttribute("src") !== url) {
+      img.src = url;
+    }
+  };
+  nextImage.src = url;
+}
 
 function aplicarBanner(heroEl, banner) {
   if (!banner) return false;
   let mudou = false;
+  const slug = heroEl.dataset.pageBanner || "";
 
   if (banner.imagem_url) {
+    const imagemUrl = otimizarImagemBanner(banner.imagem_url, slug);
     const img = heroEl.querySelector(".hero__background");
-    if (img && img.getAttribute("src") !== banner.imagem_url) {
-      const nextImage = new Image();
-      nextImage.decoding = "async";
-      nextImage.onload = () => {
-        img.src = banner.imagem_url;
-      };
-      nextImage.src = banner.imagem_url;
+    if (img && img.getAttribute("src") !== imagemUrl) {
+      trocarImagemAposCarregar(img, imagemUrl);
       mudou = true;
     }
   }

@@ -15,14 +15,33 @@
     try { return JSON.parse(raw).data || null; } catch { return null; }
   }
 
+  function optimizeBannerImage(url, slug) {
+    if (!url || (slug !== "produtos" && slug !== "receitas") || !url.includes("res.cloudinary.com")) return url;
+    return url.replace(
+      /\/image\/upload\/(?:[^/]+\/)?(v\d+\/)/,
+      "/image/upload/f_auto,q_auto,c_limit,w_1200/$1"
+    );
+  }
+
+  function swapImageWhenReady(img, url) {
+    if (!img || img.getAttribute("src") === url) return;
+    img.dataset.bannerSrcPending = url;
+    var nextImage = new Image();
+    nextImage.decoding = "async";
+    nextImage.onload = function () {
+      if (img.dataset.bannerSrcPending === url && img.getAttribute("src") !== url) {
+        img.src = url;
+      }
+    };
+    nextImage.src = url;
+  }
+
   var banner = read("banner:" + hero.dataset.pageBanner);
   if (!banner) return;
 
   if (banner.imagem_url) {
-    var img = hero.querySelector(".hero__background");
-    if (img && img.getAttribute("src") !== banner.imagem_url) {
-      img.src = banner.imagem_url;
-    }
+    var imageUrl = optimizeBannerImage(banner.imagem_url, hero.dataset.pageBanner);
+    swapImageWhenReady(hero.querySelector(".hero__background"), imageUrl);
   }
 
   if (banner.titulo) {
