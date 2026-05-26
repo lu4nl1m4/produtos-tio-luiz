@@ -8,6 +8,7 @@
     <title>Receitas - Produtos Tio Luiz</title>
 
     <link rel="icon" type="image/webp" href="assets/images/logo.webp">
+    <link rel="preload" as="image" href="assets/images/logo.webp" fetchpriority="high">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://firestore.googleapis.com" crossorigin>
@@ -34,7 +35,7 @@
     <header class="header" id="header">
         <div class="header__container">
             <a href="index.html" class="header__logo">
-                <img src="assets/images/logo.webp" alt="Produtos Tio Luiz" width="1403" height="609" decoding="async">
+                <img src="assets/images/logo.webp" alt="Produtos Tio Luiz" width="1403" height="609" loading="eager" fetchpriority="high" decoding="sync">
             </a>
 
             <nav class="nav">

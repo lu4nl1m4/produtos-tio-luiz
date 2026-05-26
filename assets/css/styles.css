@@ -346,6 +346,17 @@ body.theme-pet .btn--outline:hover {
   box-shadow: var(--shadow-sm);
   z-index: 1000;
   transition: box-shadow var(--transition-base);
+  view-transition-name: site-header;
+}
+
+::view-transition-group(site-header) {
+  z-index: 1000;
+}
+
+::view-transition-old(site-header),
+::view-transition-new(site-header) {
+  animation-duration: 0ms;
+  mix-blend-mode: normal;
 }
 
 .header__container {
@@ -365,11 +376,16 @@ body.theme-pet .btn--outline:hover {
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
+  flex: 0 0 auto;
+  min-width: 180px;
+  min-height: 78px;
 }
 
 .header__logo img {
+  width: 180px;
   max-width: 180px;
   height: auto;
+  aspect-ratio: 1403 / 609;
   display: block;
 }
 
