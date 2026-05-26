@@ -103,6 +103,17 @@ html {
   scroll-behavior: auto;
 }
 
+@view-transition {
+  navigation: auto;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 1ms;
+  animation-timing-function: step-end;
+  mix-blend-mode: normal;
+}
+
 body {
   font-family: var(--font-body);
   font-size: var(--font-size-base);
@@ -336,6 +347,18 @@ body.theme-pet .btn--outline:hover {
   box-shadow: var(--shadow-sm);
   z-index: 1000;
   transition: box-shadow var(--transition-base);
+  view-transition-name: site-header;
+}
+
+::view-transition-group(site-header) {
+  z-index: 1000;
+}
+
+::view-transition-old(site-header),
+::view-transition-new(site-header) {
+  animation-duration: 1ms;
+  animation-timing-function: step-end;
+  mix-blend-mode: normal;
 }
 
 .header__container {

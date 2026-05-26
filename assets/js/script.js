@@ -62,18 +62,16 @@ document.addEventListener('DOMContentLoaded', function() {
     // ===== ACTIVE NAVIGATION HIGHLIGHTING =====
     // Destaque automático do link ativo com base na página atual
     const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    const activePage = ({
+        'produto.html': 'produtos.html',
+        'receita.html': 'receitas.html',
+        '': 'index.html',
+        '/': 'index.html'
+    })[currentPage] || currentPage;
     const navLinksAll = document.querySelectorAll('.nav__link');
 
     navLinksAll.forEach(link => {
-        const href = link.getAttribute('href');
-        // Remove qualquer active existente
-        link.classList.remove('nav__link--active');
-        // Compara o href do link com a página atual
-        if (href === currentPage || 
-            (currentPage === '' && href === 'index.html') ||
-            (currentPage === '/' && href === 'index.html')) {
-            link.classList.add('nav__link--active');
-        }
+        link.classList.toggle('nav__link--active', link.getAttribute('href') === activePage);
     });
 
     // ===== INTERNAL PAGE PREFETCH =====
