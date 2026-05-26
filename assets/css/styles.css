@@ -3,8 +3,14 @@
    Tema verde fresco e natural
    ======================================== */
 
-/* === IMPORTS === */
-/* Fonte Inter movida para <link rel="preconnect"> + <link rel="stylesheet"> no <head> de cada HTML — @import bloqueia render serializando a request. */
+/* === FONTS === */
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("../fonts/inter-latin-400-700.woff2") format("woff2");
+}
 
 /* === VARIABLES === */
 :root {
@@ -44,8 +50,8 @@
   --color-bg-warm: #C8E6C9;
 
   /* ─── Tipografia ─── */
-  --font-display: system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
-  --font-body: system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+  --font-display: "Inter", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
 
   /* ─── Escala Tipográfica ─── */
   --font-size-xs: 0.75rem;
