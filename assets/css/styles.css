@@ -100,17 +100,7 @@
 }
 
 html {
-  scroll-behavior: smooth;
-}
-
-@view-transition {
-  navigation: auto;
-}
-
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation-duration: 180ms;
-  animation-timing-function: ease-out;
+  scroll-behavior: auto;
 }
 
 body {
@@ -346,17 +336,6 @@ body.theme-pet .btn--outline:hover {
   box-shadow: var(--shadow-sm);
   z-index: 1000;
   transition: box-shadow var(--transition-base);
-  view-transition-name: site-header;
-}
-
-::view-transition-group(site-header) {
-  z-index: 1000;
-}
-
-::view-transition-old(site-header),
-::view-transition-new(site-header) {
-  animation-duration: 0ms;
-  mix-blend-mode: normal;
 }
 
 .header__container {
@@ -487,7 +466,7 @@ body.theme-pet .btn--outline:hover {
   font-size: var(--font-size-5xl);
   margin-bottom: var(--spacing-lg);
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
-  animation: hero-rise 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: none;
 }
 
 .hero__subtitle {
@@ -496,7 +475,7 @@ body.theme-pet .btn--outline:hover {
   font-weight: 400;
   opacity: 0.95;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-  animation: hero-rise 0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both;
+  animation: none;
 }
 
 .hero__cta {
@@ -504,7 +483,7 @@ body.theme-pet .btn--outline:hover {
   gap: var(--spacing-md);
   justify-content: center;
   flex-wrap: wrap;
-  animation: hero-rise 0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both;
+  animation: none;
 }
 
 /* Respeita preferência do usuário por menos animação (acessibilidade) */
@@ -696,7 +675,7 @@ body.theme-pet .btn--outline:hover {
   box-shadow: var(--shadow-lg);
   z-index: 999;
   transition: transform var(--transition-base), box-shadow var(--transition-base);
-  animation: pulse 2s infinite;
+  animation: none;
 }
 
 .whatsapp-float:hover {
@@ -759,9 +738,9 @@ body.theme-pet .btn--outline:hover {
 
 /* === ANIMATIONS === */
 .fade-in {
-  opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  opacity: 1;
+  transform: none;
+  transition: none;
 }
 
 .hero__content.fade-in {
